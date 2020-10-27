@@ -3,31 +3,27 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Locationviewer": {
-      "root": "",
-      "sourceRoot": "src",
+    "example": {
+      "root": "projects/example/",
+      "sourceRoot": "projects/example/src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "sass"
-        }
-      },
+      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/Locationviewer",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "outputPath": "dist/example",
+            "index": "projects/example/src/index.html",
+            "main": "projects/example/src/main.ts",
+            "polyfills": "projects/example/src/polyfills.ts",
+            "tsConfig": "projects/example/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "projects/example/src/favicon.ico",
+              "projects/example/src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "projects/example/src/styles.css"
             ],
             "scripts": [],
             "es5BrowserSupport": true
@@ -36,8 +32,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/example/src/environments/environment.ts",
+                  "with": "projects/example/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -62,34 +58,34 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Locationviewer:build"
+            "browserTarget": "example:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Locationviewer:build:production"
+              "browserTarget": "example:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Locationviewer:build"
+            "browserTarget": "example:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "main": "projects/example/src/test.ts",
+            "polyfills": "projects/example/src/polyfills.ts",
+            "tsConfig": "projects/example/tsconfig.spec.json",
+            "karmaConfig": "projects/example/karma.conf.js",
             "styles": [
-              "src/styles.scss"
+              "projects/example/src/styles.css"
             ],
             "scripts": [],
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "projects/example/src/favicon.ico",
+              "projects/example/src/assets"
             ]
           }
         },
@@ -97,8 +93,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "projects/example/tsconfig.app.json",
+              "projects/example/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -107,27 +103,34 @@
         }
       }
     },
-    "Locationviewer-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "prefix": "",
+    "ngx-location-viewer": {
+      "root": "projects/ngx-location-viewer",
+      "sourceRoot": "projects/ngx-location-viewer/src",
+      "projectType": "library",
+      "prefix": "lib",
       "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Locationviewer:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "Locationviewer:serve:production"
-            }
+            "tsConfig": "projects/ngx-location-viewer/tsconfig.lib.json",
+            "project": "projects/ngx-location-viewer/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-location-viewer/src/test.ts",
+            "tsConfig": "projects/ngx-location-viewer/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-location-viewer/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
+            "tsConfig": [
+              "projects/ngx-location-viewer/tsconfig.lib.json",
+              "projects/ngx-location-viewer/tsconfig.spec.json"
+            ],
             "exclude": [
               "**/node_modules/**"
             ]
@@ -136,5 +139,5 @@
       }
     }
   },
-  "defaultProject": "Locationviewer"
+  "defaultProject": "ngx-location-viewer"
 }
