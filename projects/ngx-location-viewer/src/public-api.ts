@@ -3,5 +3,5 @@
  */
 
 export * from './lib/ngx-location-viewer.service';
-export * from './lib/ngx-location-viewer.component';
+export * from './lib/components/ngx-location-viewer.component';
 export * from './lib/ngx-location-viewer.module';

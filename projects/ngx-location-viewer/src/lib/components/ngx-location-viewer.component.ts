@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-ngx-location-viewer',
-  template: `
-    <p>
-      ngx-location-viewer works!
-    </p>
-  `,
-  styles: []
+  selector: 'aui-location-viewer',
+  templateUrl: './ngx-location-viewer.component.html',
+  styleUrls: ['./ngx-location-viewer.component.scss']
 })
 export class NgxLocationViewerComponent implements OnInit {
 

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NgxLocationViewerComponent } from './ngx-location-viewer.component';
+import { NgxLocationViewerComponent } from './components/ngx-location-viewer.component';
 
 @NgModule({
   declarations: [NgxLocationViewerComponent],
