@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { NgxLocationViewerModule } from '../../../../dist/ngx-location-viewer';
+import { LocationViewerModule } from '../../../../dist/ngx-location-viewer';
 
 @NgModule({
   declarations: [
@@ -10,7 +10,7 @@ import { NgxLocationViewerModule } from '../../../../dist/ngx-location-viewer';
   ],
   imports: [
     BrowserModule,
-    NgxLocationViewerModule
+    LocationViewerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
