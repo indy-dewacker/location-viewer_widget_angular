@@ -1,6 +1,6 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { LocationViewerMap } from '../types/location-viewer.map';
+import { LocationViewerMap } from '../classes/location-viewer-map';
 
 @Component({
   selector: 'aui-location-viewer',
