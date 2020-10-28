@@ -1,4 +1,6 @@
-<aui-leaflet
-[leafletMap]="leafletMap">
-
+<aui-leaflet [leafletMap]="leafletMap"
+    [hasSidebar]="hasSidebar">
+  <div *ngIf="showLayerManagement">
+    <p>Lagenbeheer:</p>
+  </div>
 </aui-leaflet>

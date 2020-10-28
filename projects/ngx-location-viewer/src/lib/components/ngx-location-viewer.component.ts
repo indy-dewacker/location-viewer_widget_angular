@@ -1,5 +1,5 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LocationViewerMap } from '../types/location-viewer.map';
 
 @Component({
@@ -8,6 +8,24 @@ import { LocationViewerMap } from '../types/location-viewer.map';
   styleUrls: ['./ngx-location-viewer.component.scss']
 })
 export class NgxLocationViewerComponent implements OnInit {
+  /* The default zoom level on map load. */
+  @Input() defaultZoom = 14;
+  /* The zoom level when a location is selected. */
+  @Input() onSelectZoom = 16;
+  /* The initial map center on load. */
+  @Input() mapCenter: Array<number> = [51.215, 4.425];
+  /* Show a sidebar next to the map leaflet. A sidebar can contain any additional info you like. */
+  @Input() hasSidebar = false;
+  /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
+  @Input() showLayerManagement = false;
+  /* AddPolygon event */
+  @Output() addPolygon = new EventEmitter<any>();
+  /* AddLine event */
+  @Output() addLine = new EventEmitter<any>();
+  /* EditFeature event */
+  @Output() editFeature = new EventEmitter<any>();
+
+
   /* Leaflet instance */
   leafletMap: LocationViewerMap;
   constructor(
@@ -20,16 +38,16 @@ export class NgxLocationViewerComponent implements OnInit {
 
   private initLocationViewer() {
     this.leafletMap = new LocationViewerMap({
-      zoom: 14,
-      center: [51.215, 4.425],
+      zoom: this.defaultZoom,
+      center: this.mapCenter,
       onAddPolygon: (layer) => {
-        // TODO: emit event
+        this.addPolygon.emit(layer);
       },
       onAddLine: (layer) => {
-        // TODO: emit event
+        this.addLine.emit(layer);
       },
       onEditFeature: (feature) => {
-        // TODO: emit event
+        this.editFeature.emit(feature);
       },
     }, this.mapService);
 
