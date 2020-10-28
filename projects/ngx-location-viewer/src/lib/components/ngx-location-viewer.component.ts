@@ -1,5 +1,6 @@
-import { baseMapAntwerp, baseMapWorldGray, LeafletMap, MapService } from '@acpaas-ui/ngx-components/map';
+import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
 import { Component, OnInit } from '@angular/core';
+import { LocationViewerMap } from '../types/location-viewer.map';
 
 @Component({
   selector: 'aui-location-viewer',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NgxLocationViewerComponent implements OnInit {
   /* Leaflet instance */
-  leafletMap: LeafletMap;
+  leafletMap: LocationViewerMap;
   constructor(
     private mapService: MapService
   ) { }
@@ -18,7 +19,7 @@ export class NgxLocationViewerComponent implements OnInit {
   }
 
   private initLocationViewer() {
-    this.leafletMap = new LeafletMap({
+    this.leafletMap = new LocationViewerMap({
       zoom: 14,
       center: [51.215, 4.425],
       onAddPolygon: (layer) => {
@@ -35,6 +36,9 @@ export class NgxLocationViewerComponent implements OnInit {
     this.leafletMap.onInit.subscribe(() => {
       this.leafletMap.addTileLayer(baseMapWorldGray);
       this.leafletMap.addTileLayer(baseMapAntwerp);
+      this.leafletMap.map.pm.addControls({
+        position: 'topright'
+      });
     });
   }
 
