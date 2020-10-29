@@ -6,9 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'example';
+  showToolbar = true;
+  showLayerManagement = true;
+  hasSidebar = true;
 
   ngOnInit() {
-    
   }
 }

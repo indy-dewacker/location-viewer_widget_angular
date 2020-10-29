@@ -1,6 +1,8 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LocationViewerMap } from '../classes/location-viewer-map';
+import { ToolbarOptions } from '../types/toolbar-options.model';
+import { ToolbarPosition } from '../types/toolbar-position.enum';
 
 @Component({
   selector: 'aui-location-viewer',
@@ -16,6 +18,10 @@ export class NgxLocationViewerComponent implements OnInit {
   @Input() mapCenter: Array<number> = [51.215, 4.425];
   /* Show a sidebar next to the map leaflet. A sidebar can contain any additional info you like. */
   @Input() hasSidebar = false;
+  /* Show geoman toolbar. Toolbar options can be configured with the toolbar options input parameter */
+  @Input() showToolbar = true;
+  /* Configures toolbar options. If toolbar is shown these options will configure the toolbar */
+  @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopRight };
   /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
   @Input() showLayerManagement = false;
   /* AddPolygon event */
@@ -54,9 +60,10 @@ export class NgxLocationViewerComponent implements OnInit {
     this.leafletMap.onInit.subscribe(() => {
       this.leafletMap.addTileLayer(baseMapWorldGray);
       this.leafletMap.addTileLayer(baseMapAntwerp);
-      this.leafletMap.map.pm.addControls({
-        position: 'topright'
-      });
+
+      if (this.showToolbar) {
+        this.leafletMap.map.pm.addControls(this.toolbarOptions);
+      }
     });
   }
 
