@@ -2,6 +2,7 @@ import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-com
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import { ToolbarOptions } from '../types/toolbar-options.model';
 import { ToolbarPosition } from '../types/toolbar-position.enum';
 
@@ -25,6 +26,8 @@ export class NgxLocationViewerComponent implements OnInit {
   @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopRight };
   /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
   @Input() showLayerManagement = false;
+  /* Add supporting layers. If provided will be added as DynamicMapLayer to leaflet */
+  @Input() supportingLayerOptions: SupportingLayerOptions;
   /* AddPolygon event */
   @Output() addPolygon = new EventEmitter<any>();
   /* AddLine event */
@@ -62,8 +65,12 @@ export class NgxLocationViewerComponent implements OnInit {
       this.leafletMap.addTileLayer(baseMapWorldGray);
       this.leafletMap.addTileLayer(baseMapAntwerp);
 
-      if (this.showToolbar && this.mapService.isAvailable()) {
+      if (this.showToolbar) {
         this.leafletMap.addToolbar(this.toolbarOptions);
+      }
+
+      if (this.supportingLayerOptions) {
+        this.leafletMap.addSupportingLayers(this.supportingLayerOptions);
       }
     });
   }
