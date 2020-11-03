@@ -1,11 +1,11 @@
-import {MapService} from '@acpaas-ui/ngx-components/map';
-import {Provider} from '@angular/core';
+import { Provider } from '@angular/core';
+import { LocationViewerMapService } from './services/location-viewer-map.service';
 
-export function mapServiceFactory() {
-  return new MapService('browser');
+export function locationViewerMapServiceFactory() {
+  return new LocationViewerMapService('browser');
 }
 
 export const MAP_SERVICE_PROVIDER: Provider = {
-  provide: MapService,
-  useFactory: mapServiceFactory
+  provide: LocationViewerMapService,
+  useFactory: locationViewerMapServiceFactory
 };

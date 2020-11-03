@@ -1,6 +1,7 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LocationViewerMap } from '../classes/location-viewer-map';
+import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { ToolbarOptions } from '../types/toolbar-options.model';
 import { ToolbarPosition } from '../types/toolbar-position.enum';
 
@@ -35,7 +36,7 @@ export class NgxLocationViewerComponent implements OnInit {
   /* Leaflet instance */
   leafletMap: LocationViewerMap;
   constructor(
-    private mapService: MapService
+    private mapService: LocationViewerMapService
   ) { }
 
   ngOnInit() {
@@ -61,8 +62,8 @@ export class NgxLocationViewerComponent implements OnInit {
       this.leafletMap.addTileLayer(baseMapWorldGray);
       this.leafletMap.addTileLayer(baseMapAntwerp);
 
-      if (this.showToolbar) {
-        this.leafletMap.map.pm.addControls(this.toolbarOptions);
+      if (this.showToolbar && this.mapService.isAvailable()) {
+        this.leafletMap.addToolbar(this.toolbarOptions);
       }
     });
   }
