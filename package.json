@@ -1,5 +1,6 @@
 {
   "name": "locationviewer",
+  "description": "Location viewer in progress"
   "version": "0.0.1-beta.0",
   "scripts": {
     "ng": "ng",
