@@ -23,7 +23,7 @@ export class NgxLocationViewerComponent implements OnInit {
   /* Show geoman toolbar. Toolbar options can be configured with the toolbar options input parameter */
   @Input() showToolbar = true;
   /* Configures toolbar options. If toolbar is shown these options will configure the toolbar */
-  @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopRight };
+  @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopLeft };
   /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
   @Input() showLayerManagement = false;
   /* Add supporting layers. If provided will be added as DynamicMapLayer to leaflet */
@@ -44,6 +44,20 @@ export class NgxLocationViewerComponent implements OnInit {
 
   ngOnInit() {
     this.initLocationViewer();
+  }
+
+  /**
+   * Zooms the map in
+   */
+  zoomIn() {
+    this.leafletMap.zoomIn();
+  }
+
+  /**
+   * Zooms the map out
+   */
+  zoomOut() {
+    this.leafletMap.zoomOut();
   }
 
   private initLocationViewer() {
