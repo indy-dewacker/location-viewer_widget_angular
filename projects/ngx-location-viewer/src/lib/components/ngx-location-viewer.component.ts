@@ -1,7 +1,11 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { LocationViewerMap } from '../classes/location-viewer-map';
+import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { MapServerService } from '../services/mapserver.service';
+import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import { ToolbarOptions } from '../types/toolbar-options.model';
 import { ToolbarPosition } from '../types/toolbar-position.enum';
@@ -38,8 +42,14 @@ export class NgxLocationViewerComponent implements OnInit {
 
   /* Leaflet instance */
   leafletMap: LocationViewerMap;
+
+  /* supporting layer config */
+  $supportingLayer: Observable<Layer>;
+
   constructor(
-    private mapService: LocationViewerMapService
+    private mapService: LocationViewerMapService,
+    private mapserverService: MapServerService,
+    private layerService: LayerService
   ) { }
 
   ngOnInit() {
@@ -85,6 +95,7 @@ export class NgxLocationViewerComponent implements OnInit {
 
       if (this.supportingLayerOptions) {
         this.leafletMap.addSupportingLayers(this.supportingLayerOptions);
+        this.$supportingLayer = this.layerService.buildLayer(this.supportingLayerOptions.url, this.supportingLayerOptions.layerIds);
       }
     });
   }

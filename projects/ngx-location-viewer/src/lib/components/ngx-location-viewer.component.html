@@ -1,7 +1,7 @@
 <aui-leaflet [leafletMap]="leafletMap"
     [hasSidebar]="hasSidebar">
   <div *ngIf="showLayerManagement">
-    <p>Lagenbeheer:</p>
+    <aui-layer-management [supportingLayer]="$supportingLayer | async"></aui-layer-management>
   </div>
   <div controls bottom left>
     <div class="m-button-group m-button-group--vertical">

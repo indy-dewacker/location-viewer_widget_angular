@@ -8,8 +8,8 @@ import { SupportingLayerOptions } from 'projects/ngx-location-viewer/src/public-
 })
 export class AppComponent implements OnInit {
   showToolbar = true;
-  showLayerManagement = false;
-  hasSidebar = false;
+  showLayerManagement = true;
+  hasSidebar = true;
   supportingLayerOptions: SupportingLayerOptions = {
     url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
     layerIds: [143, 144, 145, 146, 147]

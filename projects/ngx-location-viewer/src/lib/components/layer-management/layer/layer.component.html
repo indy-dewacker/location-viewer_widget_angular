@@ -1,0 +1,11 @@
+<div class="a-input u-margin-bottom-xs">
+  <div class="a-input__checkbox">
+    <input type="checkbox" id="layer-{{layer?.id}}" name="layer-{{layer?.id}}" [checked]="layer?.visible"/>
+    <label for="layer-{{layer?.id}}">{{ layer?.name }}</label>
+    <span *ngIf="showLayers()" class="fa toggle-layer u-margin-left-xs" [ngClass]="{'fa-angle-up': open, 'fa-angle-down': !open}" (click)="open = !open"></span>
+  </div>
+</div>
+<div *ngIf="open && showLayers()" class="u-margin-left-xs">
+  <aui-layer *ngFor="let childLayer of layer?.layers" [layer]="childLayer">
+  </aui-layer>
+</div>
