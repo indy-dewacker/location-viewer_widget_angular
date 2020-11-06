@@ -1,10 +1,10 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
-import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import { ToolbarOptions } from '../types/toolbar-options.model';
@@ -15,7 +15,7 @@ import { ToolbarPosition } from '../types/toolbar-position.enum';
   templateUrl: './ngx-location-viewer.component.html',
   styleUrls: ['./ngx-location-viewer.component.scss']
 })
-export class NgxLocationViewerComponent implements OnInit {
+export class NgxLocationViewerComponent implements OnInit, OnDestroy {
   /* The default zoom level on map load. */
   @Input() defaultZoom = 14;
   /* The zoom level when a location is selected. */
@@ -44,16 +44,22 @@ export class NgxLocationViewerComponent implements OnInit {
   leafletMap: LocationViewerMap;
 
   /* supporting layer config */
-  $supportingLayer: Observable<Layer>;
+  supportingLayer: Layer;
+
+  private destroyed$ = new Subject<boolean>();
 
   constructor(
     private mapService: LocationViewerMapService,
-    private mapserverService: MapServerService,
     private layerService: LayerService
   ) { }
 
   ngOnInit() {
     this.initLocationViewer();
+  }
+
+  ngOnDestroy()  {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   /**
@@ -94,10 +100,22 @@ export class NgxLocationViewerComponent implements OnInit {
       }
 
       if (this.supportingLayerOptions) {
-        this.leafletMap.addSupportingLayers(this.supportingLayerOptions);
-        this.$supportingLayer = this.layerService.buildLayer(this.supportingLayerOptions.url, this.supportingLayerOptions.layerIds);
+        this.layerService.buildLayer(this.supportingLayerOptions.url, this.supportingLayerOptions.layerIds)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(supportingLayer => {
+          this.supportingLayer = supportingLayer;
+          const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
+          this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
+        });
+
+        this.layerService.layerVisiblityChange$
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => {
+          const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
+          this.leafletMap.setVisibleLayersSupportingLayer(ids);
+        });
+
       }
     });
   }
-
 }

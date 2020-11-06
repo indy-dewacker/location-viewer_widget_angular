@@ -10,12 +10,14 @@ import { MAP_SERVICE_PROVIDER } from './map.provider';
 import { MapServerService } from './services/mapserver.service';
 import { LayerService } from './services/layer.service';
 import { LayerComponent } from './components/layer-management/layer/layer.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [NgxLocationViewerComponent, LayerManagementComponent, LayerComponent],
   imports: [
     CommonModule,
     HttpClientModule,
+    FormsModule,
     LeafletModule
   ],
   exports: [NgxLocationViewerComponent],

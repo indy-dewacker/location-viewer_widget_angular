@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, Observable, of } from 'rxjs';
+import { filter, map, take } from 'rxjs/operators';
 import { Layer } from '../types/layer.model';
 import { LayerInfo } from '../types/mapserver/info-response/layer-info.model';
 import { MapServerService } from './mapserver.service';
 
 @Injectable()
 export class LayerService {
+    private layerVisibilitySub$ = new BehaviorSubject<boolean>(null);
     constructor(private mapserverService: MapServerService) {
     }
 
@@ -41,6 +42,31 @@ export class LayerService {
                 return  dummyLayer;
             }
         }));
+    }
+
+    /* Fetch visible layerids of layer object */
+    getVisibleLayerIds(layer: Layer): number[] {
+        let visibleLayerIds: number[] = [];
+        if (layer.visible) {
+            // Only return id if there are no sublayers, otherwise if parent id is returned, all sub layers will be shown
+            if (layer.layers.length === 0) {
+                visibleLayerIds.push(layer.id);
+            }
+            layer.layers.filter(x => x.visible === true).forEach(visibleSubLayer => {
+                visibleLayerIds =  [...visibleLayerIds, ...this.getVisibleLayerIds(visibleSubLayer)];
+            });
+        }
+
+        return visibleLayerIds;
+    }
+
+
+    setLayerVisibilityChange(): void {
+        this.layerVisibilitySub$.next(true);
+    }
+
+    get layerVisiblityChange$(): Observable<boolean> {
+        return this.layerVisibilitySub$.pipe(filter((value: boolean) => !!value));
     }
 
     private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[]): Layer[] {
