@@ -1,7 +1,7 @@
 export interface LayerLegendInfo {
     contentType: string;
     height: number;
-    imageData: Blob;
+    imageData: string;
     label: string;
     url: string;
     width: number;

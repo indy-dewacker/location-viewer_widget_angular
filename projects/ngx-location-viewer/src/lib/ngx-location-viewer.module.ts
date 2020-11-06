@@ -11,9 +11,10 @@ import { MapServerService } from './services/mapserver.service';
 import { LayerService } from './services/layer.service';
 import { LayerComponent } from './components/layer-management/layer/layer.component';
 import { FormsModule } from '@angular/forms';
+import { LayerLegendComponent } from './components/layer-management/layer-legend/layer-legend.component';
 
 @NgModule({
-  declarations: [NgxLocationViewerComponent, LayerManagementComponent, LayerComponent],
+  declarations: [NgxLocationViewerComponent, LayerManagementComponent, LayerComponent, LayerLegendComponent],
   imports: [
     CommonModule,
     HttpClientModule,

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { LayerService } from '../../../services/layer.service';
 import { Layer } from '../../../types/layer.model';
 
@@ -11,13 +12,22 @@ export class LayerComponent implements OnInit {
   @Input() layer: Layer;
 
   open = true;
-  constructor(private layerService: LayerService) { }
+  imageUrl: SafeUrl;
+  constructor(private layerService: LayerService, private domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
+    if (this.layer.legend && this.layer.legend.length === 1) {
+      // tslint:disable-next-line: max-line-length
+      this.imageUrl = this.domSanitizer.bypassSecurityTrustUrl(`data: ${this.layer.legend[0].contentType};base64, ${this.layer.legend[0].imageData}`);
+    }
   }
 
   showLayers(): boolean {
     return this.layer && this.layer.layers.length > 0;
+  }
+
+  showLegend(): boolean {
+    return this.layer && this.layer.legend && this.layer.legend.length > 1;
   }
 
   onChangeVisibility() {

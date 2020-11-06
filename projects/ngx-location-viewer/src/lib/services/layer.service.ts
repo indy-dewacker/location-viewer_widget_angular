@@ -3,6 +3,7 @@ import { BehaviorSubject, forkJoin, Observable, of } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { Layer } from '../types/layer.model';
 import { LayerInfo } from '../types/mapserver/info-response/layer-info.model';
+import { LayerLegend } from '../types/mapserver/legend-response/layer-legend.model';
 import { MapServerService } from './mapserver.service';
 
 @Injectable()
@@ -28,8 +29,12 @@ export class LayerService {
                     visible: parentLayer[0].defaultVisibility,
                     layers: []
                 };
+                const layerLegend = legend.layers.filter(x => x.layerId === layer.id);
+                if (layerLegend.length === 1) {
+                    layer.legend = layerLegend[0].legend;
+                }
 
-                layer.layers = this.buildChildLayer(parentLayer[0].id, layerIds, info.layers);
+                layer.layers = this.buildChildLayer(parentLayer[0].id, layerIds, info.layers, legend.layers);
 
                 return layer;
             } else {
@@ -69,9 +74,9 @@ export class LayerService {
         return this.layerVisibilitySub$.pipe(filter((value: boolean) => !!value));
     }
 
-    private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[]): Layer[] {
+    private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[], layerLegend: LayerLegend[]): Layer[] {
         const childLayers: Layer[] = [];
-        layers.filter((x) => x.parentLayerId === parentLayerId).forEach(childLayer => {
+        layers.filter((x) => x.parentLayerId === parentLayerId && layerIds.indexOf(x.id) > -1).forEach(childLayer => {
             // instantiate layer object
             const layer: Layer = {
                 id: childLayer.id,
@@ -80,8 +85,13 @@ export class LayerService {
                 layers: []
             };
 
+            const childLegend = layerLegend.filter(x => x.layerId === layer.id);
+            if (childLegend.length === 1) {
+                layer.legend = childLegend[0].legend;
+            }
+
             if (layers.filter(x => x.parentLayerId === childLayer.id).length > 0) {
-                layer.layers = this.buildChildLayer(childLayer.id, layerIds, layers);
+                layer.layers = this.buildChildLayer(childLayer.id, layerIds, layers, layerLegend);
             }
 
             childLayers.push(layer);
