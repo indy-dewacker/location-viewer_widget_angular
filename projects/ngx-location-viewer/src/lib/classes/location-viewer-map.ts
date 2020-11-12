@@ -1,6 +1,5 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
-import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import { ToolbarOptions } from '../types/toolbar-options.model';
 
 export class LocationViewerMap extends LeafletMap {
@@ -27,7 +26,7 @@ export class LocationViewerMap extends LeafletMap {
                 layers: layerIds,
                 continuousWorld: true,
                 useCors: false,
-                f: 'image'
+                f: 'image',
             }).addTo(this.map);
         }
     }
@@ -39,6 +38,3 @@ export class LocationViewerMap extends LeafletMap {
         }
     }
 }
-
-
-

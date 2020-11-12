@@ -10,34 +10,31 @@ import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-le
 @Injectable()
 export class LayerService {
     private layerVisibilitySub$ = new BehaviorSubject<boolean>(null);
-    constructor() {
-    }
+    constructor() {}
 
     buildLayerFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[]) {
         // Build layermanagement from info (only 1 parent layer)
-            // get parent layer from info layers
-            const parentLayer = info.layers.filter(x =>
-                x.parentLayerId === -1 && layerIds.indexOf(x.id) > -1
-            );
+        // get parent layer from info layers
+        const parentLayer = info.layers.filter((x) => x.parentLayerId === -1 && layerIds.indexOf(x.id) > -1);
 
-            if (parentLayer.length === 1) {
-                const layer: Layer = {
-                    id: parentLayer[0].id,
-                    name: parentLayer[0].name,
-                    visible: parentLayer[0].defaultVisibility,
-                    layers: []
-                };
-                const layerLegend = legend.layers.filter(x => x.layerId === layer.id);
-                if (layerLegend.length === 1) {
-                    layer.legend = layerLegend[0].legend;
-                }
-
-                layer.layers = this.buildChildLayer(parentLayer[0].id, layerIds, info.layers, legend.layers);
-
-                return layer;
+        if (parentLayer.length === 1) {
+            const layer: Layer = {
+                id: parentLayer[0].id,
+                name: parentLayer[0].name,
+                visible: parentLayer[0].defaultVisibility,
+                layers: [],
+            };
+            const layerLegend = legend.layers.filter((x) => x.layerId === layer.id);
+            if (layerLegend.length === 1) {
+                layer.legend = layerLegend[0].legend;
             }
 
-            return null;
+            layer.layers = this.buildChildLayer(parentLayer[0].id, layerIds, info.layers, legend.layers);
+
+            return layer;
+        }
+
+        return null;
     }
 
     /* Fetch visible layerids of layer object */
@@ -48,14 +45,15 @@ export class LayerService {
             if (layer.layers.length === 0) {
                 visibleLayerIds.push(layer.id);
             }
-            layer.layers.filter(x => x.visible === true).forEach(visibleSubLayer => {
-                visibleLayerIds =  [...visibleLayerIds, ...this.getVisibleLayerIds(visibleSubLayer)];
-            });
+            layer.layers
+                .filter((x) => x.visible === true)
+                .forEach((visibleSubLayer) => {
+                    visibleLayerIds = [...visibleLayerIds, ...this.getVisibleLayerIds(visibleSubLayer)];
+                });
         }
 
         return visibleLayerIds;
     }
-
 
     setLayerVisibilityChange(): void {
         this.layerVisibilitySub$.next(true);
@@ -67,26 +65,28 @@ export class LayerService {
 
     private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[], layerLegend: LayerLegend[]): Layer[] {
         const childLayers: Layer[] = [];
-        layers.filter((x) => x.parentLayerId === parentLayerId && layerIds.indexOf(x.id) > -1).forEach(childLayer => {
-            // instantiate layer object
-            const layer: Layer = {
-                id: childLayer.id,
-                name: childLayer.name,
-                visible: childLayer.defaultVisibility,
-                layers: []
-            };
+        layers
+            .filter((x) => x.parentLayerId === parentLayerId && layerIds.indexOf(x.id) > -1)
+            .forEach((childLayer) => {
+                // instantiate layer object
+                const layer: Layer = {
+                    id: childLayer.id,
+                    name: childLayer.name,
+                    visible: childLayer.defaultVisibility,
+                    layers: [],
+                };
 
-            const childLegend = layerLegend.filter(x => x.layerId === layer.id);
-            if (childLegend.length === 1) {
-                layer.legend = childLegend[0].legend;
-            }
+                const childLegend = layerLegend.filter((x) => x.layerId === layer.id);
+                if (childLegend.length === 1) {
+                    layer.legend = childLegend[0].legend;
+                }
 
-            if (layers.filter(x => x.parentLayerId === childLayer.id).length > 0) {
-                layer.layers = this.buildChildLayer(childLayer.id, layerIds, layers, layerLegend);
-            }
+                if (layers.filter((x) => x.parentLayerId === childLayer.id).length > 0) {
+                    layer.layers = this.buildChildLayer(childLayer.id, layerIds, layers, layerLegend);
+                }
 
-            childLayers.push(layer);
-        });
+                childLayers.push(layer);
+            });
 
         return childLayers;
     }

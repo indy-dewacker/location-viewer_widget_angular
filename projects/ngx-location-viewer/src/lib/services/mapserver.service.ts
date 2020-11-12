@@ -6,8 +6,7 @@ import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-le
 
 @Injectable()
 export class MapServerService {
-    constructor(private http: HttpClient) {
-    }
+    constructor(private http: HttpClient) {}
 
     private responseQueryParam = 'f=pjson';
 
