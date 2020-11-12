@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, Observable, of } from 'rxjs';
-import { filter, map, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Layer } from '../types/layer.model';
 import { LayerInfo } from '../types/mapserver/info-response/layer-info.model';
+import { MapserverInfo } from '../types/mapserver/info-response/mapserver-info.model';
 import { LayerLegend } from '../types/mapserver/legend-response/layer-legend.model';
-import { MapServerService } from './mapserver.service';
+import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-legend.model';
 
 @Injectable()
 export class LayerService {
     private layerVisibilitySub$ = new BehaviorSubject<boolean>(null);
-    constructor(private mapserverService: MapServerService) {
+    constructor() {
     }
 
-    buildLayer(url: string, layerIds: number[]): Observable<Layer> {
-        return forkJoin([this.mapserverService.getMapserverInfo(url), this.mapserverService.getMapserverLegend(url)])
-        .pipe(take(1),
-        map(([info, legend]) => {
-            // Build layermanagement from info (only 1 parent layer)
+    buildLayerFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[]) {
+        // Build layermanagement from info (only 1 parent layer)
             // get parent layer from info layers
             const parentLayer = info.layers.filter(x =>
                 x.parentLayerId === -1 && layerIds.indexOf(x.id) > -1
@@ -37,16 +35,9 @@ export class LayerService {
                 layer.layers = this.buildChildLayer(parentLayer[0].id, layerIds, info.layers, legend.layers);
 
                 return layer;
-            } else {
-                const dummyLayer: Layer = {
-                    id: 1,
-                    name: 'test',
-                    visible: true,
-                    layers: []
-                };
-                return  dummyLayer;
             }
-        }));
+
+            return null;
     }
 
     /* Fetch visible layerids of layer object */

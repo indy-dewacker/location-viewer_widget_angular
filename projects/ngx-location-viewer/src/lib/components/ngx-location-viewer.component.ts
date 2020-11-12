@@ -1,10 +1,12 @@
 import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject, throwError } from 'rxjs';
+import { catchError, take, takeUntil } from 'rxjs/operators';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import { ToolbarOptions } from '../types/toolbar-options.model';
@@ -52,7 +54,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
   constructor(
     private mapService: LocationViewerMapService,
-    private layerService: LayerService
+    private layerService: LayerService,
+    private mapserverService: MapServerService
   ) { }
 
   ngOnInit() {
@@ -105,23 +108,29 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         this.leafletMap.addToolbar(this.toolbarOptions);
       }
 
-      if (this.supportingLayerOptions) {
-        this.layerService.buildLayer(this.supportingLayerOptions.url, this.supportingLayerOptions.layerIds)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(supportingLayer => {
-          this.supportingLayer = supportingLayer;
+      this.initiateSupportingLayer();
+    });
+  }
+
+  private initiateSupportingLayer() {
+    if (this.supportingLayerOptions) {
+      forkJoin(
+        [
+          this.mapserverService.getMapserverInfo(this.supportingLayerOptions.url),
+          this.mapserverService.getMapserverLegend(this.supportingLayerOptions.url)
+        ]).pipe(take(1)).subscribe(([info, legend]) => {
+          this.supportingLayer = this.layerService.buildLayerFromInfoAndLegend(info, legend, this.supportingLayerOptions.layerIds);
           const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
           this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
-        });
+      });
 
-        this.layerService.layerVisiblityChange$
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(() => {
-          const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
-          this.leafletMap.setVisibleLayersSupportingLayer(ids);
-        });
+      this.layerService.layerVisiblityChange$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
+        this.leafletMap.setVisibleLayersSupportingLayer(ids);
+      });
 
-      }
-    });
+    }
   }
 }

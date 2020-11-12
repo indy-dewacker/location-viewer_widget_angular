@@ -9,13 +9,13 @@ export class MapServerService {
     constructor(private http: HttpClient) {
     }
 
-    private responeQueryParam = 'f=pjson';
+    private responseQueryParam = 'f=pjson';
 
     getMapserverLegend(url: string): Observable<MapserverLegend> {
-        return this.http.get<MapserverLegend>(`${url}/legend?${this.responeQueryParam}`);
+        return this.http.get<MapserverLegend>(`${url}/legend?${this.responseQueryParam}`);
     }
 
     getMapserverInfo(url: string): Observable<MapserverInfo> {
-        return this.http.get<MapserverInfo>(`${url}?${this.responeQueryParam}`);
+        return this.http.get<MapserverInfo>(`${url}?${this.responseQueryParam}`);
     }
 }
