@@ -22,14 +22,14 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
   @Input() onSelectZoom = 16;
   /* The initial map center on load. */
   @Input() mapCenter: Array<number> = [51.215, 4.425];
-  /* Show a sidebar next to the map leaflet. A sidebar can contain any additional info you like. */
-  @Input() hasSidebar = false;
   /* Show geoman toolbar. Toolbar options can be configured with the toolbar options input parameter */
   @Input() showToolbar = true;
   /* Configures toolbar options. If toolbar is shown these options will configure the toolbar */
-  @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopLeft };
+  @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopRight };
   /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
   @Input() showLayerManagement = false;
+  /* If showLayerManagement is enabled. Define if layermanagement is default visible */
+  @Input() layerManagementVisible = false;
   /* Add supporting layers. If provided will be added as DynamicMapLayer to leaflet */
   @Input() supportingLayerOptions: SupportingLayerOptions;
   /* AddPolygon event */
@@ -39,12 +39,14 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
   /* EditFeature event */
   @Output() editFeature = new EventEmitter<any>();
 
-
   /* Leaflet instance */
   leafletMap: LocationViewerMap;
 
   /* supporting layer config */
   supportingLayer: Layer;
+
+  /* Sets the sidebar of leaflet map to visible/invisible */
+  hasSidebar = false;
 
   private destroyed$ = new Subject<boolean>();
 
@@ -74,6 +76,10 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
    */
   zoomOut() {
     this.leafletMap.zoomOut();
+  }
+
+  toggleLayermanagement() {
+    this.hasSidebar = !this.hasSidebar;
   }
 
   private initLocationViewer() {

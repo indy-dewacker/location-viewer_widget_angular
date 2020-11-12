@@ -3,6 +3,15 @@
   <div *ngIf="showLayerManagement">
     <aui-layer-management [supportingLayer]="supportingLayer"></aui-layer-management>
   </div>
+  <div controls top left>
+    <button *ngIf="showLayerManagement"
+      type="button"
+      class="a-button a-button--small has-icon a-button--block"
+      name="toggle-layermanagement"
+      (click)="toggleLayermanagement()">
+      <span class="fa" [ngClass]="{'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar}"></span>
+    </button>
+  </div>
   <div controls bottom left>
     <div class="m-button-group m-button-group--vertical">
       <button
