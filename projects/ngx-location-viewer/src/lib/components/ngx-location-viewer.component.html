@@ -1,24 +1,26 @@
-<aui-leaflet [leafletMap]="leafletMap"
-    [hasSidebar]="hasSidebar">
-  <div *ngIf="showLayerManagement">
-    <p>Lagenbeheer:</p>
-  </div>
-  <div controls bottom left>
-    <div class="m-button-group m-button-group--vertical">
-      <button
-        type="button"
-        class="a-button a-button--small has-icon a-button--block button-zoom-in"
-        (click)="zoomIn()"
-      >
-        <span class="fa fa-plus" attr.aria-label="Zoom in"></span>
-      </button>
-      <button
-        type="button"
-        class="a-button a-button--small has-icon a-button--block button-zoom-out"
-        (click)="zoomOut()"
-      >
-        <span class="fa fa-minus" attr.aria-label="Zoom out"></span>
-      </button>
+<aui-leaflet [leafletMap]="leafletMap" [hasSidebar]="hasSidebar">
+    <div *ngIf="showLayerManagement">
+        <aui-layer-management [supportingLayer]="supportingLayer"></aui-layer-management>
     </div>
-  </div>
+    <div controls top left>
+        <button
+            *ngIf="showLayerManagement"
+            type="button"
+            class="a-button a-button--small has-icon a-button--block"
+            name="toggle-layermanagement"
+            (click)="toggleLayermanagement()"
+        >
+            <span class="fa" [ngClass]="{ 'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar }"></span>
+        </button>
+    </div>
+    <div controls bottom left>
+        <div class="m-button-group m-button-group--vertical">
+            <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-in" (click)="zoomIn()">
+                <span class="fa fa-plus" attr.aria-label="Zoom in"></span>
+            </button>
+            <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-out" (click)="zoomOut()">
+                <span class="fa fa-minus" attr.aria-label="Zoom out"></span>
+            </button>
+        </div>
+    </div>
 </aui-leaflet>
