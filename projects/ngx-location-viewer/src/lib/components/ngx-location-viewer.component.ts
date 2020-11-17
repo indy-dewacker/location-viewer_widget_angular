@@ -109,9 +109,28 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
             if (this.showToolbar) {
                 this.leafletMap.addToolbar(this.toolbarOptions);
+
+                const actions = [
+                    // uses the default 'cancel' action
+                    'cancel',
+
+                    // creates a new action that has text, no click event
+                    { text: 'Custom text, no click' },
+
+                    // creates a new action with text and a click event
+                    {
+                        text: 'click me',
+                        onClick: () => {
+                            alert('🙋‍♂️');
+                        },
+                    },
+                ];
+
+                this.leafletMap.map.pm.Toolbar.createCustomControl({name: 'meten', className: 'location-viewer-measure', actions: actions});
             }
 
             this.initiateSupportingLayer();
+            this.leafletMap.addOperationalLayer();
         });
     }
 
