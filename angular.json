@@ -19,6 +19,11 @@
             "polyfills": "projects/example/src/polyfills.ts",
             "tsConfig": "projects/example/tsconfig.app.json",
             "assets": [
+              {
+                "glob": "**/*",
+                "input": "./node_modules/leaflet/dist/images",
+                "output": "/"
+              },
               "projects/example/src/favicon.ico",
               "projects/example/src/assets"
             ],
