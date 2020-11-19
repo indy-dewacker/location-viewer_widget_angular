@@ -11,6 +11,8 @@ import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import { ToolbarOptions } from '../types/toolbar-options.model';
 import { ToolbarPosition } from '../types/toolbar-position.enum';
+import area from '@turf/area';
+import { DrawEvents } from '../types/leaflet.types';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -112,6 +114,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             }
 
             this.initiateSupportingLayer();
+            this.initiateEvents();
         });
     }
 
@@ -138,4 +141,20 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             });
         }
     }
+
+    private initiateEvents() {
+        this.leafletMap.map.on(DrawEvents.create, e => {
+            if (e.shape === 'meten') {
+                const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
+                this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
+            } else if (e.shape === 'omtrek') {
+                const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
+                const calculatedArea = area(e.layer.toGeoJSON());
+                const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
+                this.leafletMap.addPopupToLayer(e.layer, content, true);
+            }
+        });
+    }
+
+
 }
