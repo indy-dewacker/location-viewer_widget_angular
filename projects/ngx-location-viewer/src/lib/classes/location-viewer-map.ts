@@ -42,13 +42,6 @@ export class LocationViewerMap extends LeafletMap {
         }
     }
 
-    // start measureaction
-    setMeasureAction(draw: string) {
-        this.map.pm.enableDraw(draw, {
-            snappable: true,
-        });
-    }
-
     // calculates distance between multiple LatLng points
     calculateDistance(arrayOfPoints: LatLng[]): number {
         let totalDistance = 0;
