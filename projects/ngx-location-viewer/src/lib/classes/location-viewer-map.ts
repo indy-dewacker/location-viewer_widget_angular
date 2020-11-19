@@ -14,8 +14,9 @@ export class LocationViewerMap extends LeafletMap {
         if (this.mapService.isAvailable()) {
             this.map.pm.addControls(options);
             this.map.pm.setLang('nl');
-            this.map.pm.Toolbar.copyDrawControl('Polygon', { name: 'omtrek', toggle: false, title: 'omtrek'});
-            this.map.pm.Toolbar.copyDrawControl('Polyline', { name: 'meten', toggle: false, title: 'meten'});
+            this.map.pm.Toolbar.copyDrawControl('Polygon', { name: 'omtrek', toggle: false, title: 'Omtrek'});
+            this.map.pm.Toolbar.copyDrawControl('Polyline', { name: 'meten', toggle: false, title: 'Meten'});
+            this.map.pm.Toolbar.copyDrawControl('Marker', { name: 'watishier', toggle: false, title: 'Wat is hier' });
         }
     }
 

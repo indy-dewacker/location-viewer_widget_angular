@@ -1,6 +1,6 @@
 export interface LatLng {
-    Lat: number;
-    Lng: number;
+    lat: number;
+    lng: number;
     distanceTo(point: LatLng): number;
 }
 

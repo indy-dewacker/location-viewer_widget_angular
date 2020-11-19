@@ -13,6 +13,7 @@ import { ToolbarOptions } from '../types/toolbar-options.model';
 import { ToolbarPosition } from '../types/toolbar-position.enum';
 import area from '@turf/area';
 import { DrawEvents } from '../types/leaflet.types';
+import { GeoApiService } from '../services/geoapi.service';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -58,6 +59,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         private mapService: LocationViewerMapService,
         private layerService: LayerService,
         private mapserverService: MapServerService,
+        private geoApiService: GeoApiService,
     ) {}
 
     ngOnInit() {
@@ -143,18 +145,71 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     }
 
     private initiateEvents() {
-        this.leafletMap.map.on(DrawEvents.create, e => {
-            if (e.shape === 'meten') {
-                const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
-                this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
-            } else if (e.shape === 'omtrek') {
-                const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
-                const calculatedArea = area(e.layer.toGeoJSON());
-                const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
-                this.leafletMap.addPopupToLayer(e.layer, content, true);
+        this.leafletMap.map.on(DrawEvents.create, (e) => {
+            switch (e.shape) {
+                case 'meten': {
+                    const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
+                    this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
+                    break;
+                }
+                case 'omtrek': {
+                    const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
+                    const calculatedArea = area(e.layer.toGeoJSON());
+                    const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
+                    this.leafletMap.addPopupToLayer(e.layer, content, true);
+                    break;
+                }
+                case 'watishier': {
+                    this.leafletMap.map.pm.disableDraw('watishier');
+                    this.geoApiService
+                        .getAddressesByCoordinates(e.marker.getLatLng())
+                        .pipe(take(1))
+                        .subscribe((x) => {
+                            const address = x.addressDetail[0];
+                            this.leafletMap.addHtmlMarker(address.addressPosition.wgs84, this.createMarker(
+                                '#000000',
+                                'fa-circle',
+                                '10px',
+                                {top: '-3px', left: '2px'}
+                              ));
+                            const content =
+                              '<div class="container">' +
+                              '<div class="row">' +
+                              '<div class="col-sm-3" >' +
+                              '<a href="http://maps.google.com/maps?q=&layer=c&cbll=' + address.addressPosition.wgs84.lat + ',' + address.addressPosition.wgs84.lon + '" + target="_blank" >' +
+                              '<img title="Ga naar streetview" src="https://seeklogo.com/images/G/google-street-view-logo-665165D1A8-seeklogo.com.png" style="max-width: 100%; max-height: 100%;"/>' +
+                              '</a>' +
+                              '</div>' +
+                              '<div class="col-sm-8">' +
+                              '<div class="col-sm-12"><b>' + address.formattedAddress + '</b></div>' +
+                              '<div class="col-sm-3">WGS84:</div><div id="wgs" class="col-sm-8" style="text-align: left;">' + address.addressPosition.wgs84.lat + ', ' + address.addressPosition.wgs84.lon + '</div><div class="col-sm-1"><i class="fa fa-files-o coordinate-pointer" ng-click="CopyWGS()"></i></div>' +
+                              '<div class="col-sm-3">Lambert:</div><div id="lambert" class="col-sm-8" style="text-align: left;">' + address.addressPosition.lambert72.x + ', ' + address.addressPosition.lambert72.y + '</div><div class="col-sm-1"><i class="fa fa-files-o coordinate-pointer"  ng-click="CopyLambert()"></i></div>' +
+                              '</div>' +
+                              '</div>' +
+                              '</div>';
+                            this.leafletMap.addPopupToLayer(e.marker, content, true);
+                            console.log(x);
+                        });
+                }
             }
         });
     }
 
+    /**
+     * Defines the custom marker markup.
+     */
+    private createMarker(
+        color: string = '#0064b4',
+        icon: string = 'fa-map-marker',
+        size: string = '40px',
+        position: { top: string; left: string } = {
+            top: '-36px',
+            left: '-5px',
+        },
+    ) {
+        const markerStyle = `color: ${color}; font-size: ${size}; top: ${position.top}; left: ${position.left}`;
+        const markerIcon = `<span class="fa ${icon}" aria-hidden="true"></span>`;
 
+        return `<span style="${markerStyle}" class="ngx-location-picker-marker">${markerIcon}</span>`;
+    }
 }
