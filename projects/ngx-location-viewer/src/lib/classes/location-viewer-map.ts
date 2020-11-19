@@ -1,5 +1,6 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { LatLng, PopupEvents } from '../types/leaflet.types';
 import { ToolbarOptions } from '../types/toolbar-options.model';
 
 export class LocationViewerMap extends LeafletMap {
@@ -12,6 +13,9 @@ export class LocationViewerMap extends LeafletMap {
     addToolbar(options: ToolbarOptions) {
         if (this.mapService.isAvailable()) {
             this.map.pm.addControls(options);
+            this.map.pm.setLang('nl');
+            this.map.pm.Toolbar.copyDrawControl('Polygon', { name: 'omtrek', toggle: false, title: 'omtrek'});
+            this.map.pm.Toolbar.copyDrawControl('Polyline', { name: 'meten', toggle: false, title: 'meten'});
         }
     }
 
@@ -36,5 +40,45 @@ export class LocationViewerMap extends LeafletMap {
         if (this.mapService.isAvailable() && this.supportingLayer) {
             this.supportingLayer.setLayers(ids);
         }
+    }
+
+    // calculates distance between multiple LatLng points
+    calculateDistance(arrayOfPoints: LatLng[]): number {
+        let totalDistance = 0;
+        for (let i = 0; i < arrayOfPoints.length - 1; i++) {
+            const currPoint = arrayOfPoints[i];
+            const nextPoint = arrayOfPoints[i + 1];
+            totalDistance += currPoint.distanceTo(nextPoint);
+        }
+        return totalDistance;
+    }
+
+    // calculates perimeter of multiple LatLng points
+    calculatePerimeter(arrayOfPoints: LatLng[]): number {
+        let totalDistance = 0;
+        for (let i = 0; i < arrayOfPoints.length; i++) {
+            const currPoint = arrayOfPoints[i];
+            // if it is the last point calculate distance to the first point
+            if (i === arrayOfPoints.length - 1) {
+                totalDistance += currPoint.distanceTo(arrayOfPoints[0]);
+            } else {
+                totalDistance += currPoint.distanceTo(arrayOfPoints[i + 1]);
+            }
+        }
+        return totalDistance;
+    }
+
+    // adds Popup to layer
+    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean) {
+        const popup = layer.bindPopup(() => {
+            return this.mapService.L.Util.template(popupContent);
+        });
+        if (onCloseRemoveLayer) {
+            popup.on(PopupEvents.popupclose, () => {
+                this.map.removeLayer(layer);
+            });
+        }
+
+        layer.openPopup();
     }
 }
