@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { LayerService } from '../../../services/layer.service';
+import { LayerTypes } from '../../../types/layer-types.enum';
 import { Layer } from '../../../types/layer.model';
 
 @Component({
@@ -10,6 +11,7 @@ import { Layer } from '../../../types/layer.model';
 })
 export class LayerComponent implements OnInit {
     @Input() layer: Layer;
+    @Input() layerType: LayerTypes;
 
     open = true;
     imageUrl: SafeUrl;
@@ -32,6 +34,6 @@ export class LayerComponent implements OnInit {
     }
 
     onChangeVisibility() {
-        this.layerService.setLayerVisibilityChange();
+        this.layerService.setLayerVisibilityChange(this.layerType);
     }
 }

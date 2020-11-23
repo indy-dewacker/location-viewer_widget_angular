@@ -1,18 +1,80 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { GeometryTypes } from '../types/geometry-types.enum';
+import { LayerTypes } from '../types/layer-types.enum';
 import { Layer } from '../types/layer.model';
 import { LayerInfo } from '../types/mapserver/info-response/layer-info.model';
 import { MapserverInfo } from '../types/mapserver/info-response/mapserver-info.model';
+import { LayerSpecificInfo } from '../types/mapserver/layerinfo-response/layer-info.model';
 import { LayerLegend } from '../types/mapserver/legend-response/layer-legend.model';
 import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-legend.model';
 
 @Injectable()
 export class LayerService {
-    private layerVisibilitySub$ = new BehaviorSubject<boolean>(null);
+    private layerVisibilitySub$ = new BehaviorSubject<LayerTypes>(null);
     constructor() {}
 
-    buildLayerFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[]) {
+    // get specific layer from info and legend
+    getLayerFromLayerInfo(layerInfo: LayerSpecificInfo, legend: MapserverLegend): Layer {
+        const layerLegend = legend.layers.find((x) => x.layerId === layerInfo.id);
+
+        if (!layerLegend) {
+            throw new Error(`Could not retrieve legend info for layer with id: ${layerInfo.id}`);
+        }
+
+        const layer: Layer = {
+            id: layerInfo.id,
+            name: layerInfo.name,
+            visible: layerInfo.defaultVisibility,
+            layers: [],
+            legend: layerLegend.legend,
+            styleField: layerInfo.drawingInfo.renderer.field1,
+        };
+
+        if (layerInfo.geometryType !== GeometryTypes.esriGeometryPoint) {
+            layer.colors = layerInfo.drawingInfo.renderer.uniqueValueInfos.map((uniqueValue) => {
+                let fillColor = '';
+                let color = '';
+                let fill = false;
+                let weight = 1;
+                switch (layerInfo.geometryType) {
+                    case GeometryTypes.esriGeometryPolyline:
+                        color = this.RGBToHex(uniqueValue.symbol.color[0], uniqueValue.symbol.color[1], uniqueValue.symbol.color[2]);
+                        weight = uniqueValue.symbol.width;
+                        break;
+                    case GeometryTypes.esriGeometryPolygon:
+                        if (uniqueValue.symbol.color) {
+                            fillColor = this.RGBToHex(
+                                uniqueValue.symbol.color[0],
+                                uniqueValue.symbol.color[1],
+                                uniqueValue.symbol.color[2],
+                            );
+                            fill = uniqueValue.symbol.color[3] > 0 ? true : false;
+                        }
+                        color = this.RGBToHex(
+                            uniqueValue.symbol.outline.color[0],
+                            uniqueValue.symbol.outline.color[1],
+                            uniqueValue.symbol.outline.color[2],
+                        );
+                        weight = uniqueValue.symbol.outline.width;
+                        break;
+                }
+                return {
+                    value: uniqueValue.value,
+                    weight,
+                    color,
+                    fillColor,
+                    fill,
+                };
+            });
+        }
+
+        return layer;
+    }
+
+    // filter multiple layers by id
+    buildLayerFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[]): Layer {
         // Build layermanagement from info (only 1 parent layer)
         // get parent layer from info layers
         const parentLayer = info.layers.filter((x) => x.parentLayerId === -1 && layerIds.indexOf(x.id) > -1);
@@ -55,12 +117,12 @@ export class LayerService {
         return visibleLayerIds;
     }
 
-    setLayerVisibilityChange(): void {
-        this.layerVisibilitySub$.next(true);
+    setLayerVisibilityChange(layerType: LayerTypes): void {
+        this.layerVisibilitySub$.next(layerType);
     }
 
-    get layerVisiblityChange$(): Observable<boolean> {
-        return this.layerVisibilitySub$.pipe(filter((value: boolean) => !!value));
+    get layerVisiblityChange$(): Observable<LayerTypes> {
+        return this.layerVisibilitySub$.pipe(filter((value: LayerTypes) => !!value));
     }
 
     private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[], layerLegend: LayerLegend[]): Layer[] {
@@ -89,5 +151,14 @@ export class LayerService {
             });
 
         return childLayers;
+    }
+
+    private RGBToHex(red: number, green: number, blue: number) {
+        return `#${this.ColorToHex(red)}${this.ColorToHex(green)}${this.ColorToHex(blue)}`;
+    }
+
+    private ColorToHex(color: number) {
+        const hex = color.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
     }
 }

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LayerTypes } from '../../types/layer-types.enum';
 import { Layer } from '../../types/layer.model';
 
 @Component({
@@ -7,7 +8,10 @@ import { Layer } from '../../types/layer.model';
     styleUrls: ['./layer-management.component.css'],
 })
 export class LayerManagementComponent implements OnInit {
+    @Input() operationalLayer: Layer;
     @Input() supportingLayer: Layer;
+
+    layerTypes = LayerTypes;
     constructor() {}
 
     ngOnInit() {}

@@ -6,4 +6,14 @@ export interface Layer {
     visible: boolean;
     layers: Layer[];
     legend?: LayerLegendInfo[];
+    styleField?: string;
+    colors?: LayerColor[];
+}
+
+export interface LayerColor {
+    fillColor: string;
+    color: string;
+    weight: number;
+    fill?: boolean;
+    value: string;
 }

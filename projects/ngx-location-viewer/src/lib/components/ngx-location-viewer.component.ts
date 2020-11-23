@@ -8,13 +8,13 @@ import { LocationViewerMapService } from '../services/location-viewer-map.servic
 import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
-import { ToolbarPosition } from '../types/toolbar-position.enum';
 import area from '@turf/area';
 import { DrawEvents } from '../types/leaflet.types';
 import { GeoApiService } from '../services/geoapi.service';
 import { Shapes } from '../types/geoman/geoman.types';
 import { ButtonActions } from '../types/button-actions.enum';
-import { Button } from 'protractor';
+import { OperationalLayerOptions } from '../types/operational-layer-options.model';
+import { LayerTypes } from '../types/layer-types.enum';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -34,6 +34,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     @Input() layerManagementVisible = false;
     /* Add supporting layers. If provided will be added as DynamicMapLayer to leaflet */
     @Input() supportingLayerOptions: SupportingLayerOptions;
+    /* Add operationalLayer. If provided will be added as FeaturLayer(clustered) to leaflet */
+    @Input() operationalLayerOptions: OperationalLayerOptions;
     /* AddPolygon event */
     @Output() addPolygon = new EventEmitter<any>();
     /* AddLine event */
@@ -46,6 +48,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
     /* supporting layer config */
     supportingLayer: Layer;
+    /* operational layer config */
+    operationalLayer: Layer;
 
     /* Sets the sidebar of leaflet map to visible/invisible */
     hasSidebar = false;
@@ -148,6 +152,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             this.leafletMap.map.pm.setLang('nl');
 
             this.initiateSupportingLayer();
+            this.initiateOperationalLayer();
+            this.handleLayerVisibilityChange();
             this.initiateEvents();
         });
     }
@@ -168,12 +174,39 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                     const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
                     this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
                 });
-
-            this.layerService.layerVisiblityChange$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-                const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
-                this.leafletMap.setVisibleLayersSupportingLayer(ids);
-            });
         }
+    }
+
+    private initiateOperationalLayer() {
+        if (this.operationalLayerOptions) {
+            forkJoin([
+                this.mapserverService
+                .getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
+                this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url)
+            ])
+                .pipe(take(1))
+                .subscribe(([layerInfo, legend]) => {
+                    this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
+                    this.leafletMap.addOperationalLayer(
+                        this.operationalLayerOptions,
+                        this.operationalLayer,
+                    );
+                });
+        }
+    }
+
+    private handleLayerVisibilityChange() {
+        this.layerService.layerVisiblityChange$.pipe(takeUntil(this.destroyed$)).subscribe((layerType: LayerTypes) => {
+            switch (layerType) {
+                case LayerTypes.supporting:
+                    const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
+                    this.leafletMap.setVisibleLayersSupportingLayer(ids);
+                    break;
+                case LayerTypes.operational:
+                    this.leafletMap.setVisibilityOperationalLayer(this.operationalLayer.visible);
+                    break;
+            }
+        });
     }
 
     private initiateEvents() {
