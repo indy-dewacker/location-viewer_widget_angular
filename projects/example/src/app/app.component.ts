@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   operationalLayerOptions: OperationalLayerOptions = {
     url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
     layerId: 2,
-    enableClustering: false
+    enableClustering: true
   };
 
   // supportingLayerOptions: SupportingLayerOptions = {

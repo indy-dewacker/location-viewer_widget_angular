@@ -2,6 +2,7 @@ import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { Layer } from '../types/layer.model';
 import { LatLng, PopupEvents } from '../types/leaflet.types';
+import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 export class LocationViewerMap extends LeafletMap {
     public supportingLayer;
     public operationalLayer;
@@ -32,21 +33,23 @@ export class LocationViewerMap extends LeafletMap {
         }
     }
 
-    addOperationalLayer(mapserverUrl: string, layerId: number, layer: Layer) {
+    addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer) {
         if (this.mapService.isAvailable()) {
-            this.operationalLayer = new this.mapService.esri.featureLayer({
-                url: `${mapserverUrl}/${layerId}/query`,
+            const featureLayerOptions = {
+                url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
                 where: layer.visible ? '' : '1 = -1',
                 // style is used to style lines and polygons
                 style: (feature) => {
-                    const colorValue = feature.properties[layer.styleField];
-                    const colorItem = layer.colors.find(x => x.value === colorValue);
-                    return colorItem;
+                    if (layer.colors) {
+                        const colorValue = feature.properties[layer.styleField];
+                        const colorItem = layer.colors.find((x) => x.value === colorValue);
+                        return colorItem;
+                    }
                 },
                 // point to layer method is used to style points
                 pointToLayer: (feature, latlng) => {
                     const legendValue = feature.properties[layer.styleField];
-                    const legendItem = layer.legend.find(x => x.values && x.values.includes(legendValue));
+                    const legendItem = layer.legend.find((x) => x.values && x.values.includes(legendValue));
                     let iconUrl = '';
                     if (legendItem) {
                         iconUrl = `data:${legendItem.contentType};base64, ${legendItem.imageData}`;
@@ -56,11 +59,16 @@ export class LocationViewerMap extends LeafletMap {
 
                     const icon = this.mapService.L.icon({
                         iconUrl,
-                        iconAnchor: [10, 10]
+                        iconAnchor: [10, 10],
                     });
                     return this.mapService.L.marker(latlng, { icon });
-                }
-            }).addTo(this.map);
+                },
+            };
+            if (operationalLayerOptions.enableClustering) {
+                this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions).addTo(this.map);
+            } else {
+                this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions).addTo(this.map);
+            }
         }
     }
 
@@ -98,9 +106,12 @@ export class LocationViewerMap extends LeafletMap {
 
     // adds Popup to layer
     addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null, minWidth = 50) {
-        const popup = layer.bindPopup(() => {
-            return this.mapService.L.Util.template(popupContent);
-        }, { minWidth});
+        const popup = layer.bindPopup(
+            () => {
+                return this.mapService.L.Util.template(popupContent);
+            },
+            { minWidth },
+        );
         if (onCloseRemoveLayer) {
             popup.on(PopupEvents.popupclose, () => {
                 this.map.removeLayer(layer);

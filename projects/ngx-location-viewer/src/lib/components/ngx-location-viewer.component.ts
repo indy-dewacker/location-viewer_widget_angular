@@ -188,8 +188,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                 .subscribe(([layerInfo, legend]) => {
                     this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
                     this.leafletMap.addOperationalLayer(
-                        this.operationalLayerOptions.url,
-                        this.operationalLayerOptions.layerId,
+                        this.operationalLayerOptions,
                         this.operationalLayer,
                     );
                 });

@@ -12,6 +12,8 @@ export class LocationViewerMapService extends MapService {
     requireDependencies() {
         if (this.isAvailable()) {
             require('@geoman-io/leaflet-geoman-free');
+            require('leaflet.markercluster');
+            this.esri.Cluster = require('esri-leaflet-cluster');
         }
     }
 }
