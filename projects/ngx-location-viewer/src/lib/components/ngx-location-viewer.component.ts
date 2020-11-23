@@ -1,18 +1,20 @@
-import { baseMapAntwerp, baseMapWorldGray, MapService } from '@acpaas-ui/ngx-components/map';
-import { HttpErrorResponse } from '@angular/common/http';
+import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { forkJoin, Subject, throwError } from 'rxjs';
-import { catchError, take, takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
-import { ToolbarOptions } from '../types/toolbar-options.model';
 import { ToolbarPosition } from '../types/toolbar-position.enum';
 import area from '@turf/area';
 import { DrawEvents } from '../types/leaflet.types';
+import { GeoApiService } from '../services/geoapi.service';
+import { Shapes } from '../types/geoman/geoman.types';
+import { ButtonActions } from '../types/button-actions.enum';
+import { Button } from 'protractor';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -26,10 +28,6 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     @Input() onSelectZoom = 16;
     /* The initial map center on load. */
     @Input() mapCenter: Array<number> = [51.215, 4.425];
-    /* Show geoman toolbar. Toolbar options can be configured with the toolbar options input parameter */
-    @Input() showToolbar = true;
-    /* Configures toolbar options. If toolbar is shown these options will configure the toolbar */
-    @Input() toolbarOptions: ToolbarOptions = { position: ToolbarPosition.TopRight };
     /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
     @Input() showLayerManagement = false;
     /* If showLayerManagement is enabled. Define if layermanagement is default visible */
@@ -51,6 +49,10 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
     /* Sets the sidebar of leaflet map to visible/invisible */
     hasSidebar = false;
+    buttonActions = ButtonActions;
+
+    // Selected button
+    currentButton = '';
 
     private destroyed$ = new Subject<boolean>();
 
@@ -58,6 +60,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         private mapService: LocationViewerMapService,
         private layerService: LayerService,
         private mapserverService: MapServerService,
+        private geoApiService: GeoApiService,
     ) {}
 
     ngOnInit() {
@@ -87,6 +90,39 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         this.hasSidebar = !this.hasSidebar;
     }
 
+    activeButtonChange(action: ButtonActions) {
+        switch (this.currentButton) {
+            case ButtonActions.whatishere:
+                this.leafletMap.map.pm.disableDraw(Shapes.Marker);
+                break;
+            case ButtonActions.distance:
+                this.leafletMap.map.pm.disableDraw(Shapes.Line);
+                break;
+            case ButtonActions.area:
+                this.leafletMap.map.pm.disableDraw(Shapes.Polygon);
+                break;
+        }
+
+        // if the button action is the same as currentButton reset button
+        if (this.currentButton === action) {
+            this.currentButton = '';
+            return;
+        }
+
+        this.currentButton = action;
+        switch (action) {
+            case ButtonActions.whatishere:
+                this.leafletMap.map.pm.enableDraw(Shapes.Marker);
+                break;
+            case ButtonActions.distance:
+                this.leafletMap.map.pm.enableDraw(Shapes.Line);
+                break;
+            case ButtonActions.area:
+                this.leafletMap.map.pm.enableDraw(Shapes.Polygon);
+                break;
+        }
+    }
+
     private initLocationViewer() {
         this.leafletMap = new LocationViewerMap(
             {
@@ -109,9 +145,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             this.leafletMap.addTileLayer(baseMapWorldGray);
             this.leafletMap.addTileLayer(baseMapAntwerp);
 
-            if (this.showToolbar) {
-                this.leafletMap.addToolbar(this.toolbarOptions);
-            }
+            this.leafletMap.map.pm.setLang('nl');
 
             this.initiateSupportingLayer();
             this.initiateEvents();
@@ -143,18 +177,87 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     }
 
     private initiateEvents() {
-        this.leafletMap.map.on(DrawEvents.create, e => {
-            if (e.shape === 'meten') {
-                const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
-                this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
-            } else if (e.shape === 'omtrek') {
-                const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
-                const calculatedArea = area(e.layer.toGeoJSON());
-                const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
-                this.leafletMap.addPopupToLayer(e.layer, content, true);
+        this.leafletMap.map.on(DrawEvents.create, (e) => {
+            switch (e.shape) {
+                case Shapes.Line: {
+                    const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
+                    this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
+                    break;
+                }
+                case Shapes.Polygon: {
+                    const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
+                    const calculatedArea = area(e.layer.toGeoJSON());
+                    const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
+                    this.leafletMap.addPopupToLayer(e.layer, content, true);
+                    break;
+                }
+                case Shapes.Marker: {
+                    this.geoApiService
+                        .getAddressesByCoordinates(e.marker.getLatLng())
+                        .pipe(take(1))
+                        .subscribe((x) => {
+                            if (x.addressDetail.length > 0) {
+                                const address = x.addressDetail[0];
+                                const marker = this.leafletMap.addHtmlMarker(
+                                    address.addressPosition.wgs84,
+                                    this.createMarker('#000000', 'fa-circle', '10px', { top: '-3px', left: '2px' }),
+                                );
+                                const content =
+                                    '<div class="row">' +
+                                    '<div class="col-sm-8"><b>' +
+                                    address.formattedAddress +
+                                    '</b></div> ' +
+                                    '<div class="col-sm-3" >' +
+                                    '<a href="http://maps.google.com/maps?q=&layer=c&cbll=' +
+                                    address.addressPosition.wgs84.lat +
+                                    ',' +
+                                    address.addressPosition.wgs84.lon +
+                                    '" + target="_blank" >' +
+                                    '<img title="Ga naar streetview" src="https://seeklogo.com/images/G/google-street-view-logo-665165D1A8-seeklogo.com.png" style="max-width: 100%; max-height: 100%;"/>' +
+                                    '</a>' +
+                                    '</div></div>' +
+                                    '<div class="row">' +
+                                    '<div class="col-sm-3">WGS84:</div>' +
+                                    '<div id="wgs" class="col-sm-9" style="text-align: left;">' +
+                                    address.addressPosition.wgs84.lat +
+                                    ', ' +
+                                    address.addressPosition.wgs84.lon +
+                                    '</div></div>' +
+                                    '<div class="row">' +
+                                    '<div class="col-sm-3">Lambert:</div><div id="lambert" class="col-sm-9" style="text-align: left;">' +
+                                    address.addressPosition.lambert72.x +
+                                    ', ' +
+                                    address.addressPosition.lambert72.y +
+                                    '</div>' +
+                                    '</div>';
+                                this.leafletMap.addPopupToLayer(e.marker, content, true, marker, 300);
+                            } else {
+                                this.leafletMap.addPopupToLayer(e.marker, '<p>Geen adres gevonden.</p>', true);
+                            }
+                        });
+                }
             }
+
+            // after finished intake reset current button
+            this.activeButtonChange(ButtonActions.none);
         });
     }
 
+    /**
+     * Defines the custom marker markup.
+     */
+    private createMarker(
+        color: string = '#0064b4',
+        icon: string = 'fa-map-marker',
+        size: string = '40px',
+        position: { top: string; left: string } = {
+            top: '-36px',
+            left: '-5px',
+        },
+    ) {
+        const markerStyle = `color: ${color}; font-size: ${size}; top: ${position.top}; left: ${position.left}`;
+        const markerIcon = `<span class="fa ${icon}" aria-hidden="true"></span>`;
 
+        return `<span style="${markerStyle}" class="ngx-location-picker-marker">${markerIcon}</span>`;
+    }
 }
