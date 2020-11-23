@@ -1,6 +1,6 @@
 <aui-leaflet [leafletMap]="leafletMap" [hasSidebar]="hasSidebar">
     <div *ngIf="showLayerManagement">
-        <aui-layer-management [supportingLayer]="supportingLayer"></aui-layer-management>
+        <aui-layer-management [supportingLayer]="supportingLayer" [operationalLayer]="operationalLayer"></aui-layer-management>
     </div>
     <div controls top left>
         <button

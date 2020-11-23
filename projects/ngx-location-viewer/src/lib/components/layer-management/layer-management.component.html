@@ -1,6 +1,6 @@
 <p>Lagenbeheer:</p>
 <br />
 <p>Supporting layer:</p>
-<aui-layer *ngIf="supportingLayer" [layer]="supportingLayer"></aui-layer>
+<aui-layer *ngIf="supportingLayer" [layer]="supportingLayer" [layerType]="layerTypes.supporting"></aui-layer>
 <p>Operational layer:</p>
-<br />
+<aui-layer *ngIf="operationalLayer" [layer]="operationalLayer" [layerType]="layerTypes.operational"></aui-layer>

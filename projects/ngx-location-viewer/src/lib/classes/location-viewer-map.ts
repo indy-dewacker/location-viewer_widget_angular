@@ -1,8 +1,10 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { Layer } from '../types/layer.model';
 import { LatLng, PopupEvents } from '../types/leaflet.types';
 export class LocationViewerMap extends LeafletMap {
     public supportingLayer;
+    public operationalLayer;
     constructor(options: LeafletMapOptions, mapService: LocationViewerMapService) {
         super(options, mapService);
     }
@@ -27,6 +29,44 @@ export class LocationViewerMap extends LeafletMap {
     setVisibleLayersSupportingLayer(ids: number[]) {
         if (this.mapService.isAvailable() && this.supportingLayer) {
             this.supportingLayer.setLayers(ids);
+        }
+    }
+
+    addOperationalLayer(mapserverUrl: string, layerId: number, layer: Layer) {
+        if (this.mapService.isAvailable()) {
+            this.operationalLayer = new this.mapService.esri.featureLayer({
+                url: `${mapserverUrl}/${layerId}/query`,
+                where: layer.visible ? '' : '1 = -1',
+                // style is used to style lines and polygons
+                style: (feature) => {
+                    const colorValue = feature.properties[layer.styleField];
+                    const colorItem = layer.colors.find(x => x.value === colorValue);
+                    return colorItem;
+                },
+                // point to layer method is used to style points
+                pointToLayer: (feature, latlng) => {
+                    const legendValue = feature.properties[layer.styleField];
+                    const legendItem = layer.legend.find(x => x.values && x.values.includes(legendValue));
+                    let iconUrl = '';
+                    if (legendItem) {
+                        iconUrl = `data:${legendItem.contentType};base64, ${legendItem.imageData}`;
+                    } else {
+                        iconUrl = `data:${layer.legend[0].contentType};base64, ${layer.legend[0].imageData}`;
+                    }
+
+                    const icon = this.mapService.L.icon({
+                        iconUrl,
+                        iconAnchor: [10, 10]
+                    });
+                    return this.mapService.L.marker(latlng, { icon });
+                }
+            }).addTo(this.map);
+        }
+    }
+
+    setVisibilityOperationalLayer(visible: boolean) {
+        if (this.mapService.isAvailable && this.operationalLayer) {
+            this.operationalLayer.setWhere(visible ? '' : '1 = -1');
         }
     }
 

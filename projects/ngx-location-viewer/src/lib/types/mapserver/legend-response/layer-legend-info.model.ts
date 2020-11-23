@@ -5,4 +5,5 @@ export interface LayerLegendInfo {
     label: string;
     url: string;
     width: number;
+    values?: string[];
 }

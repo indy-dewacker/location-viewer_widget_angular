@@ -1,4 +1,4 @@
-<div class="u-margin-top-xs">
+<div class="u-margin-top-xs u-margin-left-xs">
     <div class="a-input">
         <img *ngIf="layer?.legend?.length === 1" [src]="imageUrl" class="layer-icon" />
         <div class="a-input__checkbox">
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div *ngIf="open && showLayers()" class="u-margin-left-xs">
-        <aui-layer *ngFor="let childLayer of layer?.layers" [layer]="childLayer"> </aui-layer>
+        <aui-layer *ngFor="let childLayer of layer?.layers" [layer]="childLayer" [layerType]="layerType"> </aui-layer>
     </div>
 
     <div *ngIf="open && showLegend()" class="u-margin-left">
