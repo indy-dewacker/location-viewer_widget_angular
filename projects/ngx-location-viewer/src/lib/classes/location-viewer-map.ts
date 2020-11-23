@@ -1,23 +1,10 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { LatLng, PopupEvents } from '../types/leaflet.types';
-import { ToolbarOptions } from '../types/toolbar-options.model';
-
 export class LocationViewerMap extends LeafletMap {
     public supportingLayer;
     constructor(options: LeafletMapOptions, mapService: LocationViewerMapService) {
         super(options, mapService);
-    }
-
-    // Toolbar
-    addToolbar(options: ToolbarOptions) {
-        if (this.mapService.isAvailable()) {
-            this.map.pm.addControls(options);
-            this.map.pm.setLang('nl');
-            this.map.pm.Toolbar.copyDrawControl('Polygon', { name: 'omtrek', toggle: false, title: 'Omtrek'});
-            this.map.pm.Toolbar.copyDrawControl('Polyline', { name: 'meten', toggle: false, title: 'Meten'});
-            this.map.pm.Toolbar.copyDrawControl('Marker', { name: 'watishier', toggle: false, title: 'Wat is hier' });
-        }
     }
 
     // Supporting layer
@@ -70,13 +57,16 @@ export class LocationViewerMap extends LeafletMap {
     }
 
     // adds Popup to layer
-    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean) {
+    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null, minWidth = 50) {
         const popup = layer.bindPopup(() => {
             return this.mapService.L.Util.template(popupContent);
-        });
+        }, { minWidth});
         if (onCloseRemoveLayer) {
             popup.on(PopupEvents.popupclose, () => {
                 this.map.removeLayer(layer);
+                if (extraLayer) {
+                    this.map.removeLayer(extraLayer);
+                }
             });
         }
 

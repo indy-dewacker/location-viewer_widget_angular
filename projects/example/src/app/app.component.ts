@@ -7,7 +7,6 @@ import { SupportingLayerOptions } from 'projects/ngx-location-viewer/src/public-
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  showToolbar = true;
   showLayerManagement = true;
   supportingLayerOptions: SupportingLayerOptions = {
     url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',

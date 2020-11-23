@@ -12,6 +12,69 @@
         >
             <span class="fa" [ngClass]="{ 'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar }"></span>
         </button>
+        <div class="m-button-group m-button-group--vertical u-margin-top-xs">
+            <div class="m-button-group m-button-group--horizontal">
+                <button
+                    type="button"
+                    class="a-button a-button--small has-icon a-button--block"
+                    [ngClass]="{
+                        'a-button': currentButton !== buttonActions.select,
+                        'a-button-outline': currentButton === buttonActions.select
+                    }"
+                    (click)="activeButtonChange(buttonActions.select)"
+                >
+                    <span class="fa fa-mouse-pointer" title="Selecteren"></span>
+                </button>
+            </div>
+            <div class="m-button-group m-button-group--horizontal">
+                <button
+                    type="button"
+                    class="a-button--small has-icon a-button--block"
+                    [ngClass]="{
+                        'a-button': !currentButton.startsWith(buttonActions.measurement),
+                        'a-button-outline': currentButton.startsWith(buttonActions.measurement)
+                    }"
+                    (click)="activeButtonChange(buttonActions.measurement)"
+                >
+                    <span class="fa fa-arrows-v" title="Meten"></span>
+                </button>
+                <div *ngIf="currentButton.startsWith(buttonActions.measurement)">
+                    <button
+                        type="button"
+                        class="a-button a-button--small has-icon a-button--block u-margin-left-xs"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.distance,
+                            'a-button-outline': currentButton === buttonActions.distance
+                        }"
+                        (click)="activeButtonChange(buttonActions.distance)"
+                    >
+                        <span class="fa fa-expand" title="Meten afstand"></span>
+                    </button>
+                    <button
+                        type="button"
+                        class="a-button a-button--small has-icon a-button--block"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.area,
+                            'a-button-outline': currentButton === buttonActions.area
+                        }"
+                        (click)="activeButtonChange(buttonActions.area)"
+                    >
+                        <span class="fa fa-arrows" title="Meten oppervlakte en omtrek"></span>
+                    </button>
+                </div>
+            </div>
+            <button
+                type="button"
+                class="a-button--small has-icon a-button--block"
+                [ngClass]="{
+                    'a-button': currentButton !== buttonActions.whatishere,
+                    'a-button-outline': currentButton === buttonActions.whatishere
+                }"
+                (click)="activeButtonChange(buttonActions.whatishere)"
+            >
+                <span class="fa fa-map-pin" title="Wat is hier"></span>
+            </button>
+        </div>
     </div>
     <div controls bottom left>
         <div class="m-button-group m-button-group--vertical">
