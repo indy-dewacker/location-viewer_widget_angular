@@ -18,13 +18,48 @@
                     type="button"
                     class="a-button a-button--small has-icon a-button--block"
                     [ngClass]="{
-                        'a-button': currentButton !== buttonActions.select,
-                        'a-button-outline': currentButton === buttonActions.select
+                        'a-button': !currentButton.startsWith(buttonActions.select),
+                        'a-button-outline': currentButton.startsWith(buttonActions.select)
                     }"
                     (click)="activeButtonChange(buttonActions.select)"
                 >
                     <span class="fa fa-mouse-pointer" title="Selecteren"></span>
                 </button>
+                <div *ngIf="currentButton.startsWith(buttonActions.select)">
+                    <button
+                        type="button"
+                        class="a-button a-button--small has-icon a-button--block u-margin-left-xs"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.selectRectangle,
+                            'a-button-outline': currentButton === buttonActions.selectRectangle
+                        }"
+                        (click)="activeButtonChange(buttonActions.selectRectangle)"
+                    >
+                        <span class="fa fa-square-o" title="Selecteer met een rechthoek"></span>
+                    </button>
+                    <button
+                        type="button"
+                        class="a-button a-button--small has-icon a-button--block"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.selectPolygon,
+                            'a-button-outline': currentButton === buttonActions.selectPolygon
+                        }"
+                        (click)="activeButtonChange(buttonActions.selectPolygon)"
+                    >
+                        <span class="fa fa-pencil-square" title="Selecteer met een veelhoek"></span>
+                    </button>
+                    <button
+                        type="button"
+                        class="a-button a-button--small has-icon a-button--block"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.selectZone,
+                            'a-button-outline': currentButton === buttonActions.selectZone
+                        }"
+                        (click)="activeButtonChange(buttonActions.selectZone)"
+                    >
+                        <span class="fa fa-coffee" title="Selecteer met filterlaag"></span>
+                    </button>
+                </div>
             </div>
             <div class="m-button-group m-button-group--horizontal">
                 <button

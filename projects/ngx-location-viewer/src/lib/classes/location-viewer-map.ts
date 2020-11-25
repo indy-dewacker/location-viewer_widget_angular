@@ -1,11 +1,15 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
+import { Subject } from 'rxjs';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { Layer } from '../types/layer.model';
 import { LatLng, PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 export class LocationViewerMap extends LeafletMap {
     public supportingLayer;
     public operationalLayer;
+    public filterLayer;
+    public filterLayerClicked = new Subject<any>();
     constructor(options: LeafletMapOptions, mapService: LocationViewerMapService) {
         super(options, mapService);
     }
@@ -75,6 +79,44 @@ export class LocationViewerMap extends LeafletMap {
     setVisibilityOperationalLayer(visible: boolean) {
         if (this.mapService.isAvailable && this.operationalLayer) {
             this.operationalLayer.setWhere(visible ? '' : '1 = -1');
+        }
+    }
+
+    addFilterLayer(filterLayerOptions: FilterLayerOptions) {
+        if (this.mapService.isAvailable()) {
+            this.filterLayer = this.mapService.esri
+                .featureLayer({
+                    url: `${filterLayerOptions.url}/${filterLayerOptions.layerId}/query`,
+                    where: '1 = -1',
+                    onEachFeature: (feature, layerProp) => {
+                        layerProp.on('click', (e) => {
+                            this.filterLayerClicked.next(e);
+                        });
+                    },
+                })
+                .bindPopup((layerInfo) => {
+                    return this.mapService.L.Util.template(
+                        `<p>${filterLayerOptions.popupLabel}: {${filterLayerOptions.propertyToDisplay}}</p>`,
+                        layerInfo.feature.properties,
+                    );
+                })
+                .addTo(this.map);
+
+            // removes default click behaviour ==> opening popup
+            this.filterLayer.off('click');
+
+            this.filterLayer.on('mouseover', (e) => {
+                this.filterLayer.openPopup(e.layer || e.target);
+            });
+        }
+    }
+
+    setVisibilityFilterLayer(visible: boolean) {
+        if (this.mapService.isAvailable && this.filterLayer) {
+            this.filterLayer.setWhere(visible ? '' : '1 = -1');
+            setTimeout(() => {
+                this.filterLayer.closePopup();
+            }, 200);
         }
     }
 

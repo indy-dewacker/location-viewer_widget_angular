@@ -7,3 +7,4 @@ export * from './lib/components/ngx-location-viewer.component';
 export * from './lib/ngx-location-viewer.module';
 export * from './lib/types/supporting-layer-options.model';
 export * from './lib/types/operational-layer-options.model';
+export * from './lib/types/filter-layer-options.model';

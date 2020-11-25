@@ -15,6 +15,7 @@ import { Shapes } from '../types/geoman/geoman.types';
 import { ButtonActions } from '../types/button-actions.enum';
 import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 import { LayerTypes } from '../types/layer-types.enum';
+import { FilterLayerOptions } from '../types/filter-layer-options.model';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -36,12 +37,16 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     @Input() supportingLayerOptions: SupportingLayerOptions;
     /* Add operationalLayer. If provided will be added as FeaturLayer(clustered) to leaflet */
     @Input() operationalLayerOptions: OperationalLayerOptions;
+    /* Adds filter layer. If provided will be added as FeatureLayer to leaflet. Is used to filter operationallayer by geometry */
+    @Input() filterLayerOptions: FilterLayerOptions;
     /* AddPolygon event */
     @Output() addPolygon = new EventEmitter<any>();
     /* AddLine event */
     @Output() addLine = new EventEmitter<any>();
     /* EditFeature event */
     @Output() editFeature = new EventEmitter<any>();
+    /* Operational layer filtered: fired when using selection tools rectangle/polygon or using filter layer */
+    @Output() filteredResult = new EventEmitter<any>();
 
     /* Leaflet instance */
     leafletMap: LocationViewerMap;
@@ -105,6 +110,9 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             case ButtonActions.area:
                 this.leafletMap.map.pm.disableDraw(Shapes.Polygon);
                 break;
+            case ButtonActions.selectZone:
+                this.leafletMap.setVisibilityFilterLayer(false);
+                break;
         }
 
         // if the button action is the same as currentButton reset button
@@ -122,7 +130,14 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                 this.leafletMap.map.pm.enableDraw(Shapes.Line);
                 break;
             case ButtonActions.area:
+            case ButtonActions.selectPolygon:
                 this.leafletMap.map.pm.enableDraw(Shapes.Polygon);
+                break;
+            case ButtonActions.selectRectangle:
+                this.leafletMap.map.pm.enableDraw(Shapes.Rectangle);
+                break;
+            case ButtonActions.selectZone:
+                this.leafletMap.setVisibilityFilterLayer(true);
                 break;
         }
     }
@@ -153,6 +168,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
             this.initiateSupportingLayer();
             this.initiateOperationalLayer();
+            this.initiateFilterLayer();
             this.handleLayerVisibilityChange();
             this.initiateEvents();
         });
@@ -180,18 +196,23 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     private initiateOperationalLayer() {
         if (this.operationalLayerOptions) {
             forkJoin([
-                this.mapserverService
-                .getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
-                this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url)
+                this.mapserverService.getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
+                this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url),
             ])
                 .pipe(take(1))
                 .subscribe(([layerInfo, legend]) => {
                     this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
-                    this.leafletMap.addOperationalLayer(
-                        this.operationalLayerOptions,
-                        this.operationalLayer,
-                    );
+                    this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer);
                 });
+        }
+    }
+
+    private initiateFilterLayer() {
+        if (this.filterLayerOptions) {
+            this.leafletMap.addFilterLayer(this.filterLayerOptions);
+            this.leafletMap.filterLayerClicked.pipe(takeUntil(this.destroyed$)).subscribe((x) => {
+                this.filterOperationalLayer(x.target.feature);
+            });
         }
     }
 
@@ -218,10 +239,25 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                     break;
                 }
                 case Shapes.Polygon: {
-                    const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
-                    const calculatedArea = area(e.layer.toGeoJSON());
-                    const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
-                    this.leafletMap.addPopupToLayer(e.layer, content, true);
+                    switch (this.currentButton) {
+                        case ButtonActions.area:
+                            const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
+                            const calculatedArea = area(e.layer.toGeoJSON());
+                            const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
+                            this.leafletMap.addPopupToLayer(e.layer, content, true);
+                            break;
+                        case this.buttonActions.selectPolygon:
+                            this.filterOperationalLayer(e.layer.toGeoJSON());
+                            this.leafletMap.map.removeLayer(e.layer);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case Shapes.Rectangle: {
+                    this.filterOperationalLayer(e.layer.toGeoJSON());
+                    this.leafletMap.map.removeLayer(e.layer);
                     break;
                 }
                 case Shapes.Marker: {
@@ -274,6 +310,15 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             // after finished intake reset current button
             this.activeButtonChange(ButtonActions.none);
         });
+    }
+
+    private filterOperationalLayer(feature) {
+        this.geoApiService
+            .getGeofeaturesByGeometry(this.operationalLayerOptions.url, [this.operationalLayerOptions.layerId], feature)
+            .pipe(take(1))
+            .subscribe((x) => {
+                this.filteredResult.emit(x);
+            });
     }
 
     /**

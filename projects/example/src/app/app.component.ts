@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SupportingLayerOptions } from 'ngx-location-viewer/ngx-location-viewer';
-import { OperationalLayerOptions } from 'projects/ngx-location-viewer/src/public-api';
+import { FilterLayerOptions, OperationalLayerOptions, SupportingLayerOptions } from 'projects/ngx-location-viewer/src/public-api';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +7,7 @@ import { OperationalLayerOptions } from 'projects/ngx-location-viewer/src/public
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  result: any;
   showLayerManagement = true;
   supportingLayerOptions: SupportingLayerOptions = {
     url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
@@ -20,11 +20,22 @@ export class AppComponent implements OnInit {
     enableClustering: true
   };
 
+  filterLayerOptions: FilterLayerOptions = {
+    url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
+    layerId: 78,
+    popupLabel: 'Routenaam',
+    propertyToDisplay: 'Routenaam'
+  };
+
   // supportingLayerOptions: SupportingLayerOptions = {
   //   url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
   //   layerIds: [38, 42, 65]
   // };
 
   ngOnInit() {
+  }
+
+  updateResult(result: any) {
+    this.result = result;
   }
 }

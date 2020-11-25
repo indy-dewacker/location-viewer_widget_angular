@@ -1,6 +1,8 @@
-<p>Lagenbeheer:</p>
-<br />
-<p>Supporting layer:</p>
-<aui-layer *ngIf="supportingLayer" [layer]="supportingLayer" [layerType]="layerTypes.supporting"></aui-layer>
-<p>Operational layer:</p>
+<h5 class="has-base-font">Lagenoverzicht</h5>
+<hr>
+<h6 class="has-base-font">Operationele laag:</h6>
 <aui-layer *ngIf="operationalLayer" [layer]="operationalLayer" [layerType]="layerTypes.operational"></aui-layer>
+<hr>
+<h6 class="has-base-font">Ondersteunende laag:</h6>
+<aui-layer *ngIf="supportingLayer" [layer]="supportingLayer" [layerType]="layerTypes.supporting"></aui-layer>
+
