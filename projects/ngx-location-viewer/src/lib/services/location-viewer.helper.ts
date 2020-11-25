@@ -80,25 +80,23 @@ export class LocationViewerHelper {
     /**
      * Builds the html for the whatishere popup
      *
+     * @param address AddressDetail object with address info
      *
+     * @return string
      */
     getWhatisherePopupContent(address: AddressDetail): string {
-        return '<div class="whatishere-wrapper">' + '<div class="whatishere-title"><b>' + address.formattedAddress + '</b></div>' +
-        '<div class="whatishere-content">' +
-        '<div class="whatishere-type">WGS84:</div><div>' + address.addressPosition.wgs84.lat +
-        ', ' +
-        address.addressPosition.wgs84.lon + '</div>' +
-        '<div class="whatishere-type">Lambert:</div><div> ' + address.addressPosition.lambert72.x +
-        ', ' +
-        address.addressPosition.lambert72.y + '</div>' +
-        '</div><div class="whatishere-image"> ' +
-        '<a href="http://maps.google.com/maps?q=&layer=c&cbll=' +
-        address.addressPosition.wgs84.lat +
-        ',' +
-        address.addressPosition.wgs84.lon +
-        '" + target="_blank" >' +
-        '<img title="Ga naar streetview" src="https://seeklogo.com/images/G/google-street-view-logo-665165D1A8-seeklogo.com.png" style="max-width: 100%; max-height: 100%;"/>' +
-        '</a></div></div>';
+        return `<div class="whatishere-wrapper">
+        <div class="whatishere-title"><b>${address.formattedAddress}</b></div>
+        <div class="whatishere-content">
+        <div class="whatishere-type">WGS84:</div>
+        <div>${address.addressPosition.wgs84.lat}, ${address.addressPosition.wgs84.lon}</div>
+        <div class="whatishere-type">Lambert:</div>
+        <div>${address.addressPosition.lambert72.x}, ${address.addressPosition.lambert72.y}</div>
+        </div><div class="whatishere-image">
+        <a href="http://maps.google.com/maps?q=&layer=c&cbll=${address.addressPosition.wgs84.lat},${address.addressPosition.wgs84.lon}"
+        target="_blank" ><img title="Ga naar streetview"
+        src="https://seeklogo.com/images/G/google-street-view-logo-665165D1A8-seeklogo.com.png"
+        style="max-width: 100%; max-height: 100%;"/></a></div></div>`;
     }
 
 }
