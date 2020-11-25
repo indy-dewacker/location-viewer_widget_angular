@@ -99,6 +99,9 @@ export class LocationViewerMap extends LeafletMap {
                         `<p>${filterLayerOptions.popupLabel}: {${filterLayerOptions.propertyToDisplay}}</p>`,
                         layerInfo.feature.properties,
                     );
+                },
+                {
+                    closeButton: false
                 })
                 .addTo(this.map);
 
