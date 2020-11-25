@@ -1,24 +1,33 @@
-# NgxLocationViewer
+Then import the component inside your module:
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.0.
+```ts
+import {LocationPickerModule} from '@acpaas-ui-widgets/ngx-location-viewer';
 
-## Code scaffolding
+@NgModule({
+  imports: [
+    ...,
+    LocationViewerModule
+  ],
+  ...
+})
+```
 
-Run `ng generate component component-name --project ngx-location-viewer` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-location-viewer`.
-> Note: Don't forget to add `--project ngx-location-viewer` or else it will be added to the default project in your `angular.json` file. 
+Finally include the required styles:
 
-## Build
+Add Antwerp core branding stylesheet in your index.html file:
 
-Run `ng build ngx-location-viewer` to build the project. The build artifacts will be stored in the `dist/` directory.
+```html
+<link rel="stylesheet" href="https://cdn.antwerpen.be/core_branding_scss/4.1.1/main.min.css">
+```
 
-## Publishing
+Add required leaflet styles in your angular.json file.
 
-After building your library with `ng build ngx-location-viewer`, go to the dist folder `cd dist/ngx-location-viewer` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ngx-location-viewer` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```
+"styles": [
+    "node_modules/leaflet/dist/leaflet.css",
+    "node_modules/leaflet-draw/dist/leaflet.draw.css",
+    "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
+    "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+    "node_modules/leaflet.markercluster/dist/MarkerCluster.css"
+]
+```
