@@ -12,8 +12,8 @@
     </aui-location-viewer>
   </div>
   <div *ngIf="result">
-    <p>Aantal resultaten: {{ result?.results?.length }}</p>
-    <pre>{{ result?.results?.slice(0, 10) | json }}</pre>
+    <p>Aantal resultaten: {{ result.length }}</p>
+    <pre>{{ result.slice(0, 10) | json }}</pre>
   </div>
 
 </div>

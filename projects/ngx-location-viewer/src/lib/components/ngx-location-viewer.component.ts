@@ -17,6 +17,7 @@ import { OperationalLayerOptions } from '../types/operational-layer-options.mode
 import { LayerTypes } from '../types/layer-types.enum';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { LocationViewerHelper } from '../services/location-viewer.helper';
+import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -47,7 +48,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     /* EditFeature event */
     @Output() editFeature = new EventEmitter<any>();
     /* Operational layer filtered: fired when using selection tools rectangle/polygon or using filter layer */
-    @Output() filteredResult = new EventEmitter<any>();
+    @Output() filteredResult = new EventEmitter<GeofeatureDetail[]>();
 
     /* Leaflet instance */
     leafletMap: LocationViewerMap;
@@ -292,8 +293,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         this.geoApiService
             .getGeofeaturesByGeometry(this.operationalLayerOptions.url, [this.operationalLayerOptions.layerId], feature)
             .pipe(take(1))
-            .subscribe((x) => {
-                this.filteredResult.emit(x);
+            .subscribe((geoFeatureRespone) => {
+                this.filteredResult.emit(geoFeatureRespone.results);
             });
     }
 
