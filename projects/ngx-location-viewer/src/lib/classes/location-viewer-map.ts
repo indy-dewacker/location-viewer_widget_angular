@@ -147,12 +147,11 @@ export class LocationViewerMap extends LeafletMap {
     }
 
     // adds Popup to layer
-    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null, minWidth = 50) {
+    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null) {
         const popup = layer.bindPopup(
             () => {
                 return this.mapService.L.Util.template(popupContent);
             },
-            { minWidth },
         );
         if (onCloseRemoveLayer) {
             popup.on(PopupEvents.popupclose, () => {

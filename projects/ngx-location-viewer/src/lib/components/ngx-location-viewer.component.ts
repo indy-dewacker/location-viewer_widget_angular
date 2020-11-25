@@ -16,6 +16,7 @@ import { ButtonActions } from '../types/button-actions.enum';
 import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 import { LayerTypes } from '../types/layer-types.enum';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
+import { LocationViewerHelper } from '../services/location-viewer.helper';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -70,6 +71,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         private layerService: LayerService,
         private mapserverService: MapServerService,
         private geoApiService: GeoApiService,
+        private locationViewerHelper: LocationViewerHelper
     ) {}
 
     ngOnInit() {
@@ -234,16 +236,17 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         this.leafletMap.map.on(DrawEvents.create, (e) => {
             switch (e.shape) {
                 case Shapes.Line: {
-                    const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
-                    this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
+                    const distance = this.locationViewerHelper.calculateDistance(e.layer.editing.latlngs[0]);
+                    const content = this.locationViewerHelper.getDistancePopupContent(distance);
+                    this.leafletMap.addPopupToLayer(e.layer, content, true);
                     break;
                 }
                 case Shapes.Polygon: {
                     switch (this.currentButton) {
                         case ButtonActions.area:
-                            const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
+                            const perimeter = this.locationViewerHelper.calculatePerimeter(e.layer.editing.latlngs[0][0]);
                             const calculatedArea = area(e.layer.toGeoJSON());
-                            const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
+                            const content = this.locationViewerHelper.getAreaPopupContent(perimeter, calculatedArea);
                             this.leafletMap.addPopupToLayer(e.layer, content, true);
                             break;
                         case this.buttonActions.selectPolygon:
@@ -271,35 +274,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                                     address.addressPosition.wgs84,
                                     this.createMarker('#000000', 'fa-circle', '10px', { top: '-3px', left: '2px' }),
                                 );
-                                const content =
-                                    '<div class="row">' +
-                                    '<div class="col-sm-8"><b>' +
-                                    address.formattedAddress +
-                                    '</b></div> ' +
-                                    '<div class="col-sm-3" >' +
-                                    '<a href="http://maps.google.com/maps?q=&layer=c&cbll=' +
-                                    address.addressPosition.wgs84.lat +
-                                    ',' +
-                                    address.addressPosition.wgs84.lon +
-                                    '" + target="_blank" >' +
-                                    '<img title="Ga naar streetview" src="https://seeklogo.com/images/G/google-street-view-logo-665165D1A8-seeklogo.com.png" style="max-width: 100%; max-height: 100%;"/>' +
-                                    '</a>' +
-                                    '</div></div>' +
-                                    '<div class="row">' +
-                                    '<div class="col-sm-3">WGS84:</div>' +
-                                    '<div id="wgs" class="col-sm-9" style="text-align: left;">' +
-                                    address.addressPosition.wgs84.lat +
-                                    ', ' +
-                                    address.addressPosition.wgs84.lon +
-                                    '</div></div>' +
-                                    '<div class="row">' +
-                                    '<div class="col-sm-3">Lambert:</div><div id="lambert" class="col-sm-9" style="text-align: left;">' +
-                                    address.addressPosition.lambert72.x +
-                                    ', ' +
-                                    address.addressPosition.lambert72.y +
-                                    '</div>' +
-                                    '</div>';
-                                this.leafletMap.addPopupToLayer(e.marker, content, true, marker, 300);
+                                const content = this.locationViewerHelper.getWhatisherePopupContent(address);
+                                this.leafletMap.addPopupToLayer(e.marker, content, true, marker);
                             } else {
                                 this.leafletMap.addPopupToLayer(e.marker, '<p>Geen adres gevonden.</p>', true);
                             }
