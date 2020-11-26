@@ -3,7 +3,7 @@ import { AddressDetail } from '../types/geoapi/address-detail.model';
 import { LatLng } from '../types/leaflet.types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 /**
  * Provide helper functions
@@ -12,8 +12,7 @@ export class LocationViewerHelper {
     /**
      *
      */
-    constructor() {
-    }
+    constructor() {}
 
     /**
      * Calculates the distance between multiple LatLng objects
@@ -52,7 +51,6 @@ export class LocationViewerHelper {
         }
         return totalDistance;
     }
-
 
     /**
      * Builds the html for area popup
@@ -99,4 +97,33 @@ export class LocationViewerHelper {
         style="max-width: 100%; max-height: 100%;"/></a></div></div>`;
     }
 
+    /**
+     * Check for valid mapserver url
+     *
+     * @param url mapserver url
+     *
+     * @return boolean
+     */
+    isValidMapServer(url: string): boolean {
+        let validUrl: URL;
+
+        // first check for valid url
+        try {
+            validUrl = new URL(url);
+        } catch (error) {
+            throw new Error(`Provided url is not a valid url: ${url}`);
+        }
+
+        // check if url is http or https protocol
+        if (validUrl.protocol !== 'http:' && validUrl.protocol !== 'https:') {
+            throw new Error(`Provided url does not follow http(s) protocol: ${url}`);
+        }
+
+        // we expect mapserver url to end with 'mapserver' this is to build the correct urls
+        if (!validUrl.href.toLowerCase().endsWith('mapserver')) {
+            throw new Error(`Provided mapserver url has to end with \'mapserver\': ${url}`);
+        }
+
+        return true;
+    }
 }

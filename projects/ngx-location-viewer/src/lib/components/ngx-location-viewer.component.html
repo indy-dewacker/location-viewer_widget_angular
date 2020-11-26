@@ -6,14 +6,14 @@
         <button
             *ngIf="showLayerManagement"
             type="button"
-            class="a-button a-button--small has-icon a-button--block"
+            class="a-button a-button--small has-icon a-button--block u-margin-bottom-xs"
             name="toggle-layermanagement"
             (click)="toggleLayermanagement()"
         >
             <span class="fa" [ngClass]="{ 'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar }"></span>
         </button>
-        <div class="m-button-group m-button-group--vertical u-margin-top-xs">
-            <div class="m-button-group m-button-group--horizontal">
+        <div class="m-button-group m-button-group--vertical">
+            <div *ngIf="leafletMap.operationalLayer" class="m-button-group m-button-group--horizontal">
                 <button
                     type="button"
                     class="a-button a-button--small has-icon a-button--block"
@@ -49,6 +49,7 @@
                         <span class="fa fa-pencil-square" title="Selecteer met een veelhoek"></span>
                     </button>
                     <button
+                        *ngIf="leafletMap.filterLayer"
                         type="button"
                         class="a-button a-button--small has-icon a-button--block"
                         [ngClass]="{

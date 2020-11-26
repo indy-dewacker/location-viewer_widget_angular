@@ -178,7 +178,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     }
 
     private initiateSupportingLayer() {
-        if (this.supportingLayerOptions) {
+        if (this.supportingLayerOptions && this.locationViewerHelper.isValidMapServer(this.supportingLayerOptions.url)) {
             forkJoin([
                 this.mapserverService.getMapserverInfo(this.supportingLayerOptions.url),
                 this.mapserverService.getMapserverLegend(this.supportingLayerOptions.url),
@@ -197,7 +197,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     }
 
     private initiateOperationalLayer() {
-        if (this.operationalLayerOptions) {
+        if (this.operationalLayerOptions && this.locationViewerHelper.isValidMapServer(this.operationalLayerOptions.url)) {
             forkJoin([
                 this.mapserverService.getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
                 this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url),
@@ -211,7 +211,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     }
 
     private initiateFilterLayer() {
-        if (this.filterLayerOptions) {
+        if (this.filterLayerOptions && this.locationViewerHelper.isValidMapServer(this.filterLayerOptions.url)) {
             this.leafletMap.addFilterLayer(this.filterLayerOptions);
             this.leafletMap.filterLayerClicked.pipe(takeUntil(this.destroyed$)).subscribe((x) => {
                 this.filterOperationalLayer(x.target.feature);

@@ -40,7 +40,6 @@ export class AppComponent implements OnInit {
     ngOnInit() {}
 
     updateResult(result: GeofeatureDetail[]) {
-        console.log(result);
         this.result = result;
     }
 }
