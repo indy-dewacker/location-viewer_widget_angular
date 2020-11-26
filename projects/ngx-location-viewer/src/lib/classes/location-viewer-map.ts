@@ -6,9 +6,9 @@ import { Layer } from '../types/layer.model';
 import { LatLng, PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 export class LocationViewerMap extends LeafletMap {
-    public supportingLayer;
-    public operationalLayer;
-    public filterLayer;
+    public supportingLayer: any;
+    public operationalLayer: any;
+    public filterLayer: any;
     public filterLayerClicked = new Subject<any>();
     constructor(options: LeafletMapOptions, mapService: LocationViewerMapService) {
         super(options, mapService);
