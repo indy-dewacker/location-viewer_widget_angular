@@ -1,0 +1,29 @@
+::ng-deep {
+    // styling of whatishere popup
+    .whatishere-wrapper {
+        width: 300px;
+        overflow: hidden;
+        margin-top: 5px;
+    }
+
+    .whatishere-title {
+        padding-top: 5px;
+    }
+
+    .whatishere-content {
+        margin-top: 10px;
+        width: 225px;
+        float: left;
+        div {
+            float: left;
+        }
+    }
+
+    .whatishere-type {
+        width: 65px;
+    }
+    
+    .whatishere-image {
+        overflow: hidden;
+    }
+}

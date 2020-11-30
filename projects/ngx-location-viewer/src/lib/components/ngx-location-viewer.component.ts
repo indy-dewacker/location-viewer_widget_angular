@@ -15,6 +15,9 @@ import { Shapes } from '../types/geoman/geoman.types';
 import { ButtonActions } from '../types/button-actions.enum';
 import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 import { LayerTypes } from '../types/layer-types.enum';
+import { FilterLayerOptions } from '../types/filter-layer-options.model';
+import { LocationViewerHelper } from '../services/location-viewer.helper';
+import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -36,12 +39,16 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     @Input() supportingLayerOptions: SupportingLayerOptions;
     /* Add operationalLayer. If provided will be added as FeaturLayer(clustered) to leaflet */
     @Input() operationalLayerOptions: OperationalLayerOptions;
+    /* Adds filter layer. If provided will be added as FeatureLayer to leaflet. Is used to filter operationallayer by geometry */
+    @Input() filterLayerOptions: FilterLayerOptions;
     /* AddPolygon event */
     @Output() addPolygon = new EventEmitter<any>();
     /* AddLine event */
     @Output() addLine = new EventEmitter<any>();
     /* EditFeature event */
     @Output() editFeature = new EventEmitter<any>();
+    /* Operational layer filtered: fired when using selection tools rectangle/polygon or using filter layer */
+    @Output() filteredResult = new EventEmitter<GeofeatureDetail[]>();
 
     /* Leaflet instance */
     leafletMap: LocationViewerMap;
@@ -65,6 +72,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         private layerService: LayerService,
         private mapserverService: MapServerService,
         private geoApiService: GeoApiService,
+        private locationViewerHelper: LocationViewerHelper
     ) {}
 
     ngOnInit() {
@@ -105,6 +113,9 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             case ButtonActions.area:
                 this.leafletMap.map.pm.disableDraw(Shapes.Polygon);
                 break;
+            case ButtonActions.selectZone:
+                this.leafletMap.setVisibilityFilterLayer(false);
+                break;
         }
 
         // if the button action is the same as currentButton reset button
@@ -122,7 +133,14 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                 this.leafletMap.map.pm.enableDraw(Shapes.Line);
                 break;
             case ButtonActions.area:
+            case ButtonActions.selectPolygon:
                 this.leafletMap.map.pm.enableDraw(Shapes.Polygon);
+                break;
+            case ButtonActions.selectRectangle:
+                this.leafletMap.map.pm.enableDraw(Shapes.Rectangle);
+                break;
+            case ButtonActions.selectZone:
+                this.leafletMap.setVisibilityFilterLayer(true);
                 break;
         }
     }
@@ -153,13 +171,14 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
             this.initiateSupportingLayer();
             this.initiateOperationalLayer();
+            this.initiateFilterLayer();
             this.handleLayerVisibilityChange();
             this.initiateEvents();
         });
     }
 
     private initiateSupportingLayer() {
-        if (this.supportingLayerOptions) {
+        if (this.supportingLayerOptions && this.locationViewerHelper.isValidMapServer(this.supportingLayerOptions.url)) {
             forkJoin([
                 this.mapserverService.getMapserverInfo(this.supportingLayerOptions.url),
                 this.mapserverService.getMapserverLegend(this.supportingLayerOptions.url),
@@ -178,20 +197,25 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
     }
 
     private initiateOperationalLayer() {
-        if (this.operationalLayerOptions) {
+        if (this.operationalLayerOptions && this.locationViewerHelper.isValidMapServer(this.operationalLayerOptions.url)) {
             forkJoin([
-                this.mapserverService
-                .getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
-                this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url)
+                this.mapserverService.getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
+                this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url),
             ])
                 .pipe(take(1))
                 .subscribe(([layerInfo, legend]) => {
                     this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
-                    this.leafletMap.addOperationalLayer(
-                        this.operationalLayerOptions,
-                        this.operationalLayer,
-                    );
+                    this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer);
                 });
+        }
+    }
+
+    private initiateFilterLayer() {
+        if (this.filterLayerOptions && this.locationViewerHelper.isValidMapServer(this.filterLayerOptions.url)) {
+            this.leafletMap.addFilterLayer(this.filterLayerOptions);
+            this.leafletMap.filterLayerClicked.pipe(takeUntil(this.destroyed$)).subscribe((x) => {
+                this.filterOperationalLayer(x.target.feature);
+            });
         }
     }
 
@@ -213,15 +237,31 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         this.leafletMap.map.on(DrawEvents.create, (e) => {
             switch (e.shape) {
                 case Shapes.Line: {
-                    const distance = this.leafletMap.calculateDistance(e.layer.editing.latlngs[0]);
-                    this.leafletMap.addPopupToLayer(e.layer, `<p>Afstand(m): ${distance.toFixed(2)}</p>`, true);
+                    const distance = this.locationViewerHelper.calculateDistance(e.layer.editing.latlngs[0]);
+                    const content = this.locationViewerHelper.getDistancePopupContent(distance);
+                    this.leafletMap.addPopupToLayer(e.layer, content, true);
                     break;
                 }
                 case Shapes.Polygon: {
-                    const perimeter = this.leafletMap.calculatePerimeter(e.layer.editing.latlngs[0][0]);
-                    const calculatedArea = area(e.layer.toGeoJSON());
-                    const content = `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${calculatedArea.toFixed(2)}</p>`;
-                    this.leafletMap.addPopupToLayer(e.layer, content, true);
+                    switch (this.currentButton) {
+                        case ButtonActions.area:
+                            const perimeter = this.locationViewerHelper.calculatePerimeter(e.layer.editing.latlngs[0][0]);
+                            const calculatedArea = area(e.layer.toGeoJSON());
+                            const content = this.locationViewerHelper.getAreaPopupContent(perimeter, calculatedArea);
+                            this.leafletMap.addPopupToLayer(e.layer, content, true);
+                            break;
+                        case this.buttonActions.selectPolygon:
+                            this.filterOperationalLayer(e.layer.toGeoJSON());
+                            this.leafletMap.map.removeLayer(e.layer);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case Shapes.Rectangle: {
+                    this.filterOperationalLayer(e.layer.toGeoJSON());
+                    this.leafletMap.map.removeLayer(e.layer);
                     break;
                 }
                 case Shapes.Marker: {
@@ -235,35 +275,8 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                                     address.addressPosition.wgs84,
                                     this.createMarker('#000000', 'fa-circle', '10px', { top: '-3px', left: '2px' }),
                                 );
-                                const content =
-                                    '<div class="row">' +
-                                    '<div class="col-sm-8"><b>' +
-                                    address.formattedAddress +
-                                    '</b></div> ' +
-                                    '<div class="col-sm-3" >' +
-                                    '<a href="http://maps.google.com/maps?q=&layer=c&cbll=' +
-                                    address.addressPosition.wgs84.lat +
-                                    ',' +
-                                    address.addressPosition.wgs84.lon +
-                                    '" + target="_blank" >' +
-                                    '<img title="Ga naar streetview" src="https://seeklogo.com/images/G/google-street-view-logo-665165D1A8-seeklogo.com.png" style="max-width: 100%; max-height: 100%;"/>' +
-                                    '</a>' +
-                                    '</div></div>' +
-                                    '<div class="row">' +
-                                    '<div class="col-sm-3">WGS84:</div>' +
-                                    '<div id="wgs" class="col-sm-9" style="text-align: left;">' +
-                                    address.addressPosition.wgs84.lat +
-                                    ', ' +
-                                    address.addressPosition.wgs84.lon +
-                                    '</div></div>' +
-                                    '<div class="row">' +
-                                    '<div class="col-sm-3">Lambert:</div><div id="lambert" class="col-sm-9" style="text-align: left;">' +
-                                    address.addressPosition.lambert72.x +
-                                    ', ' +
-                                    address.addressPosition.lambert72.y +
-                                    '</div>' +
-                                    '</div>';
-                                this.leafletMap.addPopupToLayer(e.marker, content, true, marker, 300);
+                                const content = this.locationViewerHelper.getWhatisherePopupContent(address);
+                                this.leafletMap.addPopupToLayer(e.marker, content, true, marker);
                             } else {
                                 this.leafletMap.addPopupToLayer(e.marker, '<p>Geen adres gevonden.</p>', true);
                             }
@@ -274,6 +287,15 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
             // after finished intake reset current button
             this.activeButtonChange(ButtonActions.none);
         });
+    }
+
+    private filterOperationalLayer(feature) {
+        this.geoApiService
+            .getGeofeaturesByGeometry(this.operationalLayerOptions.url, [this.operationalLayerOptions.layerId], feature)
+            .pipe(take(1))
+            .subscribe((geoFeatureRespone) => {
+                this.filteredResult.emit(geoFeatureRespone.results);
+            });
     }
 
     /**

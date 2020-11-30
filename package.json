@@ -26,7 +26,6 @@
     "@angular/router": "~7.2.0",
     "@geoman-io/leaflet-geoman-free": "^2.7.0",
     "@turf/area": "^6.0.1",
-    "bootstrap": "^4.5.3",
     "core-js": "^2.5.4",
     "esri-leaflet-cluster": "^2.1.0",
     "leaflet.markercluster": "^1.4.1",

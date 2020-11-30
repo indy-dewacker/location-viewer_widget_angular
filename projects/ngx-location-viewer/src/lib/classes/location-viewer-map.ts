@@ -1,11 +1,15 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
+import { Subject } from 'rxjs';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { Layer } from '../types/layer.model';
 import { LatLng, PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions } from '../types/operational-layer-options.model';
 export class LocationViewerMap extends LeafletMap {
-    public supportingLayer;
-    public operationalLayer;
+    public supportingLayer: any;
+    public operationalLayer: any;
+    public filterLayer: any;
+    public filterLayerClicked = new Subject<any>();
     constructor(options: LeafletMapOptions, mapService: LocationViewerMapService) {
         super(options, mapService);
     }
@@ -78,6 +82,47 @@ export class LocationViewerMap extends LeafletMap {
         }
     }
 
+    addFilterLayer(filterLayerOptions: FilterLayerOptions) {
+        if (this.mapService.isAvailable()) {
+            this.filterLayer = this.mapService.esri
+                .featureLayer({
+                    url: `${filterLayerOptions.url}/${filterLayerOptions.layerId}/query`,
+                    where: '1 = -1',
+                    onEachFeature: (feature, layerProp) => {
+                        layerProp.on('click', (e) => {
+                            this.filterLayerClicked.next(e);
+                        });
+                    },
+                })
+                .bindPopup((layerInfo) => {
+                    return this.mapService.L.Util.template(
+                        `<p>${filterLayerOptions.popupLabel}: {${filterLayerOptions.propertyToDisplay}}</p>`,
+                        layerInfo.feature.properties,
+                    );
+                },
+                {
+                    closeButton: false
+                })
+                .addTo(this.map);
+
+            // removes default click behaviour ==> opening popup
+            this.filterLayer.off('click');
+
+            this.filterLayer.on('mouseover', (e) => {
+                this.filterLayer.openPopup(e.layer || e.target);
+            });
+        }
+    }
+
+    setVisibilityFilterLayer(visible: boolean) {
+        if (this.mapService.isAvailable && this.filterLayer) {
+            this.filterLayer.setWhere(visible ? '' : '1 = -1');
+            setTimeout(() => {
+                this.filterLayer.closePopup();
+            }, 200);
+        }
+    }
+
     // calculates distance between multiple LatLng points
     calculateDistance(arrayOfPoints: LatLng[]): number {
         let totalDistance = 0;
@@ -105,12 +150,11 @@ export class LocationViewerMap extends LeafletMap {
     }
 
     // adds Popup to layer
-    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null, minWidth = 50) {
+    addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null) {
         const popup = layer.bindPopup(
             () => {
                 return this.mapService.L.Util.template(popupContent);
             },
-            { minWidth },
         );
         if (onCloseRemoveLayer) {
             popup.on(PopupEvents.popupclose, () => {
