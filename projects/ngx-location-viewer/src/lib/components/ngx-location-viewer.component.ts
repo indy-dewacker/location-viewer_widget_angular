@@ -25,6 +25,8 @@ import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
     styleUrls: ['./ngx-location-viewer.component.scss'],
 })
 export class NgxLocationViewerComponent implements OnInit, OnDestroy {
+    /* Geo API */
+    @Input() geoApiBaseUrl: string;
     /* The default zoom level on map load. */
     @Input() defaultZoom = 14;
     /* The zoom level when a location is selected. */
@@ -72,7 +74,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
         private layerService: LayerService,
         private mapserverService: MapServerService,
         private geoApiService: GeoApiService,
-        private locationViewerHelper: LocationViewerHelper
+        private locationViewerHelper: LocationViewerHelper,
     ) {}
 
     ngOnInit() {
@@ -266,7 +268,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
                 }
                 case Shapes.Marker: {
                     this.geoApiService
-                        .getAddressesByCoordinates(e.marker.getLatLng())
+                        .getAddressesByCoordinates(this.geoApiBaseUrl, e.marker.getLatLng())
                         .pipe(take(1))
                         .subscribe((x) => {
                             if (x.addressDetail.length > 0) {
@@ -291,7 +293,7 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
     private filterOperationalLayer(feature) {
         this.geoApiService
-            .getGeofeaturesByGeometry(this.operationalLayerOptions.url, [this.operationalLayerOptions.layerId], feature)
+            .getGeofeaturesByGeometry(this.geoApiBaseUrl, this.operationalLayerOptions.url, [this.operationalLayerOptions.layerId], feature)
             .pipe(take(1))
             .subscribe((geoFeatureRespone) => {
                 this.filteredResult.emit(geoFeatureRespone.results);

@@ -13,6 +13,7 @@ import {
 })
 export class AppComponent implements OnInit {
     result: GeofeatureDetail[];
+    geoApiBaseUrl = 'https://geoapi-app1-o.antwerpen.be/v2/';
     showLayerManagement = true;
     supportingLayerOptions: SupportingLayerOptions = {
         url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
