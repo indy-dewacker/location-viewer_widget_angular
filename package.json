@@ -12,7 +12,11 @@
     "npm-pack": "cd dist/ngx-location-viewer && npm pack"
   },
   "peerDependencies": {
-    "@acpaas-ui/ngx-components": "^3.3.0"
+    "@acpaas-ui/ngx-components": "^3.3.0",
+    "@geoman-io/leaflet-geoman-free": "^2.7.0",
+    "@turf/area": "^6.0.1",
+    "esri-leaflet-cluster": "^2.1.0",
+    "leaflet.markercluster": "^1.4.1"
   },
   "private": true,
   "dependencies": {
