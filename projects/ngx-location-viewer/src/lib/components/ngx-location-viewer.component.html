@@ -13,7 +13,7 @@
             <span class="fa" [ngClass]="{ 'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar }"></span>
         </button>
         <div class="m-button-group m-button-group--vertical">
-            <div *ngIf="leafletMap.operationalLayer" class="m-button-group m-button-group--horizontal">
+            <div *ngIf="leafletMap.operationalLayer && showSelectionTools" class="m-button-group m-button-group--horizontal">
                 <button
                     type="button"
                     class="a-button a-button--small has-icon a-button--block"
@@ -62,7 +62,7 @@
                     </button>
                 </div>
             </div>
-            <div class="m-button-group m-button-group--horizontal">
+            <div class="m-button-group m-button-group--horizontal" *ngIf="showMeasureTools">
                 <button
                     type="button"
                     class="a-button--small has-icon a-button--block"
@@ -107,6 +107,7 @@
                     'a-button-outline': currentButton === buttonActions.whatishere
                 }"
                 (click)="activeButtonChange(buttonActions.whatishere)"
+                *ngIf="showWhatIsHereButton"
             >
                 <span class="fa fa-map-pin" title="Wat is hier"></span>
             </button>

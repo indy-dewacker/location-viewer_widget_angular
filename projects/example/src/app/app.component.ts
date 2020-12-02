@@ -45,9 +45,15 @@ export class AppComponent implements OnInit {
     }
 
     changeSettings() {
-      this.supportingLayerOptions  = {
-        url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
-        layerIds: [143, 144, 147],
-    };
+        this.supportingLayerOptions = {
+            url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
+            layerIds: [143, 144, 147],
+        };
+
+        this.operationalLayerOptions = {
+          url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
+          layerId: 2,
+          enableClustering: false,
+      };
     }
 }

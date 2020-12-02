@@ -35,8 +35,12 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Input() mapCenter: Array<number> = [51.215, 4.425];
     /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
     @Input() showLayerManagement = false;
-    /* If showLayerManagement is enabled. Define if layermanagement is default visible */
-    @Input() layerManagementVisible = false;
+    /* Show selection tools */
+    @Input() showSelectionTools = true;
+    /* Show measure tools */
+    @Input() showMeasureTools = true;
+    /* show whatishere button */
+    @Input() showWhatIsHereButton = true;
     /* Add supporting layers. If provided will be added as DynamicMapLayer to leaflet */
     @Input() supportingLayerOptions: SupportingLayerOptions;
     /* Add operationalLayer. If provided will be added as FeaturLayer(clustered) to leaflet */
