@@ -43,4 +43,11 @@ export class AppComponent implements OnInit {
     updateResult(result: GeofeatureDetail[]) {
         this.result = result;
     }
+
+    changeSettings() {
+      this.supportingLayerOptions  = {
+        url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
+        layerIds: [143, 144, 147],
+    };
+    }
 }

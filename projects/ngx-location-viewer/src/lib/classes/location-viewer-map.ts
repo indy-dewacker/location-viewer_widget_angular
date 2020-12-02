@@ -17,6 +17,7 @@ export class LocationViewerMap extends LeafletMap {
     // Supporting layer
     addSupportingLayers(mapserverUrl: string, layerIds: number[]) {
         if (this.mapService.isAvailable()) {
+            this.removeLayer(this.supportingLayer);
             this.supportingLayer = new this.mapService.esri.dynamicMapLayer({
                 maxZoom: 20,
                 minZoom: 0,
@@ -30,6 +31,13 @@ export class LocationViewerMap extends LeafletMap {
         }
     }
 
+    // Removes layer
+    removeLayer(layer: any) {
+        if (this.mapService.isAvailable() && layer) {
+            this.map.removeLayer(layer);
+        }
+    }
+
     // Supportinglayer will only show the provided layerids
     setVisibleLayersSupportingLayer(ids: number[]) {
         if (this.mapService.isAvailable() && this.supportingLayer) {
@@ -39,6 +47,7 @@ export class LocationViewerMap extends LeafletMap {
 
     addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer) {
         if (this.mapService.isAvailable()) {
+            this.removeLayer(this.operationalLayer);
             const featureLayerOptions = {
                 url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
                 where: layer.visible ? '' : '1 = -1',
@@ -84,6 +93,7 @@ export class LocationViewerMap extends LeafletMap {
 
     addFilterLayer(filterLayerOptions: FilterLayerOptions) {
         if (this.mapService.isAvailable()) {
+            this.removeLayer(this.filterLayer);
             this.filterLayer = this.mapService.esri
                 .featureLayer({
                     url: `${filterLayerOptions.url}/${filterLayerOptions.layerId}/query`,

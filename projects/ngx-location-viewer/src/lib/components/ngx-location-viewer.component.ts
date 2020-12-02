@@ -1,5 +1,5 @@
 import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-components/map';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { forkJoin, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { LocationViewerMap } from '../classes/location-viewer-map';
@@ -24,7 +24,7 @@ import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
     templateUrl: './ngx-location-viewer.component.html',
     styleUrls: ['./ngx-location-viewer.component.scss'],
 })
-export class NgxLocationViewerComponent implements OnInit, OnDestroy {
+export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy {
     /* Geo API */
     @Input() geoApiBaseUrl: string;
     /* The default zoom level on map load. */
@@ -79,6 +79,30 @@ export class NgxLocationViewerComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initLocationViewer();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        // tslint:disable-next-line: forin
+        for (const propName in changes) {
+            const change = changes[propName];
+
+            // only handle changes after first cycle, first cycle need to wait for leafletmap init
+            if (!change.firstChange) {
+                switch (propName) {
+                    case 'supportingLayerOptions':
+                        this.initiateSupportingLayer();
+                        break;
+                    case 'operationalLayerOptions':
+                        this.initiateOperationalLayer();
+                        break;
+                    case 'filterLayerOptions':
+                        this.initiateFilterLayer();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     ngOnDestroy() {

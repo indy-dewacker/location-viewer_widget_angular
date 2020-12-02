@@ -9,7 +9,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "npm-pack": "cd dist/ngx-location-viewer && npm pack"
+    "dev": "ng build ngx-location-viewer --watch",
+    "npm-pack": "cd dist/ngx-location-viewer && npm pack",
+    "copy-license": "ncp LICENSE dist/ngx-location-viewer/license",
+    "copy-readme": "ncp README.md dist/ngx-location-viewer/README.md",
+    "copy-files": "npm run copy-license && npm run copy-readme",
+    "build-lib": "ng build ngx-location-viewer && npm run copy-files && npm run npm-pack"
   },
   "peerDependencies": {
     "@acpaas-ui/ngx-components": "^3.3.0",
@@ -55,6 +60,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ncp": "^2.0.0",
     "ng-packagr": "^4.2.0",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
