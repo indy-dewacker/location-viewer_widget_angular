@@ -18,7 +18,7 @@ export class LayerComponent implements OnInit {
     constructor(private layerService: LayerService, private domSanitizer: DomSanitizer) {}
 
     ngOnInit() {
-        if (this.layer.legend && this.layer.legend.length === 1) {
+        if (this.layer && this.layer.legend && this.layer.legend.length === 1) {
             this.imageUrl = this.domSanitizer.bypassSecurityTrustUrl(
                 `data: ${this.layer.legend[0].contentType};base64, ${this.layer.legend[0].imageData}`,
             );

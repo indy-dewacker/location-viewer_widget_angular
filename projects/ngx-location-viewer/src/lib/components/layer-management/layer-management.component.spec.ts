@@ -1,6 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { LayerService } from '../../services/layer.service';
+import { LayerLegendComponent } from './layer-legend/layer-legend.component';
 
 import { LayerManagementComponent } from './layer-management.component';
+import { LayerComponent } from './layer/layer.component';
 
 describe('LayerManagementComponent', () => {
   let component: LayerManagementComponent;
@@ -8,7 +13,13 @@ describe('LayerManagementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayerManagementComponent ]
+      declarations: [ LayerManagementComponent, LayerComponent, LayerLegendComponent ],
+      imports: [
+        FormsModule
+      ],
+      providers: [
+        LayerService
+      ]
     })
     .compileComponents();
   }));

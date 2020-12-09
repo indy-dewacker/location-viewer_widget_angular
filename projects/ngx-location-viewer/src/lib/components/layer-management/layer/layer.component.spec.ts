@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { LayerService } from '../../../services/layer.service';
+import { LayerLegendComponent } from '../layer-legend/layer-legend.component';
 
 import { LayerComponent } from './layer.component';
 
@@ -8,7 +11,9 @@ describe('LayerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayerComponent ]
+      declarations: [ LayerComponent, LayerLegendComponent ],
+      imports: [ FormsModule ],
+      providers: [ LayerService ]
     })
     .compileComponents();
   }));
