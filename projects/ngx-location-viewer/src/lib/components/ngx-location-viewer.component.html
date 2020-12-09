@@ -1,8 +1,11 @@
 <aui-leaflet [leafletMap]="leafletMap" [hasSidebar]="hasSidebar">
+    <div *ngIf="hasSidebar">
+        <ng-content></ng-content>
+    </div>
     <div *ngIf="showLayerManagement">
         <aui-layer-management [supportingLayer]="supportingLayer" [operationalLayer]="operationalLayer"></aui-layer-management>
     </div>
-    <div controls top left>
+    <div class="controls-top-left" controls top left>
         <button
             *ngIf="showLayerManagement"
             type="button"
@@ -112,8 +115,10 @@
                 <span class="fa fa-map-pin" title="Wat is hier"></span>
             </button>
         </div>
+        <ng-content select="[controls][top][left]"></ng-content>
     </div>
     <div controls bottom left>
+        <ng-content select="[controls][bottom][left]"></ng-content>
         <div class="m-button-group m-button-group--vertical">
             <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-in" (click)="zoomIn()">
                 <span class="fa fa-plus" attr.aria-label="Zoom in"></span>
@@ -122,5 +127,30 @@
                 <span class="fa fa-minus" attr.aria-label="Zoom out"></span>
             </button>
         </div>
+
+        <div *ngIf="tileLayer" class="m-button-group map-layer-toggle u-margin-top-xs">
+            <button
+              type="button"
+              class="a-button a-button--small"
+              (click)="toggleTileLayer()"
+              [disabled]="isDefaultTileLayer"
+            >
+              {{ defaultTileLayerLabel }}
+            </button>
+            <button
+              type="button"
+              class="a-button a-button--small"
+              (click)="toggleTileLayer(true)"
+              [disabled]="isCustomTileLayer"
+            >
+              {{ tileLayer.buttonLabel }}
+            </button>
+          </div>
+    </div>
+    <div controls bottom right>
+        <ng-content select="[controls][bottom][right]"></ng-content>
+    </div>
+    <div controls top right>
+        <ng-content select="[controls][top][right]"></ng-content>
     </div>
 </aui-leaflet>
