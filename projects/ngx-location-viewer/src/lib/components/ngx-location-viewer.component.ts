@@ -70,7 +70,6 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     /* operational layer config */
     operationalLayer: Layer;
 
-    /* Sets the sidebar of leaflet map to visible/invisible */
     buttonActions = ButtonActions;
     /* Current tile layer type default or custom */
     tileLayerType: LeafletTileLayerType = LeafletTileLayerType.DEFAULT;
@@ -165,7 +164,11 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                 this.leafletMap.map.pm.disableDraw(Shapes.Line);
                 break;
             case ButtonActions.area:
+            case ButtonActions.selectPolygon:
                 this.leafletMap.map.pm.disableDraw(Shapes.Polygon);
+                break;
+            case ButtonActions.selectRectangle:
+                this.leafletMap.map.pm.disableDraw(Shapes.Rectangle);
                 break;
             case ButtonActions.selectZone:
                 this.leafletMap.setVisibilityFilterLayer(false);
