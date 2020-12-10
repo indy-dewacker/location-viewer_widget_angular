@@ -1,7 +1,7 @@
 import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { forkJoin, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { share, take, takeUntil } from 'rxjs/operators';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
@@ -18,6 +18,7 @@ import { LayerTypes } from '../types/layer-types.enum';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { LocationViewerHelper } from '../services/location-viewer.helper';
 import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
+import { LeafletTileLayerModel, LeafletTileLayerType } from '../types/leaflet-tile-layer.model';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -29,12 +30,12 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Input() geoApiBaseUrl: string;
     /* The default zoom level on map load. */
     @Input() defaultZoom = 14;
-    /* The zoom level when a location is selected. */
-    @Input() onSelectZoom = 16;
     /* The initial map center on load. */
     @Input() mapCenter: Array<number> = [51.215, 4.425];
+    /* Show a sidebar next to the map leaflet. A sidebar can contain any additional info you like. */
+    @Input() hasSidebar = false;
     /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
-    @Input() showLayerManagement = false;
+    @Input() showLayerManagement = true;
     /* Show selection tools */
     @Input() showSelectionTools = true;
     /* Show measure tools */
@@ -47,6 +48,14 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Input() operationalLayerOptions: OperationalLayerOptions;
     /* Adds filter layer. If provided will be added as FeatureLayer to leaflet. Is used to filter operationallayer by geometry */
     @Input() filterLayerOptions: FilterLayerOptions;
+    /* Leafletmap instance. If null will be initialized .*/
+    @Input() leafletMap: LocationViewerMap;
+    /* Default tile layer button label */
+    @Input() defaultTileLayerLabel = 'Kaart';
+    /* Custom leaflet tile layer, if provided, shows actions on the leaflet to toggle between default and custom tile layer. */
+    @Input() tileLayer: LeafletTileLayerModel;
+    /* HasSideBar change */
+    @Output() hasSidebarChange = new EventEmitter<boolean>();
     /* AddPolygon event */
     @Output() addPolygon = new EventEmitter<any>();
     /* AddLine event */
@@ -56,22 +65,35 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     /* Operational layer filtered: fired when using selection tools rectangle/polygon or using filter layer */
     @Output() filteredResult = new EventEmitter<GeofeatureDetail[]>();
 
-    /* Leaflet instance */
-    leafletMap: LocationViewerMap;
-
     /* supporting layer config */
     supportingLayer: Layer;
     /* operational layer config */
     operationalLayer: Layer;
 
-    /* Sets the sidebar of leaflet map to visible/invisible */
-    hasSidebar = false;
     buttonActions = ButtonActions;
+    /* Current tile layer type default or custom */
+    tileLayerType: LeafletTileLayerType = LeafletTileLayerType.DEFAULT;
 
     // Selected button
     currentButton = '';
 
     private destroyed$ = new Subject<boolean>();
+    /* Current active tile layers */
+    private activeTileLayers = [];
+
+    /**
+     * Check if current tile layer is the default one.
+     */
+    get isDefaultTileLayer(): boolean {
+        return this.tileLayerType === LeafletTileLayerType.DEFAULT;
+    }
+
+    /**
+     * Check if current tile layer is user defined.
+     */
+    get isCustomTileLayer(): boolean {
+        return this.tileLayerType === LeafletTileLayerType.CUSTOM;
+    }
 
     constructor(
         private mapService: LocationViewerMapService,
@@ -130,6 +152,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
     toggleLayermanagement() {
         this.hasSidebar = !this.hasSidebar;
+        this.hasSidebarChange.emit(this.hasSidebar);
     }
 
     activeButtonChange(action: ButtonActions) {
@@ -141,7 +164,11 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                 this.leafletMap.map.pm.disableDraw(Shapes.Line);
                 break;
             case ButtonActions.area:
+            case ButtonActions.selectPolygon:
                 this.leafletMap.map.pm.disableDraw(Shapes.Polygon);
+                break;
+            case ButtonActions.selectRectangle:
+                this.leafletMap.map.pm.disableDraw(Shapes.Rectangle);
                 break;
             case ButtonActions.selectZone:
                 this.leafletMap.setVisibilityFilterLayer(false);
@@ -175,28 +202,60 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
         }
     }
 
+    /**
+     * Toggle tile layer when a custom tile layer is provided
+     */
+    toggleTileLayer(custom: boolean = false) {
+        this.resetCurrentTileLayers();
+
+        this.tileLayerType = custom ? LeafletTileLayerType.CUSTOM : LeafletTileLayerType.DEFAULT;
+
+        if (custom) {
+            this.activeTileLayers.push(this.leafletMap.addTileLayer(this.tileLayer.layer));
+        } else {
+            this.activeTileLayers.push(this.leafletMap.addTileLayer(baseMapWorldGray));
+            this.activeTileLayers.push(this.leafletMap.addTileLayer(baseMapAntwerp));
+        }
+    }
+
+    /**
+     * Resets the current tile layers
+     */
+    private resetCurrentTileLayers() {
+        if (this.activeTileLayers.length > 0) {
+            this.activeTileLayers.map((layer) => {
+                this.leafletMap.removeLayer(layer);
+            });
+        }
+
+        this.activeTileLayers = [];
+    }
+
     private initLocationViewer() {
-        this.leafletMap = new LocationViewerMap(
-            {
-                zoom: this.defaultZoom,
-                center: this.mapCenter,
-                onAddPolygon: (layer) => {
-                    this.addPolygon.emit(layer);
+        if (!this.leafletMap) {
+            this.leafletMap = new LocationViewerMap(
+                {
+                    zoom: this.defaultZoom,
+                    center: this.mapCenter,
+                    onAddPolygon: (layer) => {
+                        this.addPolygon.emit(layer);
+                    },
+                    onAddLine: (layer) => {
+                        this.addLine.emit(layer);
+                    },
+                    onEditFeature: (feature) => {
+                        this.editFeature.emit(feature);
+                    },
                 },
-                onAddLine: (layer) => {
-                    this.addLine.emit(layer);
-                },
-                onEditFeature: (feature) => {
-                    this.editFeature.emit(feature);
-                },
-            },
-            this.mapService,
-        );
+                this.mapService,
+            );
+        }
 
         this.leafletMap.onInit.subscribe(() => {
-            this.leafletMap.addTileLayer(baseMapWorldGray);
-            this.leafletMap.addTileLayer(baseMapAntwerp);
+            this.activeTileLayers.push(this.leafletMap.addTileLayer(baseMapWorldGray));
+            this.activeTileLayers.push(this.leafletMap.addTileLayer(baseMapAntwerp));
 
+            // sets geoman language to nl (tooltips for drawing)
             this.leafletMap.map.pm.setLang('nl');
 
             this.initiateSupportingLayer();
