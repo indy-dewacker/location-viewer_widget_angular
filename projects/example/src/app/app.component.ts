@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import {
+    CustomOperationalLayerOptions,
     FilterLayerOptions,
     GeofeatureDetail,
     OperationalLayerOptions,
+    OperationalMarker,
     SupportingLayerOptions,
 } from 'projects/ngx-location-viewer/src/public-api';
+
+import taken from './../assets/sluiksort-taken.json';
+
 
 @Component({
     selector: 'app-root',
@@ -26,6 +31,25 @@ export class AppComponent implements OnInit {
         enableClustering: true,
     };
 
+    customOperationalLayerOptions: CustomOperationalLayerOptions = {
+        name: 'taken',
+        visible: true,
+        markers: taken._embedded.tasks.filter(x => x.locationDuringAssignment.xCoordinate !== null && x.locationDuringAssignment.xCoordinate !== '').map(x => {
+            const marker: OperationalMarker = {
+                data: x,
+                icon: x.icon,
+                coordinate: {
+                    lat: +x.locationDuringAssignment.xCoordinate,
+                    lon: +x.locationDuringAssignment.yCoordinate
+                },
+                color: "#000000",
+                size: "20px"
+            };
+            return marker;
+        }),
+        enableClustering: true,
+    };
+
     filterLayerOptions: FilterLayerOptions = {
         url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
         layerId: 78,
@@ -38,7 +62,8 @@ export class AppComponent implements OnInit {
     //   layerIds: [38, 42, 65]
     // };
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     updateResult(result: GeofeatureDetail[]) {
         this.result = result;

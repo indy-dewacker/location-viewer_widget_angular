@@ -1,10 +1,10 @@
 import { LayerLegendInfo } from './mapserver/legend-response/layer-legend-info.model';
 
 export interface Layer {
-    id: number;
+    id?: number;
     name: string;
     visible: boolean;
-    layers: Layer[];
+    layers?: Layer[];
     legend?: LayerLegendInfo[];
     styleField?: string;
     colors?: LayerColor[];

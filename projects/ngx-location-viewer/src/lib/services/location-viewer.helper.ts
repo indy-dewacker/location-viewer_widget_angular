@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AddressDetail } from '../types/geoapi/address-detail.model';
 import { LatLng } from '../types/leaflet.types';
+import { OperationalMarker } from '../types/operational-layer-options.model';
 
 @Injectable({
     providedIn: 'root',
@@ -125,5 +126,52 @@ export class LocationViewerHelper {
         }
 
         return true;
+    }
+
+    /**
+     * Filter markers by geometry
+     *
+     * @param markers Operationalmarker array to filter
+     * @param geometry Array of 2 based number arrays, check if markers are inside this geometry
+     * 
+     * @returns OperationalMarker[]
+     */
+    filterOperationalMarkersByGeometry(markers: OperationalMarker[], geometry: number[][]): OperationalMarker[] {
+        const filteredMarkers = markers.filter((marker) => {
+            return this.isCoordinateInsideGeometry(marker.coordinate.lat, marker.coordinate.lon, geometry);
+        });
+
+        return filteredMarkers;
+    }
+
+    /**
+     * Check if coordinate is inside geometry, based on ray casting algorithm
+     * Code is based on: https://github.com/substack/point-in-polygon
+     *
+     * @param lattitude lattitude
+     * @param longitude longitude
+     * @param geometry Array of 2 based number arrays, check if markers are inside this geometry
+     * 
+     * @returns boolean
+     */
+    isCoordinateInsideGeometry(lattitude: number, longitude: number, geometry: number[][]): boolean {
+        let inside = false;
+        for (let i = 0, j = geometry.length - 1; i < geometry.length; j = i++) {
+            const currentPointX = geometry[i][0];
+            const currentPointY = geometry[i][1];
+            const lastPointX = geometry[j][0];
+            const lastPointY = geometry[j][1];
+
+            const intersect =
+                currentPointY > longitude != lastPointY > longitude &&
+                lattitude <
+                    ((lastPointX - currentPointX) * (longitude - currentPointY)) / (lastPointY - currentPointY) +
+                        currentPointX;
+
+            if (intersect) {
+                inside = !inside;
+            }
+        }
+        return inside;
     }
 }
