@@ -26,7 +26,7 @@ export class LayerComponent implements OnInit {
     }
 
     showLayers(): boolean {
-        return this.layer && this.layer.layers.length > 0;
+        return this.layer && this.layer.layers && this.layer.layers.length > 0;
     }
 
     showLegend(): boolean {

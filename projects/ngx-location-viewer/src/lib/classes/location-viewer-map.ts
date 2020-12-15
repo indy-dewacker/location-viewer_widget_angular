@@ -3,8 +3,9 @@ import { Subject } from 'rxjs';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { Layer } from '../types/layer.model';
-import { LatLng, PopupEvents } from '../types/leaflet.types';
-import { OperationalLayerOptions } from '../types/operational-layer-options.model';
+import { PopupEvents } from '../types/leaflet.types';
+import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
+
 export class LocationViewerMap extends LeafletMap {
     public supportingLayer: any;
     public operationalLayer: any;
@@ -78,16 +79,40 @@ export class LocationViewerMap extends LeafletMap {
                 },
             };
             if (operationalLayerOptions.enableClustering) {
-                this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions).addTo(this.map);
+                this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions);
             } else {
-                this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions).addTo(this.map);
+                this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions);
             }
+
+            if (layer.visible) {
+                this.map.addLayer(this.operationalLayer);
+            }
+        }
+    }
+
+    addOperationalMarkers(markers: OperationalMarker[], enableClustering: boolean) {
+        if (this.mapService.isAvailable()) {
+            this.removeLayer(this.operationalLayer);
+            if (enableClustering) {
+                this.operationalLayer = this.mapService.L.markerClusterGroup();
+            } else {
+                this.operationalLayer = this.mapService.L.layerGroup();
+            }
+            markers.forEach((marker) => {
+                const htmlIcon = this.getHtmlMarker(marker.color, `fa-${marker.icon}`, marker.size, undefined);
+                const icon = this.mapService.L.divIcon({ html: htmlIcon, className: 'aui-leaflet__html-icon'});
+                const leafletMarker = this.mapService.L.marker([marker.coordinate.lat, marker.coordinate.lon], { icon });
+                leafletMarker.options.data = marker.data;
+                this.operationalLayer.addLayer(leafletMarker);
+            });
+
+            this.map.addLayer(this.operationalLayer);
         }
     }
 
     setVisibilityOperationalLayer(visible: boolean) {
         if (this.mapService.isAvailable && this.operationalLayer) {
-            this.operationalLayer.setWhere(visible ? '' : '1 = -1');
+            this.setVisibilityLayer(this.operationalLayer, visible);
         }
     }
 
@@ -97,23 +122,23 @@ export class LocationViewerMap extends LeafletMap {
             this.filterLayer = this.mapService.esri
                 .featureLayer({
                     url: `${filterLayerOptions.url}/${filterLayerOptions.layerId}/query`,
-                    where: '1 = -1',
                     onEachFeature: (feature, layerProp) => {
                         layerProp.on('click', (e) => {
                             this.filterLayerClicked.next(e);
                         });
                     },
                 })
-                .bindPopup((layerInfo) => {
-                    return this.mapService.L.Util.template(
-                        `<p>${filterLayerOptions.popupLabel}: {${filterLayerOptions.propertyToDisplay}}</p>`,
-                        layerInfo.feature.properties,
-                    );
-                },
-                {
-                    closeButton: false
-                })
-                .addTo(this.map);
+                .bindPopup(
+                    (layerInfo) => {
+                        return this.mapService.L.Util.template(
+                            `<p>${filterLayerOptions.popupLabel}: {${filterLayerOptions.propertyToDisplay}}</p>`,
+                            layerInfo.feature.properties,
+                        );
+                    },
+                    {
+                        closeButton: false,
+                    },
+                );
 
             // removes default click behaviour ==> opening popup
             this.filterLayer.off('click');
@@ -126,46 +151,18 @@ export class LocationViewerMap extends LeafletMap {
 
     setVisibilityFilterLayer(visible: boolean) {
         if (this.mapService.isAvailable && this.filterLayer) {
-            this.filterLayer.setWhere(visible ? '' : '1 = -1');
+            this.setVisibilityLayer(this.filterLayer, visible);
             setTimeout(() => {
                 this.filterLayer.closePopup();
             }, 200);
         }
     }
 
-    // calculates distance between multiple LatLng points
-    calculateDistance(arrayOfPoints: LatLng[]): number {
-        let totalDistance = 0;
-        for (let i = 0; i < arrayOfPoints.length - 1; i++) {
-            const currPoint = arrayOfPoints[i];
-            const nextPoint = arrayOfPoints[i + 1];
-            totalDistance += currPoint.distanceTo(nextPoint);
-        }
-        return totalDistance;
-    }
-
-    // calculates perimeter of multiple LatLng points
-    calculatePerimeter(arrayOfPoints: LatLng[]): number {
-        let totalDistance = 0;
-        for (let i = 0; i < arrayOfPoints.length; i++) {
-            const currPoint = arrayOfPoints[i];
-            // if it is the last point calculate distance to the first point
-            if (i === arrayOfPoints.length - 1) {
-                totalDistance += currPoint.distanceTo(arrayOfPoints[0]);
-            } else {
-                totalDistance += currPoint.distanceTo(arrayOfPoints[i + 1]);
-            }
-        }
-        return totalDistance;
-    }
-
     // adds Popup to layer
     addPopupToLayer(layer, popupContent: string, onCloseRemoveLayer: boolean, extraLayer = null) {
-        const popup = layer.bindPopup(
-            () => {
-                return this.mapService.L.Util.template(popupContent);
-            },
-        );
+        const popup = layer.bindPopup(() => {
+            return this.mapService.L.Util.template(popupContent);
+        });
         if (onCloseRemoveLayer) {
             popup.on(PopupEvents.popupclose, () => {
                 this.map.removeLayer(layer);
@@ -176,5 +173,33 @@ export class LocationViewerMap extends LeafletMap {
         }
 
         layer.openPopup();
+    }
+
+    /**
+     * Defines the custom marker markup.
+     */
+    getHtmlMarker(
+        color: string = '#0064b4',
+        icon: string = 'fa-map-marker',
+        size: string = '40px',
+        position: { top: string; left: string } = {
+            top: '-36px',
+            left: '-5px',
+        },
+    ) {
+        const markerStyle = `color: ${color}; font-size: ${size}; top: ${position.top}; left: ${position.left}`;
+        const markerIcon = `<span class="fa ${icon}" aria-hidden="true"></span>`;
+
+        return `<span style="${markerStyle}" class="ngx-location-viewer-marker">${markerIcon}</span>`;
+    }
+
+    private setVisibilityLayer(layer, visible: boolean) {
+        if (visible) {
+            if(!this.map.hasLayer(layer)) {
+                this.map.addLayer(layer);
+            }
+        } else {
+            this.map.removeLayer(layer);
+        }
     }
 }
