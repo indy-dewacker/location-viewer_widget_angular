@@ -1,7 +1,7 @@
 import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-components/map';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { forkJoin, Subject } from 'rxjs';
-import { filter, share, take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
@@ -49,7 +49,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     /* Add operationalLayer by providing custom markerinfo. If operationalLayerOptions are provided these will be used to render operationalLayer */
     @Input() customOperationalLayerOptions: CustomOperationalLayerOptions;
     /* Adds filter layer. If provided will be added as FeatureLayer to leaflet. Is used to filter operationallayer by geometry */
-    @Input() filterLayerOptions: FilterLayerOptions;
+    @Input() filterLayers: FilterLayerOptions[];
     /* Leafletmap instance. If null will be initialized .*/
     @Input() leafletMap: LocationViewerMap;
     /* Default tile layer button label */
@@ -78,6 +78,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
     // Selected button
     currentButton = '';
+
+    // Selected filter layer
+    currentFilterLayer: FilterLayerOptions;
 
     private destroyed$ = new Subject<boolean>();
     /* Current active tile layers */
@@ -121,9 +124,10 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                         this.initiateSupportingLayer();
                         break;
                     case 'operationalLayerOptions':
+                    case 'customOperationalLayerOptions':
                         this.initiateOperationalLayer();
                         break;
-                    case 'filterLayerOptions':
+                    case 'filterLayers':
                         this.initiateFilterLayer();
                         break;
                     default:
@@ -217,6 +221,16 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
         } else {
             this.activeTileLayers.push(this.leafletMap.addTileLayer(baseMapWorldGray));
             this.activeTileLayers.push(this.leafletMap.addTileLayer(baseMapAntwerp));
+        }
+    }
+
+    /**
+     * Handle change select-filterlayer
+     */
+    onChangeFilterLayer() {
+        if (this.locationViewerHelper.isValidMapServer(this.currentFilterLayer.url)) {
+            this.leafletMap.addFilterLayer(this.currentFilterLayer);
+            this.leafletMap.setVisibilityFilterLayer(true);
         }
     }
 
@@ -319,12 +333,14 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private initiateFilterLayer() {
-        if (this.filterLayerOptions && this.locationViewerHelper.isValidMapServer(this.filterLayerOptions.url)) {
-            this.leafletMap.addFilterLayer(this.filterLayerOptions);
-            this.leafletMap.filterLayerClicked.pipe(takeUntil(this.destroyed$)).subscribe((x) => {
-                this.filterOperationalLayer(x.target.feature);
-            });
+        //if only 1 filterlayer is provided ==> add to 
+        if (this.filterLayers && this.filterLayers.length == 1 && this.locationViewerHelper.isValidMapServer(this.filterLayers[0].url)) {
+            this.leafletMap.addFilterLayer(this.filterLayers[0]);
         }
+
+        this.leafletMap.filterLayerClicked.pipe(takeUntil(this.destroyed$)).subscribe((x) => {
+            this.filterOperationalLayer(x.target.feature);
+        });
     }
 
     private handleLayerVisibilityChange() {
