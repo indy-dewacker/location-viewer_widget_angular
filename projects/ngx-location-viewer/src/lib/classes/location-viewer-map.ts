@@ -99,11 +99,13 @@ export class LocationViewerMap extends LeafletMap {
                 this.operationalLayer = this.mapService.L.layerGroup();
             }
             markers.forEach((marker) => {
-                const htmlIcon = this.getHtmlMarker(marker.color, `fa-${marker.icon}`, marker.size, undefined);
-                const icon = this.mapService.L.divIcon({ html: htmlIcon, className: 'aui-leaflet__html-icon'});
-                const leafletMarker = this.mapService.L.marker([marker.coordinate.lat, marker.coordinate.lon], { icon });
-                leafletMarker.options.data = marker.data;
-                this.operationalLayer.addLayer(leafletMarker);
+                if (marker.coordinate && marker.coordinate.lat && marker.coordinate.lon) {
+                    const htmlIcon = this.getHtmlMarker(marker.color, `fa-${marker.icon}`, marker.size, undefined);
+                    const icon = this.mapService.L.divIcon({ html: htmlIcon, className: 'aui-leaflet__html-icon' });
+                    const leafletMarker = this.mapService.L.marker([marker.coordinate.lat, marker.coordinate.lon], { icon });
+                    leafletMarker.options.data = marker.data;
+                    this.operationalLayer.addLayer(leafletMarker);
+                }
             });
 
             this.map.addLayer(this.operationalLayer);
@@ -195,7 +197,7 @@ export class LocationViewerMap extends LeafletMap {
 
     private setVisibilityLayer(layer, visible: boolean) {
         if (visible) {
-            if(!this.map.hasLayer(layer)) {
+            if (!this.map.hasLayer(layer)) {
                 this.map.addLayer(layer);
             }
         } else {

@@ -50,12 +50,20 @@ export class AppComponent implements OnInit {
         enableClustering: true,
     };
 
-    filterLayerOptions: FilterLayerOptions = {
-        url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
-        layerId: 78,
-        popupLabel: 'Routenaam',
-        propertyToDisplay: 'Routenaam',
-    };
+    filterLayers: FilterLayerOptions[] = [{
+            url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
+            layerId: 78,
+            name: 'Routes',
+            popupLabel: 'Routenaam',
+            propertyToDisplay: 'Routenaam',
+    },
+        {
+        url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
+        layerId: 98,
+        name: 'Tariefzones',
+        popupLabel: 'Tariefzone',
+        propertyToDisplay: 'TARIEFZONE',
+    }]
 
     // supportingLayerOptions: SupportingLayerOptions = {
     //   url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
@@ -79,13 +87,6 @@ export class AppComponent implements OnInit {
             url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
             layerId: 2,
             enableClustering: false,
-        };
-
-        this.filterLayerOptions = {
-            url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
-            layerId: 78,
-            popupLabel: 'Routenaams',
-            propertyToDisplay: 'Routenaam',
         };
     }
 }
