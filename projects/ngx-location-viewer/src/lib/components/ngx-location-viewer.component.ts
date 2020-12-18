@@ -124,9 +124,10 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                         this.initiateSupportingLayer();
                         break;
                     case 'operationalLayerOptions':
+                    case 'customOperationalLayerOptions':
                         this.initiateOperationalLayer();
                         break;
-                    case 'filterLayerOptions':
+                    case 'filterLayers':
                         this.initiateFilterLayer();
                         break;
                     default:
