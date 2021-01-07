@@ -38,7 +38,19 @@
     vertical-align: -.25ex;
 }
 
-.m-button-group>.a-button-outline {
-    margin-bottom: 0;
+//fix toggle buttons outline difference button had -margin-top -1x, .a-button-outline had margin-bottom: -1px
+.m-button-group {
+    .a-button, .a-button-outline, select {
+        margin-top:0px;
+        margin-bottom: -1px;
+    }
+}
+
+.a-input--small .a-input__addon {
+    line-height: 2rem;
+}
+
+.a-input__addon {
+    padding-left: 0;
 }
   
