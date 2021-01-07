@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {
-    CustomOperationalLayerOptions,
     FilterLayerOptions,
     GeofeatureDetail,
     OperationalLayerOptions,
@@ -26,14 +25,8 @@ export class AppComponent implements OnInit {
     };
 
     operationalLayerOptions: OperationalLayerOptions = {
-        url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
-        layerId: 2,
-        enableClustering: true,
-    };
-
-    customOperationalLayerOptions: CustomOperationalLayerOptions = {
         name: 'taken',
-        visible: true,
+        isVisible: true,
         markers: taken._embedded.tasks.filter(x => x.locationDuringAssignment.xCoordinate !== null && x.locationDuringAssignment.xCoordinate !== '').map(x => {
             const marker: OperationalMarker = {
                 data: x,

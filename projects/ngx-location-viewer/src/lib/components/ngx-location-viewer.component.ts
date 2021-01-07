@@ -13,7 +13,7 @@ import { DrawEvents } from '../types/leaflet.types';
 import { GeoApiService } from '../services/geoapi.service';
 import { Shapes } from '../types/geoman/geoman.types';
 import { ButtonActions } from '../types/button-actions.enum';
-import { CustomOperationalLayerOptions, OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
+import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
 import { LayerTypes } from '../types/layer-types.enum';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { LocationViewerHelper } from '../services/location-viewer.helper';
@@ -26,7 +26,7 @@ import { LeafletTileLayerModel, LeafletTileLayerType } from '../types/leaflet-ti
     styleUrls: ['./ngx-location-viewer.component.scss'],
 })
 export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy {
-    /* Geo API */
+    /* Url to the backend-for-frontend (bff) Should function as pass through to the Geo API. */
     @Input() geoApiBaseUrl: string;
     /* The default zoom level on map load. */
     @Input() defaultZoom = 14;
@@ -46,8 +46,6 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Input() supportingLayerOptions: SupportingLayerOptions;
     /* Add operationalLayer. If provided will be added as FeaturLayer(clustered) to leaflet */
     @Input() operationalLayerOptions: OperationalLayerOptions;
-    /* Add operationalLayer by providing custom markerinfo. If operationalLayerOptions are provided these will be used to render operationalLayer */
-    @Input() customOperationalLayerOptions: CustomOperationalLayerOptions;
     /* Adds filter layer. If provided will be added as FeatureLayer to leaflet. Is used to filter operationallayer by geometry */
     @Input() filterLayers: FilterLayerOptions[];
     /* Leafletmap instance. If null will be initialized .*/
@@ -124,7 +122,6 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                         this.initiateSupportingLayer();
                         break;
                     case 'operationalLayerOptions':
-                    case 'customOperationalLayerOptions':
                         this.initiateOperationalLayer();
                         break;
                     case 'filterLayers':
@@ -236,7 +233,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
     /**
      * Handles layerchange
-     * @param layerType 
+     * @param layerType
      */
     handleLayerVisibilityChange(layerType: LayerTypes) {
         switch (layerType) {
@@ -317,33 +314,30 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private initiateOperationalLayer() {
-        if (
-            this.operationalLayerOptions &&
-            this.operationalLayerOptions.url &&
-            this.locationViewerHelper.isValidMapServer(this.operationalLayerOptions.url)
-        ) {
-            forkJoin([
-                this.mapserverService.getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
-                this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url),
-            ])
-                .pipe(take(1))
-                .subscribe(([layerInfo, legend]) => {
-                    this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
-                    this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer);
-                });
-        } else if (
-            this.customOperationalLayerOptions &&
-            this.customOperationalLayerOptions.markers &&
-            this.customOperationalLayerOptions.markers.length > 0
-        ) {
-            this.leafletMap.addOperationalMarkers(
-                this.customOperationalLayerOptions.markers,
-                this.customOperationalLayerOptions.enableClustering,
-            );
-            this.operationalLayer = {
-                name: this.customOperationalLayerOptions.name,
-                visible: this.customOperationalLayerOptions.visible,
-            };
+        if (this.operationalLayerOptions) {
+            //check if required settings for esri feature layer are provided
+            if (this.locationViewerHelper.isValidOperationalFeatureLayerConfiguration(this.operationalLayerOptions)) {
+                forkJoin([
+                    this.mapserverService.getMapserverLayerInfo(this.operationalLayerOptions.url, this.operationalLayerOptions.layerId),
+                    this.mapserverService.getMapserverLegend(this.operationalLayerOptions.url),
+                ])
+                    .pipe(take(1))
+                    .subscribe(([layerInfo, legend]) => {
+                        this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
+                        this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer);
+                    });
+            } else if (this.operationalLayerOptions.markers && this.operationalLayerOptions.markers.length > 0 && this.operationalLayerOptions.name && this.operationalLayerOptions.isVisible) {
+                this.leafletMap.addOperationalMarkers(
+                    this.operationalLayerOptions.markers,
+                    this.operationalLayerOptions.enableClustering,
+                );
+                this.operationalLayer = {
+                    name: this.operationalLayerOptions.name,
+                    visible: this.operationalLayerOptions.isVisible,
+                };
+            } else {
+                throw new Error('Invalid operationalLayerOptions! Check readme for examples.');
+            }
         }
     }
 
@@ -415,12 +409,10 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private filterOperationalLayer(feature) {
-        if (
-            this.operationalLayerOptions &&
-            this.operationalLayerOptions.url &&
-            this.locationViewerHelper.isValidMapServer(this.operationalLayerOptions.url)
-        ) {
-            this.geoApiService
+        if (this.operationalLayerOptions) {
+            if(this.locationViewerHelper.isValidOperationalFeatureLayerConfiguration(this.operationalLayerOptions))
+            {
+                this.geoApiService
                 .getGeofeaturesByGeometry(
                     this.geoApiBaseUrl,
                     this.operationalLayerOptions.url,
@@ -431,16 +423,13 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                 .subscribe((geoFeatureRespone) => {
                     this.filteredResult.emit(geoFeatureRespone.results);
                 });
-        } else if (
-            this.customOperationalLayerOptions &&
-            this.customOperationalLayerOptions.markers &&
-            this.customOperationalLayerOptions.markers.length > 0
-        ) {
-            const filteredMarkers = this.locationViewerHelper.filterOperationalMarkersByGeometry(
-                this.customOperationalLayerOptions.markers,
-                feature.geometry.coordinates[0].map(([y, x]) => [x, y]),
-            );
-            this.filteredResult.emit(filteredMarkers);
+            } else if(this.locationViewerHelper.isValidOpertionalMarkerLayerConfiguration(this.operationalLayerOptions)) {
+                const filteredMarkers = this.locationViewerHelper.filterOperationalMarkersByGeometry(
+                    this.operationalLayerOptions.markers,
+                    feature.geometry.coordinates[0].map(([y, x]) => [x, y]),
+                );
+                this.filteredResult.emit(filteredMarkers);
+            }
         }
     }
 }
