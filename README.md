@@ -6,7 +6,7 @@ This library was tested in Angular 8.
 
 ##### Desktop view
 
-![screenshot](desktop-view.png)
+![screenshot](desktop-view.PNG)
 
 ## Using the component
 
@@ -56,7 +56,7 @@ The concept remains the same for different technologies:
 The BFF should function solely as a pass-through layer where the API KEY gets added to the request header before proxying.
 
 Create a contract with the "GEOAPI" on the api-store
-![screenshot](api-store.png)
+![screenshot](api-store.PNG)
 
 ### Usage
 ```html
