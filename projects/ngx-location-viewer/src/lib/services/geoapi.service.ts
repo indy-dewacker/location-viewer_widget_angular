@@ -11,7 +11,7 @@ export class GeoApiService {
     }
 
     getAddressesByCoordinates(baseUrl: string, coords: LatLng): Observable<AddressResponse> {
-        return this.http.get<AddressResponse>(`${baseUrl}addresses?sr=wgs84&x=${coords.lat}&y=${coords.lng}&buffer=50&count1`);
+        return this.http.get<AddressResponse>(`${baseUrl}addresses?sr=wgs84&x=${coords.lat}&y=${coords.lng}&buffer=50&count=1`);
     }
 
     getGeofeaturesByGeometry(baseUrl: string, url: string, layerIds: number[], feature: any): Observable<GeofeatureResponse> {

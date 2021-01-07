@@ -1,4 +1,4 @@
-import { MapService } from '@acpaas-ui/ngx-components/map';
+import { MapService } from '@acpaas-ui/ngx-leaflet';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 @Injectable()

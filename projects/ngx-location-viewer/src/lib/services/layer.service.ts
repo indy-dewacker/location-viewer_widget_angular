@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { GeometryTypes } from '../types/geometry-types.enum';
-import { LayerTypes } from '../types/layer-types.enum';
 import { Layer } from '../types/layer.model';
 import { LayerInfo } from '../types/mapserver/info-response/layer-info.model';
 import { MapserverInfo } from '../types/mapserver/info-response/mapserver-info.model';
@@ -12,7 +9,6 @@ import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-le
 
 @Injectable()
 export class LayerService {
-    private layerVisibilitySub$ = new BehaviorSubject<LayerTypes>(null);
     constructor() {}
 
     // get specific layer from info and legend
@@ -115,14 +111,6 @@ export class LayerService {
         }
 
         return visibleLayerIds;
-    }
-
-    setLayerVisibilityChange(layerType: LayerTypes): void {
-        this.layerVisibilitySub$.next(layerType);
-    }
-
-    get layerVisiblityChange$(): Observable<LayerTypes> {
-        return this.layerVisibilitySub$.pipe(filter((value: LayerTypes) => !!value));
     }
 
     private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[], layerLegend: LayerLegend[]): Layer[] {

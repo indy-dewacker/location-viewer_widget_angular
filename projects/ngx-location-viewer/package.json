@@ -1,5 +1,5 @@
 {
-  "name": "ngx-location-viewer",
+  "name": "@acpaas-ui-widgets/ngx-location-viewer",
   "version": "0.0.1-beta.4",
   "license": "See license file",
   "peerDependencies": {

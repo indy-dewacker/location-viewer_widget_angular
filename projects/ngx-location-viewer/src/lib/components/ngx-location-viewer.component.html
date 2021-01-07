@@ -3,7 +3,7 @@
         <ng-content></ng-content>
     </div>
     <div *ngIf="showLayerManagement">
-        <aui-layer-management [supportingLayer]="supportingLayer" [operationalLayer]="operationalLayer"></aui-layer-management>
+        <aui-layer-management [supportingLayer]="supportingLayer" [operationalLayer]="operationalLayer" (layerVisibilityChange)="handleLayerVisibilityChange($event)"></aui-layer-management>
     </div>
     <div class="controls-top-left" controls top left>
         <button
@@ -11,6 +11,8 @@
             type="button"
             class="a-button a-button--small has-icon a-button--block u-margin-bottom-xs"
             name="toggle-layermanagement"
+            [title]="hasSidebar ? 'Sluit lagenoverzicht' : 'Open lagenoverzicht'"
+            aria-label="Open/sluit lagenoverzicht"
             (click)="toggleLayermanagement()"
         >
             <span class="fa" [ngClass]="{ 'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar }"></span>
@@ -24,6 +26,7 @@
                         'a-button': !currentButton.startsWith(buttonActions.select),
                         'a-button-outline': currentButton.startsWith(buttonActions.select)
                     }"
+                    aria-label="Selecteren"
                     (click)="activeButtonChange(buttonActions.select)"
                 >
                     <span class="fa fa-mouse-pointer" title="Selecteren"></span>
@@ -41,6 +44,7 @@
                                     }"
                                     (click)="activeButtonChange(buttonActions.selectRectangle)"
                                     title="Selecteer met een rechthoek"
+                                    aria-label="Selecteer met een rechthoek"
                                 >
                                     <svg class="icon icon-vector-square"><use xlink:href="#icon-vector-square"></use></svg>
                                 </button>
@@ -53,6 +57,7 @@
                                     }"
                                     (click)="activeButtonChange(buttonActions.selectPolygon)"
                                     title="Selecteer met een veelhoek"
+                                    aria-label="Selecteer met een veelhoek"
                                 >
                                     <svg class="icon icon-draw-polygon"><use xlink:href="#icon-draw-polygon"></use></svg>
                                 </button>
@@ -66,6 +71,7 @@
                                     }"
                                     (click)="activeButtonChange(buttonActions.selectZone)"
                                     title="Selecteer met filterlaag"
+                                    aria-label="Selecteer met filterlaag"
                                 >
                                     <svg class="icon icon-layer-group"><use xlink:href="#icon-layer-group"></use></svg>
                                 </button>
@@ -91,6 +97,7 @@
                     }"
                     (click)="activeButtonChange(buttonActions.measurement)"
                     title="Meten"
+                    aria-label="Meten"
                 >
                     <svg class="icon icon-ruler"><use xlink:href="#icon-ruler"></use></svg>
                 </button>
@@ -104,6 +111,7 @@
                         }"
                         (click)="activeButtonChange(buttonActions.distance)"
                         title="Meten afstand"
+                        aria-label="Meten afstand"
                     >
                         <svg class="icon icon-measure-line"><use xlink:href="#icon-measure-line"></use></svg>
                     </button>
@@ -116,6 +124,7 @@
                         }"
                         (click)="activeButtonChange(buttonActions.area)"
                         title="Meten oppervlakte en omtrek"
+                        aria-label="Meten oppervlakte en omtrek"
                     >
                         <svg class="icon icon-measure-shape"><use xlink:href="#icon-measure-shape"></use></svg>
                     </button>
@@ -130,8 +139,10 @@
                 }"
                 (click)="activeButtonChange(buttonActions.whatishere)"
                 *ngIf="showWhatIsHereButton"
+                title="Wat is hier"
+                aria-label="Wat is hier"
             >
-                <span class="fa fa-map-pin" title="Wat is hier"></span>
+                <span class="fa fa-map-pin" ></span>
             </button>
         </div>
         <ng-content select="[controls][top][left]"></ng-content>
@@ -143,15 +154,15 @@
                 <span class="fa fa-plus" attr.aria-label="Zoom in"></span>
             </button>
             <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-out" (click)="zoomOut()">
-                <span class="fa fa-minus" attr.aria-label="Zoom out"></span>
+                <span class="fa fa-minus" attr.aria-label="Zoom uit"></span>
             </button>
         </div>
 
         <div *ngIf="tileLayer" class="m-button-group map-layer-toggle u-margin-top-xs">
-            <button type="button" class="a-button a-button--small" (click)="toggleTileLayer()" [disabled]="isDefaultTileLayer">
+            <button type="button" class="a-button a-button--small" (click)="toggleTileLayer()" [disabled]="isDefaultTileLayer" aria-label="Selecteer default basislaag">
                 {{ defaultTileLayerLabel }}
             </button>
-            <button type="button" class="a-button a-button--small" (click)="toggleTileLayer(true)" [disabled]="isCustomTileLayer">
+            <button type="button" class="a-button a-button--small" (click)="toggleTileLayer(true)" [disabled]="isCustomTileLayer" aria-label="Selecteer specifieke basislaag">
                 {{ tileLayer.buttonLabel }}
             </button>
         </div>
