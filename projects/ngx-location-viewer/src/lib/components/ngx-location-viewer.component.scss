@@ -1,18 +1,18 @@
 ::ng-deep {
     // styling of whatishere popup
     .whatishere-wrapper {
-        width: 300px;
+        width: 18.75rem;
         overflow: hidden;
-        margin-top: 5px;
+        margin-top: 0.3125rem;
     }
 
     .whatishere-title {
-        padding-top: 5px;
+        padding-top: 0.3215rem;
     }
 
     .whatishere-content {
-        margin-top: 10px;
-        width: 225px;
+        margin-top: 0.625rem;
+        width: 14.0625rem;
         float: left;
         div {
             float: left;
@@ -20,7 +20,7 @@
     }
 
     .whatishere-type {
-        width: 65px;
+        width: 4.0625rem;
     }
     
     .whatishere-image {
@@ -36,5 +36,21 @@
     stroke: currentColor;
     fill: currentColor;
     vertical-align: -.25ex;
+}
+
+//fix toggle buttons outline difference button had -margin-top -1x, .a-button-outline had margin-bottom: -1px
+.m-button-group {
+    .a-button, .a-button-outline, select {
+        margin-top:0px;
+        margin-bottom: -1px;
+    }
+}
+
+.a-input--small .a-input__addon {
+    line-height: 2rem;
+}
+
+.a-input__addon {
+    padding-left: 0;
 }
   

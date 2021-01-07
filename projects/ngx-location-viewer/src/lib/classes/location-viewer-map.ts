@@ -1,4 +1,4 @@
-import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-components/map';
+import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-leaflet';
 import { Subject } from 'rxjs';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';

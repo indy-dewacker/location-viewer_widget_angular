@@ -3,7 +3,13 @@
 }
 
 .layer-icon {
-    left: -22px;
-    top: 2px;
+    left: -1.375rem;
+    top: 0.125rem;
     position: absolute;
+}
+
+.like-span {
+        border: none;
+        padding: 0;
+        background: none;
 }

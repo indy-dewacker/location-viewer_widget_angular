@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AddressDetail } from '../types/geoapi/address-detail.model';
 import { LatLng } from '../types/leaflet.types';
-import { OperationalMarker } from '../types/operational-layer-options.model';
+import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
 
 @Injectable({
     providedIn: 'root',
@@ -63,6 +63,26 @@ export class LocationViewerHelper {
      */
     getAreaPopupContent(perimeter: number, area: number): string {
         return `<p>Omtrek(m): ${perimeter.toFixed(2)}</p><p>Opp(m²): ${area.toFixed(2)}</p>`;
+    }
+    
+    /**
+     * Check if required settings are provided in OperationalLayerOptions to build operational layer as esri feature layer
+     * @param operationalLayerOptions 
+     * 
+     * @return boolean
+     */
+    isValidOperationalFeatureLayerConfiguration(operationalLayerOptions: OperationalLayerOptions): boolean {
+        return operationalLayerOptions.url && operationalLayerOptions.layerId && this.isValidMapServer(operationalLayerOptions.url);
+    }
+
+    /**
+     * Check if required settings are provided in OperationalLayerOptions to build operational layer as custom marker layer
+     * @param operationalLayerOptions 
+     * 
+     * @return boolean
+     */
+    isValidOpertionalMarkerLayerConfiguration(operationalLayerOptions: OperationalLayerOptions): boolean {
+        return operationalLayerOptions.markers && operationalLayerOptions.markers.length > 0 && operationalLayerOptions.name && operationalLayerOptions.isVisible;
     }
 
     /**

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
-import { LeafletModule } from '@acpaas-ui/ngx-components/map';
+import { LeafletModule } from '@acpaas-ui/ngx-leaflet';
 
 import { NgxLocationViewerComponent } from './components/ngx-location-viewer.component';
 import { LayerManagementComponent } from './components/layer-management/layer-management.component';

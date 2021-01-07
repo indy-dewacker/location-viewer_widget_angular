@@ -1,6 +1,6 @@
 <div class="u-margin-top-xs u-margin-left-xs">
     <div class="a-input" *ngIf="layer">
-        <img *ngIf="layer?.legend?.length === 1" [src]="imageUrl" class="layer-icon" />
+        <img *ngIf="layer?.legend?.length === 1" [src]="imageUrl" [alt]="layer?.name" class="layer-icon" />
         <div class="a-input__checkbox">
             <input
                 type="checkbox"
@@ -11,16 +11,16 @@
                 (change)="onChangeVisibility()"
             />
             <label for="layer-{{ layer?.id }}">{{ layer?.name }}</label>
-            <span
+            <button
                 *ngIf="showLayers() || showLegend()"
-                class="fa toggle-layer u-margin-left-xs"
+                class="fa toggle-layer u-margin-left-xs like-span"
                 [ngClass]="{ 'fa-angle-up': open, 'fa-angle-down': !open }"
                 (click)="open = !open"
-            ></span>
+            ></button>
         </div>
     </div>
     <div *ngIf="open && showLayers() && layer?.layers" class="u-margin-left-xs">
-        <aui-layer *ngFor="let childLayer of layer?.layers" [layer]="childLayer" [layerType]="layerType"> </aui-layer>
+        <aui-layer *ngFor="let childLayer of layer?.layers" [layer]="childLayer" [layerType]="layerType" (layerVisibiltyChange)="onChangeVisibility()"> </aui-layer>
     </div>
 
     <div *ngIf="open && showLegend() && layer?.legend" class="u-margin-left">

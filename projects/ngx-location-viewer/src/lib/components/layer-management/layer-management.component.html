@@ -1,11 +1,11 @@
-<h5 class="has-base-font">Lagenoverzicht</h5>
-<hr />
-<div *ngIf="operationalLayer">
-    <h6 class="has-base-font">Operationele laag:</h6>
-    <aui-layer *ngIf="operationalLayer" [layer]="operationalLayer" [layerType]="layerTypes.operational"></aui-layer>
-    <hr />
-</div>
-<div *ngIf="supportingLayer">
-    <h6 class="has-base-font">Ondersteunende lagen:</h6>
-    <aui-layer *ngIf="supportingLayer" [layer]="supportingLayer" [layerType]="layerTypes.supporting"></aui-layer>
+<h1 class="has-base-font">Lagen</h1>
+<div class="u-margin-left-xs">
+    <div *ngIf="operationalLayer" class="u-margin-top">
+        <h2 class="has-base-font">Operationele laag:</h2>
+        <aui-layer *ngIf="operationalLayer" [layer]="operationalLayer" [layerType]="layerTypes.operational" (layerVisibiltyChange)="onLayerVisibilityChange($event)"></aui-layer>
+    </div>
+    <div *ngIf="supportingLayer" class="u-margin-top">
+        <h2 class="has-base-font">Ondersteunende lagen:</h2>
+        <aui-layer *ngIf="supportingLayer" [layer]="supportingLayer" [layerType]="layerTypes.supporting" (layerVisibiltyChange)="onLayerVisibilityChange($event)"></aui-layer>
+    </div>
 </div>

@@ -1,13 +1,12 @@
-export interface OperationalLayerOptions extends BaseOperationalLayerOptions{
-    url: string;
-    layerId: number;
+export interface OperationalLayerOptions {
+    enableClustering: boolean;
+    url?: string;
+    layerId?: number;
+    name?: string;
+    markers?: OperationalMarker[]
+    isVisible?: boolean;
 }
 
-export interface CustomOperationalLayerOptions extends BaseOperationalLayerOptions {
-    name: string;
-    visible: boolean;
-    markers: OperationalMarker[];
-}
 
 export interface OperationalMarker {
     coordinate: OperationalMarkerCoordinate;
@@ -20,8 +19,4 @@ export interface OperationalMarker {
 export interface OperationalMarkerCoordinate {
     lat: number;
     lon: number;
-}
-
-interface BaseOperationalLayerOptions {
-    enableClustering: boolean;
 }
