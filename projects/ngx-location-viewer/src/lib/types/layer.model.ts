@@ -8,6 +8,7 @@ export interface Layer {
     legend?: LayerLegendInfo[];
     styleField?: string;
     colors?: LayerColor[];
+    isLoading?: boolean;
 }
 
 export interface LayerColor {

@@ -9,7 +9,7 @@ import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import area from '@turf/area';
-import { DrawEvents } from '../types/leaflet.types';
+import { DrawEvents, RasterEvents } from '../types/leaflet.types';
 import { GeoApiService } from '../services/geoapi.service';
 import { Shapes } from '../types/geoman/geoman.types';
 import { ButtonActions } from '../types/button-actions.enum';
@@ -308,7 +308,13 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                         this.supportingLayerOptions.layerIds,
                     );
                     const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
-                    this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
+                    const layer = this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
+                    layer.on(RasterEvents.loading, () => {
+                        this.supportingLayer.isLoading = true;
+                    })
+                    layer.on(RasterEvents.load, () => {
+                        this.supportingLayer.isLoading = false;
+                    })
                 });
         }
     }

@@ -10,6 +10,11 @@ export enum DrawEvents {
     create = 'pm:create',
 }
 
+export enum RasterEvents {
+    loading = 'loading',
+    load = 'load'
+}
+
 export enum PopupEvents {
     popupopen = 'popupopen',
     popupclose = 'popupclose',

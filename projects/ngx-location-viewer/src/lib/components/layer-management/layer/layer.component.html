@@ -17,6 +17,7 @@
                 [ngClass]="{ 'fa-angle-up': open, 'fa-angle-down': !open }"
                 (click)="open = !open"
             ></button>
+            <div *ngIf="layer?.isLoading === true" class="a-spinner a-spinner--sm" role="alert" aria-busy="true"></div>
         </div>
     </div>
     <div *ngIf="open && showLayers() && layer?.layers" class="u-margin-left-xs">

@@ -30,6 +30,8 @@ export class LocationViewerMap extends LeafletMap {
                 f: 'image',
             }).addTo(this.map);
         }
+
+        return this.supportingLayer;
     }
 
     // Removes layer

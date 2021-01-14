@@ -13,3 +13,9 @@
         padding: 0;
         background: none;
 }
+
+.a-spinner {
+    position: absolute;
+    top: 0rem;
+    left: -2rem;
+}
