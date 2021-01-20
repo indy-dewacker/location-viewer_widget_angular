@@ -1,7 +1,7 @@
 {
   "name": "@acpaas-ui-widgets/ngx-location-viewer",
   "description": "Location viewer in progress",
-  "version": "0.0.1-beta.4",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

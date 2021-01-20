@@ -13,4 +13,7 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+## [1.0.0] - 2021-01-20
 - Initial release.
+
+[1.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0
