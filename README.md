@@ -1,12 +1,10 @@
 # Location Viewer Smart Widget UI (Angular)
 
-The Location Viewer Smart Widget UI provides an easy to use interface for displaying locations or addresses within the city of Antwerp. 
+The Location Viewer Smart Widget UI provides an easy to use interface for displaying locations or addresses within the city of Antwerp.
 
 This library was tested in Angular 8.
 
-##### Desktop view
-
-![screenshot](desktop-view.PNG)
+<img src="location-viewer.png" alt="Voorbeeld van de Location Viewer widget." width="1152" style="max-width:1152px;width:100%">
 
 ## Using the component
 

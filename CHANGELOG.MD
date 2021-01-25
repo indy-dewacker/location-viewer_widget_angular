@@ -2,10 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-
-### Fixed
-- Changed dependency injection services (compatibility angular 6)
 <!--
 "### Added" for new features.
 "### Changed" for changes in existing functionality.
@@ -14,8 +10,17 @@ All notable changes to this project will be documented in this file.
 "### Fixed" for any bug fixes.
 "### Security" in case of vulnerabilities.
 -->
+## [Unreleased]
 
-## [1.0.0] - 2021-01-20
+
+## [1.0.1] - 2021-01-25
+
+### Fixed
+- Changed dependency injection services (compatibility angular 6)
+
+
 - Initial release.
 
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0
