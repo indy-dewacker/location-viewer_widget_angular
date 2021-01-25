@@ -13,6 +13,7 @@ import { LayerComponent } from './components/layer-management/layer/layer.compon
 import { FormsModule } from '@angular/forms';
 import { LayerLegendComponent } from './components/layer-management/layer-legend/layer-legend.component';
 import { GeoApiService } from './services/geoapi.service';
+import { LocationViewerHelper } from './services/location-viewer.helper';
 
 @NgModule({
   declarations: [NgxLocationViewerComponent, LayerManagementComponent, LayerComponent, LayerLegendComponent],
@@ -27,7 +28,8 @@ import { GeoApiService } from './services/geoapi.service';
     MAP_SERVICE_PROVIDER,
     MapServerService,
     LayerService,
-    GeoApiService
+    GeoApiService,
+    LocationViewerHelper
   ]
 })
 export class LocationViewerModule { }
