@@ -3,9 +3,7 @@ import { AddressDetail } from '../types/geoapi/address-detail.model';
 import { LatLng } from '../types/leaflet.types';
 import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 /**
  * Provide helper functions
  */

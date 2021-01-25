@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Changed dependency injection services (compatibility angular 6)
 <!--
 "### Added" for new features.
 "### Changed" for changes in existing functionality.
