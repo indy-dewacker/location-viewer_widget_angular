@@ -1,3 +1,5 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks';
+
 ::ng-deep {
     // styling of whatishere popup
     .whatishere-wrapper {
@@ -27,7 +29,7 @@
         overflow: hidden;
     }
 
-    @media screen and (max-width: 410px) {
+    @include to($screen-xs-max) {
         .o-leaflet__content.has-content {
             padding: 0.75rem;
             width: calc(100% - 65px);
