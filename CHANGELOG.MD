@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed 
-- Use @aui-core $screen-xs-max to define width sidebar for smaller devices
+- Added close button to close layermanagement (alternative way of closing for smaller devices)
 
 ## [1.0.1] - 2021-01-25
 

@@ -1,5 +1,3 @@
-@import '~@a-ui/core/dist/assets/styles/_quarks';
-
 ::ng-deep {
     // styling of whatishere popup
     .whatishere-wrapper {
@@ -28,13 +26,6 @@
     .whatishere-image {
         overflow: hidden;
     }
-
-    @include to($screen-xs-max) {
-        .o-leaflet__content.has-content {
-            padding: 0.75rem;
-            width: calc(100% - 65px);
-        }
-    }
 }
 
 .icon {
@@ -62,4 +53,3 @@
 .a-input__addon {
     padding-left: 0;
 }
-  

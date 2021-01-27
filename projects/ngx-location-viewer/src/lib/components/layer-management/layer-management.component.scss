@@ -1,0 +1,16 @@
+h1 {
+    font-size: 1.44rem !important;
+}
+
+h2 {
+    font-size: 1.2rem !important;
+}
+
+.sidebar__header {
+    position: relative;
+    .sidebar-close {
+        position: absolute;
+        top: -0.625rem;
+        right: -0.625rem;
+    }
+}
