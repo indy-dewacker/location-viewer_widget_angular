@@ -2,10 +2,20 @@
 <div class="u-margin-left-xs">
     <div *ngIf="operationalLayer" class="u-margin-top">
         <h2 class="has-base-font">Operationele laag:</h2>
-        <aui-layer *ngIf="operationalLayer" [layer]="operationalLayer" [layerType]="layerTypes.operational" (layerVisibiltyChange)="onLayerVisibilityChange($event)"></aui-layer>
+        <aui-layer
+            *ngIf="operationalLayer"
+            [layer]="operationalLayer"
+            [layerType]="layerTypes.operational"
+            (layerVisibiltyChange)="onLayerVisibilityChange($event)"
+        ></aui-layer>
     </div>
-    <div *ngIf="supportingLayer" class="u-margin-top">
+    <div *ngIf="supportingLayers" class="u-margin-top">
         <h2 class="has-base-font">Ondersteunende lagen:</h2>
-        <aui-layer *ngIf="supportingLayer" [layer]="supportingLayer" [layerType]="layerTypes.supporting" (layerVisibiltyChange)="onLayerVisibilityChange($event)"></aui-layer>
+        <aui-layer
+            *ngFor="let layer of supportingLayers"
+            [layer]="layer"
+            [layerType]="layerTypes.supporting"
+            (layerVisibiltyChange)="onLayerVisibilityChange($event)"
+        ></aui-layer>
     </div>
 </div>

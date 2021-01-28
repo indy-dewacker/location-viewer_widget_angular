@@ -66,7 +66,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[]>();
 
     /* supporting layer config */
-    supportingLayer: Layer;
+    supportingLayers: Layer[];
     /* operational layer config */
     operationalLayer: Layer;
 
@@ -238,7 +238,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     handleLayerVisibilityChange(layerType: LayerTypes) {
         switch (layerType) {
             case LayerTypes.supporting:
-                const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
+                const ids = this.layerService.getVisibleLayerIds(this.supportingLayers);
                 this.leafletMap.setVisibleLayersSupportingLayer(ids);
                 break;
             case LayerTypes.operational:
@@ -302,18 +302,18 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             ])
                 .pipe(take(1))
                 .subscribe(([info, legend]) => {
-                    this.supportingLayer = this.layerService.buildLayerFromInfoAndLegend(
+                    this.supportingLayers = this.layerService.buildSupportingLayersFromInfoAndLegend(
                         info,
                         legend,
                         this.supportingLayerOptions.layerIds,
                     );
-                    const ids = this.layerService.getVisibleLayerIds(this.supportingLayer);
+                    const ids = this.layerService.getVisibleLayerIds(this.supportingLayers);
                     const layer = this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
                     layer.on(RasterEvents.loading, () => {
-                        this.supportingLayer.isLoading = true;
+                        this.supportingLayers.forEach( x => x.isLoading = true);
                     })
                     layer.on(RasterEvents.load, () => {
-                        this.supportingLayer.isLoading = false;
+                        this.supportingLayers.forEach( x => x.isLoading = false);
                     })
                 });
         }

@@ -9,7 +9,7 @@ import { Layer } from '../../types/layer.model';
 })
 export class LayerManagementComponent implements OnInit {
     @Input() operationalLayer: Layer;
-    @Input() supportingLayer: Layer;
+    @Input() supportingLayers: Layer[];
 
     @Output() layerVisibilityChange = new EventEmitter<LayerTypes>();
 
