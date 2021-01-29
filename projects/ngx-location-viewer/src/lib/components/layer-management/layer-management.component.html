@@ -1,14 +1,14 @@
 <div class="sidebar">
     <div class="sidebar__header">
-        <button class="a-button-transparent a-button--default has-icon sidebar-close" aria-label="Close" (click)="toggleLayermanagement()">
+        <button class="a-button-transparent a-button--default has-icon sidebar__close-button" aria-label="Sluiten" (click)="toggleLayermanagement()">
             <span class="fa fa-close" aria-hidden="true"></span>
         </button>
     </div>
     <div class="sidebar__content">
-        <h1 class="has-base-font h5">Lagen</h1>
+        <h1 class="has-base-font u-text-bold h5">Lagen</h1>
         <div class="u-margin-left-xs">
             <div *ngIf="operationalLayer" class="u-margin-top">
-                <h2 class="has-base-font h6">Operationele laag:</h2>
+                <h2 class="has-base-font u-text-bold h6">Operationele laag:</h2>
                 <aui-layer
                     *ngIf="operationalLayer"
                     [layer]="operationalLayer"
@@ -17,7 +17,7 @@
                 ></aui-layer>
             </div>
             <div *ngIf="supportingLayer" class="u-margin-top">
-                <h2 class="has-base-font h6">Ondersteunende lagen:</h2>
+                <h2 class="has-base-font u-text-bold h6">Ondersteunende lagen:</h2>
                 <aui-layer
                     *ngIf="supportingLayer"
                     [layer]="supportingLayer"

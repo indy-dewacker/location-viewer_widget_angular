@@ -1,8 +1,9 @@
 .sidebar__header {
-    position: relative;
-    .sidebar-close {
-        position: absolute;
-        top: -0.625rem;
-        right: -0.625rem;
-    }
+  position: relative;
+
+  .sidebar__close-button {
+    position: absolute;
+    right: -0.625rem;
+    top: -0.625rem;
+  }
 }
