@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed 
+- Added close button to close layermanagement (alternative way of closing for smaller devices)
 
 ## [1.0.1] - 2021-01-25
 
