@@ -15,6 +15,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Supportinglayeroptions changed the way to pass layerIds: only add child id's or parent id to add all child layers
 
+## [1.0.2] - 2021-01-29
+
+### Fixed
+- Added close button to close layer management
+
 
 ## [1.0.1] - 2021-01-25
 
@@ -22,8 +27,11 @@ All notable changes to this project will be documented in this file.
 - Changed dependency injection services (compatibility angular 6)
 
 
+## [1.0.1] - 2021-01-25
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.1...HEAD
+
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0

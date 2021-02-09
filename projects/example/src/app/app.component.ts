@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     showLayerManagement = true;
     supportingLayerOptions: SupportingLayerOptions = {
         url: 'http://geodata.antwerpen.be/arcgissql/rest/services/P_ToK/P_Tok_routeweek/Mapserver',
-        layerIds: [143, 144, 145, 146],
+        layerIds: [143, 144, 145, 146, 147],
     };
 
     operationalLayerOptions: OperationalLayerOptions = {

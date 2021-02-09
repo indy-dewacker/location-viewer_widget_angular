@@ -1,0 +1,30 @@
+.layer__toggle {
+  cursor: pointer;
+}
+
+.layer__icon {
+  left: -1.375rem;
+  position: absolute;
+  top: 0.125rem;
+}
+
+.layer__reveal {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.a-spinner {
+  position: absolute;
+  top: 0rem;
+  left: -2rem;
+}
+
+.a-input__checkbox {
+  label {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+}

@@ -6,7 +6,7 @@ import { Layer } from '../../../types/layer.model';
 @Component({
     selector: 'aui-layer',
     templateUrl: './layer.component.html',
-    styleUrls: ['./layer.component.css'],
+    styleUrls: ['./layer.component.scss'],
 })
 export class LayerComponent implements OnInit {
     @Input() layer: Layer;
