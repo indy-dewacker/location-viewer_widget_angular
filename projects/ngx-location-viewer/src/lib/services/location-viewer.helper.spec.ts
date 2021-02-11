@@ -3,7 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { LocationViewerHelper } from './location-viewer.helper';
 
 describe('LocationViewerHelper', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+    beforeEach(() => TestBed.configureTestingModule({
+        providers: [LocationViewerHelper]
+    }));
 
     it('should be created', () => {
         const service: LocationViewerHelper = TestBed.get(LocationViewerHelper);

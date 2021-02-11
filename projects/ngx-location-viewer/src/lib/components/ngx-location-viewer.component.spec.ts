@@ -9,6 +9,7 @@ import { MAP_SERVICE_PROVIDER } from '../map.provider';
 import { GeoApiService } from '../services/geoapi.service';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { LocationViewerHelper } from '../services/location-viewer.helper';
 import { MapServerService } from '../services/mapserver.service';
 import { ButtonActions } from '../types/button-actions.enum';
 import { Shapes } from '../types/geoman/geoman.types';
@@ -26,7 +27,7 @@ describe('NgxLocationViewerComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NgxLocationViewerComponent, LayerManagementComponent, LayerComponent, LayerLegendComponent],
             imports: [CommonModule, HttpClientModule, FormsModule, LeafletModule],
-            providers: [MAP_SERVICE_PROVIDER, MapServerService, LayerService, GeoApiService],
+            providers: [MAP_SERVICE_PROVIDER, MapServerService, LayerService, GeoApiService, LocationViewerHelper],
         }).compileComponents();
     }));
 

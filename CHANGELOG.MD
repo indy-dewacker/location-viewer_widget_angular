@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Changed
+- Supportinglayeroptions changed the way to pass layerIds: only add child id's or parent id to add all child layers
+
 ## [1.0.2] - 2021-01-29
 
 ### Fixed

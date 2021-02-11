@@ -70,69 +70,101 @@ export class LayerService {
     }
 
     // filter multiple layers by id
-    buildLayerFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[]): Layer {
-        // Build layermanagement from info (only 1 parent layer)
-        // get parent layer from info layers
-        const parentLayer = info.layers.filter((x) => x.parentLayerId === -1 && layerIds.indexOf(x.id) > -1);
+    buildSupportingLayersFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[]): Layer[] {
+        // get selected layers from info
+        let selectedLayers = info.layers.filter((layer) => layerIds.includes(layer.id));
 
-        if (parentLayer.length === 1) {
-            const layer: Layer = {
-                id: parentLayer[0].id,
-                name: parentLayer[0].name,
-                visible: parentLayer[0].defaultVisibility,
-                layers: [],
-            };
-            const layerLegend = legend.layers.filter((x) => x.layerId === layer.id);
-            if (layerLegend.length === 1) {
-                layer.legend = layerLegend[0].legend;
-            }
+        let layers: Layer[] = [];
+        selectedLayers.forEach((selectedLayer) => {
+            const layer = this.buildLayerFromInfoAndLegend(selectedLayer, legend.layers);
+            layer.layers = this.buildChildLayer(layer.id, info.layers, legend.layers);
+            layers.push(layer);
+        });
 
-            layer.layers = this.buildChildLayer(parentLayer[0].id, layerIds, info.layers, legend.layers);
+        layers = this.buildLayerTree(layers, info.layers, legend);
 
-            return layer;
-        }
-
-        return null;
+        return layers;
     }
 
     /* Fetch visible layerids of layer object */
-    getVisibleLayerIds(layer: Layer): number[] {
+    getVisibleLayerIds(layers: Layer[]): number[] {
         let visibleLayerIds: number[] = [];
-        if (layer.visible) {
-            // Only return id if there are no sublayers, otherwise if parent id is returned, all sub layers will be shown
-            if (layer.layers.length === 0) {
-                visibleLayerIds.push(layer.id);
-            }
-            layer.layers
-                .filter((x) => x.visible === true)
-                .forEach((visibleSubLayer) => {
-                    visibleLayerIds = [...visibleLayerIds, ...this.getVisibleLayerIds(visibleSubLayer)];
-                });
-        }
+        layers
+            .filter((x) => x.visible)
+            .forEach((layer) => {
+                // Only return id if there are no sublayers, otherwise if parent id is returned, all sub layers will be shown
+                if (layer.layers.length === 0) {
+                    visibleLayerIds.push(layer.id);
+                } else {
+                    visibleLayerIds = [...visibleLayerIds, ...this.getVisibleLayerIds(layer.layers)];
+                }
+            });
 
         return visibleLayerIds;
     }
 
-    private buildChildLayer(parentLayerId: number, layerIds: number[], layers: LayerInfo[], layerLegend: LayerLegend[]): Layer[] {
+    private buildLayerTree(layers: Layer[], layersInfo: LayerInfo[], legend: MapserverLegend): Layer[] {
+        let layerTree: Layer[] = [];
+        layers.forEach(layer => {
+            const layerInfo = layersInfo.find(x => x.id === layer.id);
+            if (layerInfo && layerInfo.parentLayerId !== -1) {
+                //check if parent layer already present in layer array, add it to layer
+                const parentLayer = layerTree.find(x => x.id === layerInfo.parentLayerId);
+                if (parentLayer) {
+                    //check if layer already exists in parentlayern if not add layer
+                    if (!parentLayer.layers.some(l => l.id === layer.id)) {
+                        parentLayer.layers.push(layer);
+                    }
+                } else  {
+                    //if parent layer does not exists add new parent layer and add it to layertree
+                    const parentLayerInfo = layersInfo.find(x => x.id === layerInfo.parentLayerId);
+                    if (parentLayerInfo) {
+                        const newParentLayer: Layer = this.buildLayerFromInfoAndLegend(parentLayerInfo, legend.layers);
+                        
+                        newParentLayer.layers = [layer]
+                        layerTree.push(newParentLayer);
+                    }
+                }
+            } else {
+                layerTree.push(layer);
+            }
+        });
+
+        // if there are still layers with parent repeat this function
+        if (layersInfo.filter(x => layerTree.map(x => x.id).includes(x.id) && x.parentLayerId !== -1).length > 0) {
+            layerTree = this.buildLayerTree(layerTree, layersInfo, legend);
+        }
+
+        return layerTree;
+    }
+
+    private buildLayerFromInfoAndLegend(info: LayerInfo, legend: LayerLegend[]): Layer {
+        let layer: Layer;
+        if (info) {
+            layer = {
+                id: info.id,
+                name: info.name,
+                visible: info.defaultVisibility,
+                layers: []
+            };
+
+            const layerLegend = legend.filter((x) => x.layerId === layer.id);
+            if (layerLegend.length === 1) {
+                layer.legend = layerLegend[0].legend;
+            }
+        }
+
+        return layer;
+    }
+    private buildChildLayer(parentLayerId: number, layers: LayerInfo[], layerLegend: LayerLegend[]): Layer[] {
         const childLayers: Layer[] = [];
         layers
-            .filter((x) => x.parentLayerId === parentLayerId && layerIds.indexOf(x.id) > -1)
+            .filter((x) => x.parentLayerId === parentLayerId)
             .forEach((childLayer) => {
-                // instantiate layer object
-                const layer: Layer = {
-                    id: childLayer.id,
-                    name: childLayer.name,
-                    visible: childLayer.defaultVisibility,
-                    layers: [],
-                };
-
-                const childLegend = layerLegend.filter((x) => x.layerId === layer.id);
-                if (childLegend.length === 1) {
-                    layer.legend = childLegend[0].legend;
-                }
+                const layer = this.buildLayerFromInfoAndLegend(childLayer, layerLegend);
 
                 if (layers.filter((x) => x.parentLayerId === childLayer.id).length > 0) {
-                    layer.layers = this.buildChildLayer(childLayer.id, layerIds, layers, layerLegend);
+                    layer.layers = this.buildChildLayer(childLayer.id, layers, layerLegend);
                 }
 
                 childLayers.push(layer);

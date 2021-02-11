@@ -3,7 +3,7 @@
         <ng-content></ng-content>
     </div>
     <div *ngIf="showLayerManagement">
-        <aui-layer-management [supportingLayer]="supportingLayer" [operationalLayer]="operationalLayer" (layerVisibilityChange)="handleLayerVisibilityChange($event)" (layerManagementClosed)="toggleLayermanagement()"></aui-layer-management>
+        <aui-layer-management [supportingLayers]="supportingLayers" [operationalLayer]="operationalLayer" (layerVisibilityChange)="handleLayerVisibilityChange($event)" (layerManagementClosed)="toggleLayermanagement()"></aui-layer-management>
     </div>
     <div class="controls-top-left" controls top left>
         <button

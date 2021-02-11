@@ -1,6 +1,10 @@
 <div class="sidebar">
     <div class="sidebar__header">
-        <button class="a-button-transparent a-button--default has-icon sidebar__close-button" aria-label="Sluiten" (click)="toggleLayermanagement()">
+        <button
+            class="a-button-transparent a-button--default has-icon sidebar__close-button"
+            aria-label="Sluiten"
+            (click)="toggleLayermanagement()"
+        >
             <span class="fa fa-close" aria-hidden="true"></span>
         </button>
     </div>
@@ -16,11 +20,11 @@
                     (layerVisibiltyChange)="onLayerVisibilityChange($event)"
                 ></aui-layer>
             </div>
-            <div *ngIf="supportingLayer" class="u-margin-top">
+            <div *ngIf="supportingLayers" class="u-margin-top">
                 <h2 class="has-base-font u-text-bold h6">Ondersteunende lagen:</h2>
                 <aui-layer
-                    *ngIf="supportingLayer"
-                    [layer]="supportingLayer"
+                    *ngFor="let layer of supportingLayers"
+                    [layer]="layer"
                     [layerType]="layerTypes.supporting"
                     (layerVisibiltyChange)="onLayerVisibilityChange($event)"
                 ></aui-layer>
