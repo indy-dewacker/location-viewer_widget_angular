@@ -9,7 +9,7 @@ import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import area from '@turf/area';
-import { DrawEvents, RasterEvents } from '../types/leaflet.types';
+import { DrawEvents, InteractionEvents, RasterEvents } from '../types/leaflet.types';
 import { GeoApiService } from '../services/geoapi.service';
 import { Shapes } from '../types/geoman/geoman.types';
 import { ButtonActions } from '../types/button-actions.enum';
@@ -62,8 +62,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Output() addLine = new EventEmitter<any>();
     /* EditFeature event */
     @Output() editFeature = new EventEmitter<any>();
-    /* Operational layer filtered: fired when using selection tools rectangle/polygon or using filter layer */
-    @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[]>();
+    /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer*/
+    @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
 
     /* supporting layer config */
     supportingLayers: Layer[];
@@ -331,6 +331,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                     .subscribe(([layerInfo, legend]) => {
                         this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
                         this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer);
+                        this.registerClickEvent(false);
                     });
             } else if (this.operationalLayerOptions.markers && this.operationalLayerOptions.markers.length > 0 && this.operationalLayerOptions.name && this.operationalLayerOptions.isVisible) {
                 this.leafletMap.addOperationalMarkers(
@@ -341,9 +342,35 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                     name: this.operationalLayerOptions.name,
                     visible: this.operationalLayerOptions.isVisible,
                 };
+                this.registerClickEvent();
             } else {
                 throw new Error('Invalid operationalLayerOptions! Check readme for examples.');
             }
+
+            
+        }
+    }
+
+    private registerClickEvent(customMarker = true) {
+        // listen for events on operational layer
+        if (this.leafletMap.operationalLayer) {
+            this.leafletMap.operationalLayer.on(InteractionEvents.click, event => {
+                // if custommarker return data under options object
+                if (customMarker) {
+                    const latLng = event.layer.getLatLng();
+                    let marker: OperationalMarker = {
+                        coordinate: {
+                            lat: latLng.lat,
+                            lon: latLng.lng
+                        },
+                        data: event.layer.options.data,
+                        icon: ''
+                    }
+                    this.filteredResult.emit([marker]);
+                } else {
+                    this.filteredResult.emit([event.layer.feature.properties]);
+                }
+            })
         }
     }
 

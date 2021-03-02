@@ -91,7 +91,7 @@ Create a contract with the "GEOAPI" on the api-store
     (addLine)="onAddLine($event)"
     (editFeature)="onEditFeature($event)"
     (hasSidebarChange)="onHasSidebarChange($event)"
-    (locationSelect)="onLocationSelect($event)"
+    (filteredResult)="onFilteredResult($event)"
 >
 
 <p>This is shown inside the leaflet sidebar if hasSidebar is set to true.</p>
@@ -152,8 +152,8 @@ class ExampleComponent {
     @Output() addLine = new EventEmitter<any>();
     /* EditFeature event */
     @Output() editFeature = new EventEmitter<any>();
-    /* Operational layer filtered: fired when using selection tools rectangle/polygon or using filter layer */
-    @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[]>();
+    /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer. */
+    @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
 
 }
 ```
