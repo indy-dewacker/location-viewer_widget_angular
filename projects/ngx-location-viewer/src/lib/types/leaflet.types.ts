@@ -21,6 +21,10 @@ export enum PopupEvents {
     autopanstart = 'autopanstart'
 }
 
+export enum InteractionEvents {
+    click = 'click'
+}
+
 export interface Intake {
     layer: any;
     shape: string;
