@@ -12,11 +12,15 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [1.1.0] - 2021-03-03
+
 ### Changed
 - Supportinglayeroptions changed the way to pass layerIds: only add child id's or parent id to add all child layers
 
 ### Added
 - After clicking on a marker (operational layer) event will be emitted through filteredResult.
+
 
 ## [1.0.2] - 2021-01-29
 
@@ -34,7 +38,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0
