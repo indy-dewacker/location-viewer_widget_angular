@@ -425,7 +425,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                                 const address = x.addressDetail[0];
                                 const marker = this.leafletMap.addHtmlMarker(
                                     address.addressPosition.wgs84,
-                                    this.leafletMap.getHtmlMarker('#000000', 'fa-circle', '10px', { top: '-3px', left: '2px' }),
+                                    this.leafletMap.getHtmlMarker('#000000', 'fa fa-circle', '10px', { top: '-3px', left: '2px' }),
                                 );
                                 const content = this.locationViewerHelper.getWhatisherePopupContent(address);
                                 this.leafletMap.addPopupToLayer(e.marker, content, true, marker);

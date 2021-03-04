@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
         markers: taken._embedded.tasks.filter(x => x.locationDuringAssignment.xCoordinate !== null && x.locationDuringAssignment.xCoordinate !== '').map(x => {
             const marker: OperationalMarker = {
                 data: x,
-                icon: x.icon,
+                icon: `fa fa-${x.icon}`,
                 coordinate: {
                     lat: +x.locationDuringAssignment.xCoordinate,
                     lon: +x.locationDuringAssignment.yCoordinate

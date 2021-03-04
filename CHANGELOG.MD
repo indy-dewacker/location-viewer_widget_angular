@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Changed
+- Provided marker icon has to have font-awesome prefix (for v5 support): now pass icon like 'fa fa-laptop' instead of 'fa-laptop'
 
 ## [1.1.0] - 2021-03-03
 

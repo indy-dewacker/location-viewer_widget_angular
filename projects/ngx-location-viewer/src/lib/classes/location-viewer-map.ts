@@ -102,7 +102,7 @@ export class LocationViewerMap extends LeafletMap {
             }
             markers.forEach((marker) => {
                 if (marker.coordinate && marker.coordinate.lat && marker.coordinate.lon) {
-                    const htmlIcon = this.getHtmlMarker(marker.color, `fa-${marker.icon}`, marker.size, undefined);
+                    const htmlIcon = this.getHtmlMarker(marker.color, marker.icon, marker.size, undefined);
                     const icon = this.mapService.L.divIcon({ html: htmlIcon, className: 'aui-leaflet__html-icon' });
                     const leafletMarker = this.mapService.L.marker([marker.coordinate.lat, marker.coordinate.lon], { icon });
                     leafletMarker.options.data = marker.data;
@@ -184,7 +184,7 @@ export class LocationViewerMap extends LeafletMap {
      */
     getHtmlMarker(
         color: string = '#0064b4',
-        icon: string = 'fa-map-marker',
+        icon: string = 'fa fa-map-marker',
         size: string = '40px',
         position: { top: string; left: string } = {
             top: '-36px',
@@ -192,7 +192,7 @@ export class LocationViewerMap extends LeafletMap {
         },
     ) {
         const markerStyle = `color: ${color}; font-size: ${size}; top: ${position.top}; left: ${position.left}`;
-        const markerIcon = `<span class="fa ${icon}" aria-hidden="true"></span>`;
+        const markerIcon = `<span class="${icon}" aria-hidden="true"></span>`;
 
         return `<span style="${markerStyle}" class="ngx-location-viewer-marker">${markerIcon}</span>`;
     }
