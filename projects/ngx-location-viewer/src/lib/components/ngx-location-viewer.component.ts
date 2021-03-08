@@ -58,7 +58,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
      * The zoom level when a marker is selected.
      * If null the zoomlevel won't change after marker selection.
      */
-    @Input() onMarkerSelectZoom? = 16;
+    @Input() zoomOnMarkerSelect? = 16;
     /* HasSideBar change */
     @Output() hasSidebarChange = new EventEmitter<boolean>();
     /* AddPolygon event */
@@ -376,9 +376,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                     this.filteredResult.emit([event.layer.feature.properties]);
                 }
 
-                // Centers map on marker coordinates and sets view level to onMarkerSelectZoom
-                if (this.onMarkerSelectZoom) {
-                    this.leafletMap.setView(event.latlng, this.onMarkerSelectZoom);
+                // Centers map on marker coordinates and sets view level to zoomOnMarkerSelect
+                if (this.zoomOnMarkerSelect) {
+                    this.leafletMap.setView(event.latlng, this.zoomOnMarkerSelect);
                 }
             })  
         }

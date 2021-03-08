@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- onMarkerSelectZoom: After clicking on a marker (operational layer) the map will be centered on the marker and zoomlevel will be applied.
+- zoomOnMarkerSelect: After clicking on a marker (operational layer) the map will be centered on the marker and zoomlevel will be applied.
 
 ## [1.1.0] - 2021-03-03
 

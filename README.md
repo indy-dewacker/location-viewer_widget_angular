@@ -87,7 +87,7 @@ Create a contract with the "GEOAPI" on the api-store
     [leafletMap]="leafletMap"
     [defaultTileLayerLabel]="defaultTileLayerLabel"
     [tileLayer]="tileLayer"
-    [onMarkerSelectZoom]="onMarkerSelectZoom"
+    [zoomOnMarkerSelect]="zoomOnMarkerSelect"
     (addPolygon)="onAddPolygon($event)"
     (addLine)="onAddLine($event)"
     (editFeature)="onEditFeature($event)"
@@ -149,7 +149,7 @@ class ExampleComponent {
      * The zoom level when a marker is selected.
      * If null the zoomlevel won't change after marker selection.
      */
-    @Input() onMarkerSelectZoom? = 16;
+    @Input() zoomOnMarkerSelect? = 16;
     /* HasSideBar change */
     @Output() hasSidebarChange = new EventEmitter<boolean>();
     /* AddPolygon event */
