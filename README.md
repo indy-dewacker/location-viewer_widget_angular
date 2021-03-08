@@ -87,6 +87,7 @@ Create a contract with the "GEOAPI" on the api-store
     [leafletMap]="leafletMap"
     [defaultTileLayerLabel]="defaultTileLayerLabel"
     [tileLayer]="tileLayer"
+    [onMarkerSelectZoom]="onMarkerSelectZoom"
     (addPolygon)="onAddPolygon($event)"
     (addLine)="onAddLine($event)"
     (editFeature)="onEditFeature($event)"
@@ -144,6 +145,11 @@ class ExampleComponent {
     @Input() defaultTileLayerLabel = 'Kaart';
     /* Custom leaflet tile layer, if provided, shows actions on the leaflet to toggle between default and custom tile layer. */
     @Input() tileLayer: LeafletTileLayerModel;
+    /**
+     * The zoom level when a marker is selected.
+     * If null the zoomlevel won't change after marker selection.
+     */
+    @Input() onMarkerSelectZoom? = 16;
     /* HasSideBar change */
     @Output() hasSidebarChange = new EventEmitter<boolean>();
     /* AddPolygon event */

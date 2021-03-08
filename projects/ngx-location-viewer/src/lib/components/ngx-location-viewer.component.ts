@@ -54,6 +54,11 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Input() defaultTileLayerLabel = 'Kaart';
     /* Custom leaflet tile layer, if provided, shows actions on the leaflet to toggle between default and custom tile layer. */
     @Input() tileLayer: LeafletTileLayerModel;
+    /**
+     * The zoom level when a marker is selected.
+     * If null the zoomlevel won't change after marker selection.
+     */
+    @Input() onMarkerSelectZoom? = 16;
     /* HasSideBar change */
     @Output() hasSidebarChange = new EventEmitter<boolean>();
     /* AddPolygon event */
@@ -370,7 +375,12 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                 } else {
                     this.filteredResult.emit([event.layer.feature.properties]);
                 }
-            })
+
+                // Centers map on marker coordinates and sets view level to onMarkerSelectZoom
+                if (this.onMarkerSelectZoom) {
+                    this.leafletMap.setView(event.latlng, this.onMarkerSelectZoom);
+                }
+            })  
         }
     }
 
