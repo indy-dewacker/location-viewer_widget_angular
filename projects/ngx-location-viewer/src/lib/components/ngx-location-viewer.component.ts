@@ -467,9 +467,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                     this.filteredResult.emit(geoFeatureRespone.results);
                 });
             } else if(this.locationViewerHelper.isValidOpertionalMarkerLayerConfiguration(this.operationalLayerOptions)) {
-                const filteredMarkers = this.locationViewerHelper.filterOperationalMarkersByGeometry(
+                const filteredMarkers = this.locationViewerHelper.filterOperationalMarkersByGeometries(
                     this.operationalLayerOptions.markers,
-                    feature.geometry.coordinates[0].map(([y, x]) => [x, y]),
+                    feature.geometry.coordinates,
                 );
                 this.filteredResult.emit(filteredMarkers);
             }

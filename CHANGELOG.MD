@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- apply marker filtering to all polygons inside feature
+
 ### Added
 - zoomOnMarkerSelect: After clicking on a marker (operational layer) the map will be centered on the marker and zoomlevel will be applied.
 

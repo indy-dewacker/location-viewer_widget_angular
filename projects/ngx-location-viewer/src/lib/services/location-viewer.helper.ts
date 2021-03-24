@@ -150,13 +150,26 @@ export class LocationViewerHelper {
      * Filter markers by geometry
      *
      * @param markers Operationalmarker array to filter
-     * @param geometry Array of 2 based number arrays, check if markers are inside this geometry
+     * @param geometries Array of polygons
      * 
      * @returns OperationalMarker[]
      */
-    filterOperationalMarkersByGeometry(markers: OperationalMarker[], geometry: number[][]): OperationalMarker[] {
-        const filteredMarkers = markers.filter((marker) => {
-            return this.isCoordinateInsideGeometry(marker.coordinate.lat, marker.coordinate.lon, geometry);
+    filterOperationalMarkersByGeometries(markers: OperationalMarker[], geometries: any[]): OperationalMarker[] {
+        let filteredMarkers: OperationalMarker[] = [];
+        // flatten geometries to polygons, geometry could be polygon or collection of polygons
+        const polygons = geometries.map(g => {
+            if (g[0] && g[0][0] && isNaN(g[0][0])) {
+                return g.reduce((a, b) => a.concat(b)).map(([y, x]) => [x, y])
+            } else {
+                return g.map(([y, x]) => [x, y]);
+            }
+        });
+
+        polygons.forEach(polygon => {
+            const polyMarkers = markers.filter((marker) => {
+                return this.isCoordinateInsideGeometry(marker.coordinate.lat, marker.coordinate.lon, polygon);
+            });
+            filteredMarkers.push(...polyMarkers);
         });
 
         return filteredMarkers;
