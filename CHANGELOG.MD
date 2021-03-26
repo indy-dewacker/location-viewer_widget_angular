@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - apply marker filtering to all polygons inside feature
+- if operational marker icon is null fallback to default 'fa-map-marker' instead of using 'fa-null'
 
 ### Added
 - zoomOnMarkerSelect: After clicking on a marker (operational layer) the map will be centered on the marker and zoomlevel will be applied.

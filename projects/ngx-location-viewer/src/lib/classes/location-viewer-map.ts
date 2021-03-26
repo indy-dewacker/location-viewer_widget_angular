@@ -102,7 +102,7 @@ export class LocationViewerMap extends LeafletMap {
             }
             markers.forEach((marker) => {
                 if (marker.coordinate && marker.coordinate.lat && marker.coordinate.lon) {
-                    const htmlIcon = this.getHtmlMarker(marker.color, `fa-${marker.icon}`, marker.size, undefined);
+                    const htmlIcon = this.getHtmlMarker(marker.color, marker.icon ? `fa-${marker.icon}` : undefined, marker.size, undefined);
                     const icon = this.mapService.L.divIcon({ html: htmlIcon, className: 'aui-leaflet__html-icon' });
                     const leafletMarker = this.mapService.L.marker([marker.coordinate.lat, marker.coordinate.lon], { icon });
                     leafletMarker.options.data = marker.data;
