@@ -4,6 +4,7 @@ export interface LayerSpecificInfo {
     defaultVisibility: boolean;
     drawingInfo: LayerDrawingInfo;
     geometryType: string;
+    displayField: string;
 }
 
 export interface LayerDrawingInfo {

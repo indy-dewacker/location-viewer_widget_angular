@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Made FilterLayerOptions properties optional: name, popupLabel and propertyToDisplay. If one of these properties is null, information will be retrieved from mapserver (name & displayfield).
 
 ## [1.2.0] - 2021-03-03
 
