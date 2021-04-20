@@ -110,7 +110,7 @@ This layer will be initialized in ngOnInit with settings passed through the oper
 * Supporting layer
 Supporting layer is only there to visualize certain objects in leaflet. This layer will be initialized in ngOnInit with settings passed through the supportingLayerOptions input param.
 * Filter layers
-Filter layers are used to filter the operational layer by a specific object that is a polygon. After clicking on this layer the operational layer will be filtered by the objects geometry. This layer will be initialize in ngOnInit with settings passed through the filterLayerOptions input param.
+Filter layers are used to filter the operational layer by a specific object that is a polygon. After clicking on this layer the operational layer will be filtered by the objects geometry. This layer will be initialize in ngOnInit with settings passed through the filterLayerOptions input param. If name, popupLabel or propertyToDisplay properties are null, information will be used from layer information mapserver (name & displayfield).
 
 For working examples of the layer types check [demo](##demo), this is a working page with a form to test all the possible parameters.
 
