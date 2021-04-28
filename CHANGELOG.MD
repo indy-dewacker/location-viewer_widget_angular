@@ -12,8 +12,12 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [1.3.0] - 2021-04-28
+
 ### Added
 - Made FilterLayerOptions properties optional: name, popupLabel and propertyToDisplay. If one of these properties is null, information will be retrieved from mapserver (name & displayfield).
+
 
 ## [1.2.0] - 2021-03-03
 
@@ -51,7 +55,8 @@ All notable changes to this project will be documented in this file.
 
 
 [Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.2...v1.2.0
+[1.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.0...v1.0.1
