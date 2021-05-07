@@ -1,226 +1,129 @@
 <aui-leaflet [leafletMap]="leafletMap" [hasSidebar]="hasSidebar">
-    <div *ngIf="hasSidebar">
-        <ng-content></ng-content>
-    </div>
-    <div *ngIf="showLayerManagement">
-        <aui-layer-management [supportingLayers]="supportingLayers" [operationalLayer]="operationalLayer" (layerVisibilityChange)="handleLayerVisibilityChange($event)" (layerManagementClosed)="toggleLayermanagement()"></aui-layer-management>
-    </div>
-    <div class="controls-top-left" controls top left>
-        <button
-            *ngIf="showLayerManagement"
-            type="button"
-            class="a-button a-button--small has-icon a-button--block u-margin-bottom-xs"
-            name="toggle-layermanagement"
-            [title]="hasSidebar ? 'Sluit lagenoverzicht' : 'Open lagenoverzicht'"
-            aria-label="Open/sluit lagenoverzicht"
-            (click)="toggleLayermanagement()"
-        >
-            <span class="fa" [ngClass]="{ 'fa-angle-double-right': !hasSidebar, 'fa-angle-double-left': hasSidebar }"></span>
+  <div *ngIf="hasSidebar">
+    <ng-content></ng-content>
+  </div>
+  <div *ngIf="showLayerManagement && hasSidebar">
+    <aui-layer-management [supportingLayers]="supportingLayers" [operationalLayer]="operationalLayer"
+      (layerVisibilityChange)="handleLayerVisibilityChange($event)" (layerManagementClosed)="toggleLayermanagement()">
+    </aui-layer-management>
+  </div>
+  <div class="controls-top-left" controls top left>
+    <button *ngIf="showLayerManagement" type="button"
+      class="a-button a-button--small has-icon a-button--block u-margin-bottom-xs" name="toggle-layermanagement"
+      [title]="hasSidebar ? 'Sluit lagenoverzicht' : 'Open lagenoverzicht'"
+      [attr.aria-label]="hasSidebar ? 'Sluit lagenoverzicht' : 'Open lagenoverzicht'" (click)="toggleLayermanagement()">
+      <aui-icon *ngIf="hasSidebar" name="ai-arrow-button-left-1"></aui-icon>
+      <aui-icon *ngIf="!hasSidebar" name="ai-arrow-button-right-1"></aui-icon>
+    </button>
+    <div class="m-button-group m-button-group--vertical">
+      <div *ngIf="leafletMap.operationalLayer && showSelectionTools" class="m-button-group m-button-group--horizontal">
+        <button type="button" class="a-button--small has-icon" [ngClass]="{
+                    'a-button': !currentButton.startsWith(buttonActions.select),
+                    'a-button-outline': currentButton.startsWith(buttonActions.select)
+                }" aria-label="Selecteren" (click)="activeButtonChange(buttonActions.select)">
+          <aui-icon name="ai-cursor" ariaLabel="Selecteren"></aui-icon>
         </button>
-        <div class="m-button-group m-button-group--vertical">
-            <div *ngIf="leafletMap.operationalLayer && showSelectionTools" class="m-button-group m-button-group--horizontal">
-                <button
-                    type="button"
-                    class="a-button a-button--small has-icon a-button--block"
-                    [ngClass]="{
-                        'a-button': !currentButton.startsWith(buttonActions.select),
-                        'a-button-outline': currentButton.startsWith(buttonActions.select)
-                    }"
-                    aria-label="Selecteren"
-                    (click)="activeButtonChange(buttonActions.select)"
-                >
-                    <span class="fa fa-mouse-pointer" title="Selecteren"></span>
-                </button>
-                <div *ngIf="currentButton.startsWith(buttonActions.select)">
-                    <div class="a-input a-input--small has-addon has-icon-right">
-                        <div class="a-input__wrapper">
-                            <div class="a-input__addon">
-                                <button
-                                    type="button"
-                                    class="a-button a-button--small has-icon a-button--block"
-                                    [ngClass]="{
-                                        'a-button': currentButton !== buttonActions.selectRectangle,
-                                        'a-button-outline': currentButton === buttonActions.selectRectangle
-                                    }"
-                                    (click)="activeButtonChange(buttonActions.selectRectangle)"
-                                    title="Selecteer met een rechthoek"
-                                    aria-label="Selecteer met een rechthoek"
-                                >
-                                    <svg class="icon icon-vector-square"><use xlink:href="#icon-vector-square"></use></svg>
-                                </button>
-                                <button
-                                    type="button"
-                                    class="a-button a-button--small has-icon a-button--block"
-                                    [ngClass]="{
-                                        'a-button': currentButton !== buttonActions.selectPolygon,
-                                        'a-button-outline': currentButton === buttonActions.selectPolygon
-                                    }"
-                                    (click)="activeButtonChange(buttonActions.selectPolygon)"
-                                    title="Selecteer met een veelhoek"
-                                    aria-label="Selecteer met een veelhoek"
-                                >
-                                    <svg class="icon icon-draw-polygon"><use xlink:href="#icon-draw-polygon"></use></svg>
-                                </button>
-                                <button
-                                    *ngIf="filterLayers && filterLayers.length > 0"
-                                    type="button"
-                                    class="a-button a-button--small has-icon a-button--block"
-                                    [ngClass]="{
-                                        'a-button': currentButton !== buttonActions.selectZone,
-                                        'a-button-outline': currentButton === buttonActions.selectZone
-                                    }"
-                                    (click)="activeButtonChange(buttonActions.selectZone)"
-                                    title="Selecteer met filterlaag"
-                                    aria-label="Selecteer met filterlaag"
-                                >
-                                    <svg class="icon icon-layer-group"><use xlink:href="#icon-layer-group"></use></svg>
-                                </button>
-                            </div>
-                            <select *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1" name="select-filterLayer" id="select-filterLayer" [(ngModel)]="currentFilterLayer" (change)="onChangeFilterLayer()">
-                                <option disabled [ngValue]="undefined">Kies filterlaag</option>
-                                <ng-container *ngFor="let filterLayer of filterLayers">
-                                    <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
-                                </ng-container>
-                              </select>
-                              <span *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1" class="fa fa-angle-down"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="m-button-group m-button-group--horizontal" *ngIf="showMeasureTools">
-                <button
-                    type="button"
-                    class="a-button--small has-icon a-button--block"
-                    [ngClass]="{
-                        'a-button': !currentButton.startsWith(buttonActions.measurement),
-                        'a-button-outline': currentButton.startsWith(buttonActions.measurement)
-                    }"
-                    (click)="activeButtonChange(buttonActions.measurement)"
-                    title="Meten"
-                    aria-label="Meten"
-                >
-                    <svg class="icon icon-ruler"><use xlink:href="#icon-ruler"></use></svg>
-                </button>
-                <div *ngIf="currentButton.startsWith(buttonActions.measurement)">
-                    <button
-                        type="button"
-                        class="a-button a-button--small has-icon a-button--block"
-                        [ngClass]="{
-                            'a-button': currentButton !== buttonActions.distance,
-                            'a-button-outline': currentButton === buttonActions.distance
-                        }"
-                        (click)="activeButtonChange(buttonActions.distance)"
-                        title="Meten afstand"
-                        aria-label="Meten afstand"
-                    >
-                        <svg class="icon icon-measure-line"><use xlink:href="#icon-measure-line"></use></svg>
-                    </button>
-                    <button
-                        type="button"
-                        class="a-button a-button--small has-icon a-button--block"
-                        [ngClass]="{
-                            'a-button': currentButton !== buttonActions.area,
-                            'a-button-outline': currentButton === buttonActions.area
-                        }"
-                        (click)="activeButtonChange(buttonActions.area)"
-                        title="Meten oppervlakte en omtrek"
-                        aria-label="Meten oppervlakte en omtrek"
-                    >
-                        <svg class="icon icon-measure-shape"><use xlink:href="#icon-measure-shape"></use></svg>
-                    </button>
-                </div>
-            </div>
-            <button
-                type="button"
-                class="a-button--small has-icon a-button--block"
-                [ngClass]="{
-                    'a-button': currentButton !== buttonActions.whatishere,
-                    'a-button-outline': currentButton === buttonActions.whatishere
-                }"
-                (click)="activeButtonChange(buttonActions.whatishere)"
-                *ngIf="showWhatIsHereButton"
-                title="Wat is hier"
-                aria-label="Wat is hier"
-            >
-                <span class="fa fa-map-pin" ></span>
-            </button>
+        <div *ngIf="currentButton.startsWith(buttonActions.select)">
+          <button type="button" class="a-button--small has-icon" [ngClass]="{
+            'a-button': currentButton !== buttonActions.selectRectangle,
+            'a-button-outline': currentButton === buttonActions.selectRectangle
+        }" (click)="activeButtonChange(buttonActions.selectRectangle)" title="Selecteer met een rechthoek"
+            aria-label="Selecteer met een rechthoek">
+            <aui-icon name="ai-vectors-anchor-square"></aui-icon>
+          </button>
+          <button type="button" class="a-button--small has-icon" [ngClass]="{
+            'a-button': currentButton !== buttonActions.selectPolygon,
+            'a-button-outline': currentButton === buttonActions.selectPolygon
+        }" (click)="activeButtonChange(buttonActions.selectPolygon)" title="Selecteer met een veelhoek"
+            aria-label="Selecteer met een veelhoek">
+            <aui-icon name="ai-vectors-anchor-triangle"></aui-icon>
+          </button>
+          <button *ngIf="filterLayers && filterLayers.length > 0" type="button"
+            class="a-button a-button--small has-icon a-button--block" [ngClass]="{
+            'a-button': currentButton !== buttonActions.selectZone,
+            'a-button-outline': currentButton === buttonActions.selectZone
+        }" (click)="activeButtonChange(buttonActions.selectZone)" title="Selecteer met filterlaag"
+            aria-label="Selecteer met filterlaag">
+            <aui-icon name="ai-layers"></aui-icon>
+          </button>
         </div>
-        <ng-content select="[controls][top][left]"></ng-content>
+        <div class="a-input a-input--small has-icon-right u-margin-left-xs">
+          <div class="a-input__wrapper"
+            *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1">
+            <select name="select-filterLayer" id="select-filterLayer" [(ngModel)]="currentFilterLayer"
+              (change)="onChangeFilterLayer()">
+              <option disabled [ngValue]="undefined">Kies filterlaag</option>
+              <ng-container *ngFor="let filterLayer of filterLayers">
+                <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
+              </ng-container>
+            </select>
+            <aui-icon *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1"
+              name="ai-arrow-down-1"></aui-icon>
+          </div>
+        </div>
+      </div>
+      <div class="m-button-group m-button-group--horizontal" *ngIf="showMeasureTools">
+        <button type="button" class="a-button--small has-icon" [ngClass]="{
+                    'a-button': !currentButton.startsWith(buttonActions.measurement),
+                    'a-button-outline': currentButton.startsWith(buttonActions.measurement)
+                }" (click)="activeButtonChange(buttonActions.measurement)" title="Meten" aria-label="Meten">
+          <aui-icon name="ai-ruler"></aui-icon>
+        </button>
+        <div *ngIf="currentButton.startsWith(buttonActions.measurement)">
+          <button type="button" class="a-button--small has-icon" [ngClass]="{
+                        'a-button': currentButton !== buttonActions.distance,
+                        'a-button-outline': currentButton === buttonActions.distance
+                    }" (click)="activeButtonChange(buttonActions.distance)" title="Meten afstand"
+            aria-label="Meten afstand">
+            <aui-icon name="ai-vectors-line-path"></aui-icon>
+          </button>
+          <button type="button" class="a-button--small has-icon" [ngClass]="{
+                        'a-button': currentButton !== buttonActions.area,
+                        'a-button-outline': currentButton === buttonActions.area
+                    }" (click)="activeButtonChange(buttonActions.area)" title="Meten oppervlakte en omtrek"
+            aria-label="Meten oppervlakte en omtrek">
+            <aui-icon name="ai-vectors-anchor-rectangle"></aui-icon>
+          </button>
+        </div>
+      </div>
+      <button type="button" class="a-button--small has-icon" [ngClass]="{
+                'a-button': currentButton !== buttonActions.whatishere,
+                'a-button-outline': currentButton === buttonActions.whatishere
+            }" (click)="activeButtonChange(buttonActions.whatishere)" *ngIf="showWhatIsHereButton" title="Wat is hier"
+        aria-label="Wat is hier">
+        <aui-icon name="ai-pin"></aui-icon>
+      </button>
     </div>
-    <div controls bottom left>
-        <ng-content select="[controls][bottom][left]"></ng-content>
-        <div class="m-button-group m-button-group--vertical">
-            <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-in" (click)="zoomIn()">
-                <span class="fa fa-plus" attr.aria-label="Zoom in"></span>
-            </button>
-            <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-out" (click)="zoomOut()">
-                <span class="fa fa-minus" attr.aria-label="Zoom uit"></span>
-            </button>
-        </div>
+    <ng-content select="[controls][top][left]"></ng-content>
+  </div>
+  <div controls bottom left>
+    <ng-content select="[controls][bottom][left]"></ng-content>
+    <div class="m-button-group m-button-group--vertical">
+      <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-in" (click)="zoomIn()"
+        aria-label="Zoom in">
+        <aui-icon name="ai-add"></aui-icon>
+      </button>
+      <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-out"
+        (click)="zoomOut()" aria-label="Zoom uit">
+        <aui-icon name="ai-subtract"></aui-icon>
+      </button>
+    </div>
 
-        <div *ngIf="tileLayer" class="m-button-group map-layer-toggle u-margin-top-xs">
-            <button type="button" class="a-button a-button--small" (click)="toggleTileLayer()" [disabled]="isDefaultTileLayer" aria-label="Selecteer default basislaag">
-                {{ defaultTileLayerLabel }}
-            </button>
-            <button type="button" class="a-button a-button--small" (click)="toggleTileLayer(true)" [disabled]="isCustomTileLayer" aria-label="Selecteer specifieke basislaag">
-                {{ tileLayer.buttonLabel }}
-            </button>
-        </div>
+    <div *ngIf="tileLayer" class="m-button-group map-layer-toggle u-margin-top-xs">
+      <button type="button" class="a-button a-button--small" (click)="toggleTileLayer()" [disabled]="isDefaultTileLayer"
+        aria-label="Selecteer default basislaag">
+        {{ defaultTileLayerLabel }}
+      </button>
+      <button type="button" class="a-button a-button--small" (click)="toggleTileLayer(true)"
+        [disabled]="isCustomTileLayer" aria-label="Selecteer specifieke basislaag">
+        {{ tileLayer.buttonLabel }}
+      </button>
     </div>
-    <div controls bottom right>
-        <ng-content select="[controls][bottom][right]"></ng-content>
-    </div>
-    <div controls top right>
-        <ng-content select="[controls][top][right]"></ng-content>
-    </div>
+  </div>
+  <div controls bottom right>
+    <ng-content select="[controls][bottom][right]"></ng-content>
+  </div>
+  <div controls top right>
+    <ng-content select="[controls][top][right]"></ng-content>
+  </div>
 </aui-leaflet>
-
-<!-- Icons -->
-<svg
-    style="position: absolute; width: 0; height: 0; overflow: hidden"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
->
-    <defs>
-        <symbol id="icon-ruler" viewBox="0 0 32 32">
-            <title>Meten</title>
-            <path
-                d="M25.28 0.018c-0.698 0-1.295 0.249-1.794 0.747l-22.721 22.721c-0.498 0.498-0.747 1.096-0.747 1.794s0.249 1.295 0.747 1.794l3.588 3.588c0.001 0.001 0.001 0.001 0.002 0.002l0.572 0.572c0.498 0.498 1.096 0.747 1.794 0.747s1.296-0.249 1.794-0.747l22.721-22.721c0.498-0.498 0.747-1.096 0.747-1.794s-0.249-1.295-0.747-1.794l-4.161-4.161c-0.498-0.498-1.096-0.747-1.794-0.747zM25.243 2.374c0.48-0.001 0.882 0.161 1.206 0.485l2.67 2.67c0.371 0.371 0.529 0.843 0.475 1.417s-0.306 1.085-0.755 1.533l-20.458 20.458c-0.449 0.449-0.96 0.7-1.534 0.755s-1.046-0.104-1.417-0.475l-2.67-2.67c-0.371-0.371-0.529-0.843-0.475-1.417s0.306-1.085 0.755-1.534l0.289-0.289 2.215 2.215c0.055 0.055 0.122 0.081 0.202 0.077s0.149-0.034 0.208-0.093l0.426-0.426c0.059-0.059 0.090-0.128 0.093-0.208s-0.023-0.147-0.077-0.202l-2.215-2.215 2.212-2.212 2.215 2.215c0.055 0.055 0.122 0.081 0.202 0.077s0.149-0.034 0.208-0.093l0.426-0.426c0.059-0.059 0.090-0.129 0.093-0.208s-0.023-0.147-0.077-0.202l-2.215-2.215 2.212-2.212 3.436 3.436c0.080 0.080 0.168 0.126 0.265 0.141s0.175-0.008 0.234-0.067l0.426-0.426c0.059-0.059 0.082-0.137 0.067-0.234s-0.061-0.185-0.141-0.265l-3.436-3.436 2.212-2.212 2.215 2.215c0.055 0.055 0.122 0.081 0.202 0.077s0.149-0.034 0.208-0.093l0.426-0.426c0.059-0.059 0.090-0.129 0.093-0.208s-0.023-0.147-0.077-0.202l-2.215-2.215 2.212-2.212 2.215 2.215c0.055 0.055 0.122 0.081 0.202 0.077s0.149-0.034 0.208-0.093l0.426-0.426c0.059-0.059 0.090-0.129 0.093-0.208s-0.023-0.147-0.077-0.202l-2.215-2.215 2.212-2.212 3.436 3.436c0.080 0.080 0.168 0.126 0.265 0.141s0.175-0.008 0.234-0.067l0.426-0.426c0.059-0.059 0.082-0.137 0.067-0.234s-0.061-0.185-0.141-0.265l-3.436-3.436 2.212-2.212 2.215 2.215c0.055 0.055 0.122 0.081 0.202 0.077s0.149-0.034 0.208-0.093l0.426-0.426c0.059-0.059 0.090-0.129 0.093-0.208s-0.023-0.147-0.077-0.202l-2.215-2.215 0.938-0.938c0.449-0.449 0.96-0.7 1.534-0.755 0.072-0.007 0.142-0.010 0.21-0.010z"
-            ></path>
-        </symbol>
-        <symbol id="icon-measure-shape" viewBox="0 0 32 32">
-            <title>Meten oppervlakte en omtrek</title>
-            <path
-                d="M18.533 0.018c-0.526 0-0.975 0.187-1.348 0.56s-0.56 0.823-0.56 1.348v2.955l-5.695 2.445c-0.080-0.33-0.249-0.623-0.506-0.881-0.373-0.373-0.823-0.56-1.348-0.56h-5.513c-0.526 0-0.975 0.187-1.348 0.56s-0.56 0.823-0.56 1.348v5.513c0 0.526 0.187 0.975 0.56 1.348s0.823 0.56 1.348 0.56h0.658l-0.99 7.437h-0.626c-0.526 0-0.975 0.187-1.348 0.56s-0.56 0.823-0.56 1.348v5.513c0 0.526 0.187 0.975 0.56 1.348s0.823 0.56 1.348 0.56h5.513c0.526 0 0.975-0.187 1.348-0.56s0.56-0.823 0.56-1.348v-1.134l12.198-4.496c0.090 0.277 0.246 0.528 0.469 0.751 0.373 0.373 0.823 0.56 1.348 0.56h5.513c0.526 0 0.975-0.187 1.348-0.56s0.56-0.823 0.56-1.348v-5.513c0-0.526-0.187-0.975-0.56-1.348s-0.823-0.56-1.348-0.56h-2.342l-2.353-7.254c0.193-0.092 0.371-0.22 0.535-0.383 0.373-0.373 0.56-0.823 0.56-1.348v-5.513c0-0.526-0.187-0.975-0.56-1.348s-0.823-0.56-1.348-0.56h-5.513zM19.63 1.874h3.319c0.317 0 0.587 0.112 0.812 0.337s0.337 0.495 0.337 0.812v3.319c0 0.316-0.112 0.587-0.337 0.812s-0.495 0.337-0.812 0.337h-3.319c-0.317 0-0.587-0.112-0.812-0.337s-0.337-0.495-0.337-0.812v-3.319c0-0.317 0.112-0.587 0.337-0.812s0.495-0.337 0.812-0.337zM16.625 7.471c0.008 0.512 0.194 0.95 0.56 1.316 0.373 0.373 0.823 0.56 1.348 0.56h3.808l2.296 7.078h-0.595c-0.526 0-0.975 0.187-1.348 0.56s-0.56 0.823-0.56 1.348v3.562l-12.108 4.463v-1.797c0-0.526-0.187-0.975-0.56-1.348s-0.823-0.56-1.348-0.56h-2.373l0.99-7.437h2.341c0.526 0 0.975-0.187 1.348-0.56s0.56-0.823 0.56-1.348v-3.414l5.641-2.422zM4.66 7.742h3.319c0.316 0 0.587 0.112 0.812 0.337s0.337 0.495 0.337 0.812v3.319c0 0.316-0.112 0.587-0.337 0.812s-0.495 0.337-0.812 0.337h-3.319c-0.316 0-0.587-0.112-0.812-0.337s-0.337-0.495-0.337-0.812v-3.319c0-0.316 0.112-0.587 0.337-0.812s0.495-0.337 0.812-0.337zM25.139 18.281h3.319c0.317 0 0.587 0.112 0.812 0.337s0.337 0.495 0.337 0.812v3.319c0 0.317-0.112 0.587-0.337 0.812s-0.495 0.337-0.812 0.337h-3.319c-0.316 0-0.587-0.112-0.812-0.337s-0.337-0.495-0.337-0.812v-3.319c0-0.316 0.112-0.587 0.337-0.812s0.495-0.337 0.812-0.337zM3.702 24.509h3.319c0.316 0 0.587 0.112 0.812 0.337s0.337 0.495 0.337 0.812v3.319c0 0.317-0.112 0.587-0.337 0.812s-0.495 0.337-0.812 0.337h-3.319c-0.317 0-0.587-0.112-0.812-0.337s-0.337-0.495-0.337-0.812v-3.319c0-0.317 0.112-0.587 0.337-0.812s0.495-0.337 0.812-0.337z"
-            ></path>
-        </symbol>
-        <symbol id="icon-measure-line" viewBox="0 0 32 32">
-            <title>Meten afstand</title>
-            <path
-                d="M24.752 0.172c-0.512 0-0.95 0.182-1.314 0.546s-0.546 0.802-0.546 1.314v5.371c0 0.055 0.002 0.109 0.006 0.162l-15.22 15.22c-0.137-0.031-0.28-0.047-0.43-0.047h-5.371c-0.512 0-0.95 0.182-1.314 0.546s-0.546 0.802-0.546 1.314v5.371c0 0.512 0.182 0.95 0.546 1.314s0.802 0.546 1.314 0.546h5.371c0.512 0 0.95-0.182 1.314-0.546s0.546-0.802 0.546-1.314v-5.371c0-0.005-0-0.009-0-0.013l15.345-15.345c0.097 0.015 0.197 0.022 0.3 0.022h5.371c0.512 0 0.95-0.182 1.314-0.546s0.546-0.802 0.546-1.314v-5.371c0-0.512-0.182-0.95-0.546-1.314s-0.802-0.546-1.314-0.546h-5.371zM25.82 1.98h3.234c0.308 0 0.572 0.11 0.791 0.328s0.328 0.483 0.328 0.791v3.234c0 0.308-0.109 0.572-0.328 0.791s-0.483 0.328-0.791 0.328h-3.234c-0.308 0-0.572-0.109-0.791-0.328s-0.328-0.483-0.328-0.791v-3.234c0-0.308 0.11-0.572 0.328-0.791s0.483-0.328 0.791-0.328zM2.946 24.547h3.234c0.308 0 0.572 0.11 0.791 0.328s0.328 0.483 0.328 0.791v3.234c0 0.308-0.109 0.572-0.328 0.791s-0.483 0.328-0.791 0.328h-3.234c-0.308 0-0.572-0.109-0.791-0.328s-0.328-0.483-0.328-0.791v-3.234c0-0.308 0.109-0.572 0.328-0.791s0.483-0.328 0.791-0.328z"
-            ></path>
-        </symbol>
-        <symbol id="icon-draw-polygon" viewBox="0 0 448 512">
-            <title>Selecteer met een veelhoek</title>
-            <!-- Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
-            <path
-                d="M384 352c-.35 0-.67.1-1.02.1l-39.2-65.32c5.07-9.17 8.22-19.56 8.22-30.78s-3.14-21.61-8.22-30.78l39.2-65.32c.35.01.67.1 1.02.1 35.35 0 64-28.65 64-64s-28.65-64-64-64c-23.63 0-44.04 12.95-55.12 32H119.12C108.04 44.95 87.63 32 64 32 28.65 32 0 60.65 0 96c0 23.63 12.95 44.04 32 55.12v209.75C12.95 371.96 0 392.37 0 416c0 35.35 28.65 64 64 64 23.63 0 44.04-12.95 55.12-32h209.75c11.09 19.05 31.49 32 55.12 32 35.35 0 64-28.65 64-64 .01-35.35-28.64-64-63.99-64zm-288 8.88V151.12A63.825 63.825 0 0 0 119.12 128h208.36l-38.46 64.1c-.35-.01-.67-.1-1.02-.1-35.35 0-64 28.65-64 64s28.65 64 64 64c.35 0 .67-.1 1.02-.1l38.46 64.1H119.12A63.748 63.748 0 0 0 96 360.88zM272 256c0-8.82 7.18-16 16-16s16 7.18 16 16-7.18 16-16 16-16-7.18-16-16zM400 96c0 8.82-7.18 16-16 16s-16-7.18-16-16 7.18-16 16-16 16 7.18 16 16zM64 80c8.82 0 16 7.18 16 16s-7.18 16-16 16-16-7.18-16-16 7.18-16 16-16zM48 416c0-8.82 7.18-16 16-16s16 7.18 16 16-7.18 16-16 16-16-7.18-16-16zm336 16c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"
-            ></path>
-        </symbol>
-        <symbol id="icon-layer-group" viewBox="0 0 512 512">
-            <title>Selecteer met een filterlaag</title>
-            <!-- Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
-            <path
-                d="M12.41 148.02l232.94 105.67c6.8 3.09 14.49 3.09 21.29 0l232.94-105.67c16.55-7.51 16.55-32.52 0-40.03L266.65 2.31a25.607 25.607 0 0 0-21.29 0L12.41 107.98c-16.55 7.51-16.55 32.53 0 40.04zm487.18 88.28l-58.09-26.33-161.64 73.27c-7.56 3.43-15.59 5.17-23.86 5.17s-16.29-1.74-23.86-5.17L70.51 209.97l-58.1 26.33c-16.55 7.5-16.55 32.5 0 40l232.94 105.59c6.8 3.08 14.49 3.08 21.29 0L499.59 276.3c16.55-7.5 16.55-32.5 0-40zm0 127.8l-57.87-26.23-161.86 73.37c-7.56 3.43-15.59 5.17-23.86 5.17s-16.29-1.74-23.86-5.17L70.29 337.87 12.41 364.1c-16.55 7.5-16.55 32.5 0 40l232.94 105.59c6.8 3.08 14.49 3.08 21.29 0L499.59 404.1c16.55-7.5 16.55-32.5 0-40z"
-            ></path>
-        </symbol>
-        <symbol id="icon-vector-square" viewBox="0 0 512 512">
-            <title>Selecteer met een rechthoek</title>
-            <!-- Font Awesome Free 5.15.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
-            <path
-                d="M512 128V32c0-17.67-14.33-32-32-32h-96c-17.67 0-32 14.33-32 32H160c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v96c0 17.67 14.33 32 32 32v192c-17.67 0-32 14.33-32 32v96c0 17.67 14.33 32 32 32h96c17.67 0 32-14.33 32-32h192c0 17.67 14.33 32 32 32h96c17.67 0 32-14.33 32-32v-96c0-17.67-14.33-32-32-32V160c17.67 0 32-14.33 32-32zm-96-64h32v32h-32V64zM64 64h32v32H64V64zm32 384H64v-32h32v32zm352 0h-32v-32h32v32zm-32-96h-32c-17.67 0-32 14.33-32 32v32H160v-32c0-17.67-14.33-32-32-32H96V160h32c17.67 0 32-14.33 32-32V96h192v32c0 17.67 14.33 32 32 32h32v192z"
-            ></path>
-        </symbol>
-    </defs>
-</svg>

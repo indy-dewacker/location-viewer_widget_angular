@@ -1,9 +1,11 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks.scss';
+
 .layer__toggle {
   cursor: pointer;
 }
 
 .layer__icon {
-  left: -1.375rem;
+  left: -$spacer;
   position: absolute;
   top: 0.125rem;
 }
@@ -11,20 +13,21 @@
 .layer__reveal {
   background: transparent;
   border: none;
+  color: $text-color;
   padding: 0;
 }
 
 .a-spinner {
+  left: -2rem;
   position: absolute;
   top: 0rem;
-  left: -2rem;
 }
 
 .a-input__checkbox {
   label {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
     hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    word-wrap: break-word;
   }
 }
