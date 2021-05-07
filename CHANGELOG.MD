@@ -19,6 +19,10 @@ All notable changes to this project will be documented in this file.
 - [BREAKING] Upgraded the component to work with Angular 8
 - [BREAKING] Replaced FontAwesome icons with all new Streamline icons
 - [BREAKING] Upgraded to core branding v5
+- Improved styling
+
+### Fixed
+- Prevented unwanted selection of hidden sidebar items
 
 
 ## [1.3.0] - 2021-04-28
