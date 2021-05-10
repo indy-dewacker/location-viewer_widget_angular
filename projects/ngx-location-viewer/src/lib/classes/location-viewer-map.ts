@@ -102,7 +102,7 @@ export class LocationViewerMap extends LeafletMap {
       }
       markers.forEach((marker) => {
         if (marker.coordinate && marker.coordinate.lat && marker.coordinate.lon) {
-          const htmlIcon = this.getHtmlMarker(marker.color, marker.icon ? `fa-${marker.icon}` : undefined, marker.size, undefined);
+          const htmlIcon = this.getHtmlMarker(marker.color, marker.icon ? `ai-${marker.icon}` : undefined, marker.size, undefined);
           const icon = this.mapService.L.divIcon({ html: htmlIcon, className: 'aui-leaflet__html-icon' });
           const leafletMarker = this.mapService.L.marker([marker.coordinate.lat, marker.coordinate.lon], { icon });
           leafletMarker.options.data = marker.data;
@@ -192,9 +192,9 @@ export class LocationViewerMap extends LeafletMap {
     },
   ) {
     const markerStyle = `color: ${color}; font-size: ${size}; top: ${position.top}; left: ${position.left}`;
-    const markerIcon = `<aui-icon name="${icon}"></aui-icon>`;
+    const markerIcon = `<svg aria-hidden="true"><use href="#${icon}" /></svg>`;
 
-    return `<span style="${markerStyle}" class="ngx-location-viewer-marker">${markerIcon}</span>`;
+    return `<span style="${markerStyle}" class="ai ngx-location-viewer-marker">${markerIcon}</span>`;
   }
 
   private setVisibilityLayer(layer, visible: boolean) {
