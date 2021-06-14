@@ -33,7 +33,7 @@ Finally include the required styles:
 Add Antwerp core branding stylesheet in your index.html file:
 
 ```html
-<link rel="stylesheet" href="https://cdn.antwerpen.be/core_branding_scss/5.0.0-beta.5/main.min.css">
+<link rel="stylesheet" href="https://cdn.antwerpen.be/core_branding_scss/5.0.0/main.min.css">
 ```
 
 Add required leaflet styles in your angular.json file.
