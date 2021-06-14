@@ -18,16 +18,15 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "@acpaas-ui/ngx-flyout": "^5.0.1",
     "@acpaas-ui/ngx-icon": "^5.0.0",
-    "@acpaas-ui/ngx-leaflet": "^5.0.1",
+    "@acpaas-ui/ngx-leaflet": "^5.0.2",
     "@geoman-io/leaflet-geoman-free": "^2.7.0",
     "@turf/area": "^6.0.1",
     "esri-leaflet-cluster": "^2.1.0",
     "leaflet.markercluster": "^1.4.1"
   },
   "devDependencies": {
-    "@a-ui/core": "^5.0.0",
+    "@a-ui/core": "^5.0.1",
     "@angular-devkit/build-angular": "~0.803.29",
     "@angular-devkit/build-ng-packagr": "~0.803.29",
     "@angular/animations": "~8.2.14",
