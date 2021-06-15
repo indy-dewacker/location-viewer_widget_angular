@@ -25,6 +25,12 @@ All notable changes to this project will be documented in this file.
 - Prevented unwanted selection of hidden sidebar items
 
 
+## [1.3.1] - 2021-06-15
+
+### Fixed
+- Check for value (instead of reference) changes on supportingLayerOptions, operationalLayerOptions or filterLayers input params
+
+
 ## [1.3.0] - 2021-04-28
 
 ### Added
@@ -67,7 +73,8 @@ All notable changes to this project will be documented in this file.
 
 
 [Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.0...v2.0.0
+[2.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v2.0.0
+[1.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.0.2...v1.1.0
