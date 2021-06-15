@@ -2,6 +2,7 @@ import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-leaflet';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { forkJoin, from, of, Subject } from 'rxjs';
 import { combineAll, map, take, takeUntil } from 'rxjs/operators';
+import { isEqual } from 'lodash-es';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
@@ -122,6 +123,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
             // only handle changes after first cycle, first cycle need to wait for leafletmap init
             if (!change.firstChange) {
+                if (isEqual(change.previousValue, change.currentValue))
+                    return;
                 switch (propName) {
                     case 'supportingLayerOptions':
                         this.initiateSupportingLayer();
