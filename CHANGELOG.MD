@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Check for value (instead of reference) changes on supportingLayerOptions, operationalLayerOptions or filterLayers input params
 
 ## [1.3.0] - 2021-04-28
 
