@@ -3,10 +3,13 @@
   "version": "2.0.0",
   "license": "See license file",
   "peerDependencies": {
+    "@acpaas-ui/ngx-icon": "^5.0.0",
+    "@acpaas-ui/ngx-leaflet": "^5.0.2",
     "@angular/common": "^8.0.0",
     "@angular/core": "^8.0.0",
-    "@acpaas-ui/ngx-icon": "^5.0.0",
-    "@acpaas-ui/ngx-leaflet": "^5.0.1",
+    "@angular/forms": "^8.0.0"
+  },
+  "dependencies": {
     "@geoman-io/leaflet-geoman-free": "^2.7.0",
     "@turf/area": "^6.0.1",
     "esri-leaflet-cluster": "^2.1.0",

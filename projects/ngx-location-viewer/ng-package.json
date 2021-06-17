@@ -3,5 +3,13 @@
   "dest": "../../dist/ngx-location-viewer",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "@acpaas-ui",
+    "@geoman-io/leaflet-geoman-free",
+    "@turf/area",
+    "esri-leaflet-cluster",
+    "leaflet.markercluster",
+    "lodash-es"
+  ]
 }
