@@ -13,6 +13,18 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [2.0.0] - 2021-06-xx
+
+### Changed
+- [BREAKING] Upgraded the component to work with Angular 8
+- [BREAKING] Replaced FontAwesome icons with all new Streamline icons
+- [BREAKING] Upgraded to core branding v5
+- Improved styling
+
+### Fixed
+- Prevented unwanted selection of hidden sidebar items
+
+
 ## [1.3.1] - 2021-06-15
 
 ### Fixed
@@ -60,7 +72,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v2.0.0
 [1.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.1.0...v1.2.0

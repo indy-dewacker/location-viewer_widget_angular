@@ -11,11 +11,11 @@ describe('LayerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayerComponent, LayerLegendComponent ],
-      imports: [ FormsModule ],
-      providers: [ LayerService ]
+      declarations: [LayerComponent, LayerLegendComponent],
+      imports: [FormsModule],
+      providers: [LayerService]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

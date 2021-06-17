@@ -7,19 +7,19 @@ import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-le
 
 @Injectable()
 export class MapServerService {
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-    private responseQueryParam = 'f=pjson';
+  private responseQueryParam = 'f=pjson';
 
-    getMapserverLegend(url: string): Observable<MapserverLegend> {
-        return this.http.get<MapserverLegend>(`${url}/legend?${this.responseQueryParam}`);
-    }
+  getMapserverLegend(url: string): Observable<MapserverLegend> {
+    return this.http.get<MapserverLegend>(`${url}/legend?${this.responseQueryParam}`);
+  }
 
-    getMapserverInfo(url: string): Observable<MapserverInfo> {
-        return this.http.get<MapserverInfo>(`${url}?${this.responseQueryParam}`);
-    }
+  getMapserverInfo(url: string): Observable<MapserverInfo> {
+    return this.http.get<MapserverInfo>(`${url}?${this.responseQueryParam}`);
+  }
 
-    getMapserverLayerInfo(url: string, layerId: number): Observable<LayerSpecificInfo> {
-        return this.http.get<LayerSpecificInfo>(`${url}/${layerId}?${this.responseQueryParam}`);
-    }
+  getMapserverLayerInfo(url: string, layerId: number): Observable<LayerSpecificInfo> {
+    return this.http.get<LayerSpecificInfo>(`${url}/${layerId}?${this.responseQueryParam}`);
+  }
 }

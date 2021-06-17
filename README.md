@@ -33,7 +33,7 @@ Finally include the required styles:
 Add Antwerp core branding stylesheet in your index.html file:
 
 ```html
-<link rel="stylesheet" href="https://cdn.antwerpen.be/core_branding_scss/4.1.1/main.min.css">
+<link rel="stylesheet" href="https://cdn.antwerpen.be/core_branding_scss/5.0.1/main.min.css">
 ```
 
 Add required leaflet styles in your angular.json file.
@@ -203,7 +203,7 @@ Jasper Van Proeyen (<jasper.vanproeyen@digipolis.be>)
 
 ## Publishing
 
-> Only the ACPaaS UI team publishes new packages. [Contact us](https://acpaas-ui.digipolis.be/contact) if you need a new release published.
+> Only the Antwerp UI team publishes new packages. [Contact us](https://antwerp-ui.digipolis.be/contact) if you need a new release published.
 
 ## Running unit tests
 

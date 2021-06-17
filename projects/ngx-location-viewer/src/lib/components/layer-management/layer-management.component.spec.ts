@@ -13,7 +13,7 @@ describe('LayerManagementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayerManagementComponent, LayerComponent, LayerLegendComponent ],
+      declarations: [LayerManagementComponent, LayerComponent, LayerLegendComponent],
       imports: [
         FormsModule
       ],
@@ -21,7 +21,7 @@ describe('LayerManagementComponent', () => {
         LayerService
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

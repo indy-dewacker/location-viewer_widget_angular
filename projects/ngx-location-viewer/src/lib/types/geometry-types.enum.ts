@@ -1,5 +1,5 @@
 export enum GeometryTypes {
-    esriGeometryPolyline = 'esriGeometryPolyline',
-    esriGeometryPolygon = 'esriGeometryPolygon',
-    esriGeometryPoint = 'esriGeometryPoint'
+  esriGeometryPolyline = 'esriGeometryPolyline',
+  esriGeometryPolygon = 'esriGeometryPolygon',
+  esriGeometryPoint = 'esriGeometryPoint'
 }

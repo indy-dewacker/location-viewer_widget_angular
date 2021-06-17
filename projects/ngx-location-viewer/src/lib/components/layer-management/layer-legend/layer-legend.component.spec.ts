@@ -8,9 +8,9 @@ describe('LayerLegendComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LayerLegendComponent ]
+      declarations: [LayerLegendComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

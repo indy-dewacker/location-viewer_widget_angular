@@ -1,9 +1,11 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks.scss';
+
 .sidebar__header {
   position: relative;
 
   .sidebar__close-button {
     position: absolute;
-    right: -0.625rem;
-    top: -0.625rem;
+    right: -$spacer-xs;
+    top: -$spacer-xs;
   }
 }

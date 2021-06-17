@@ -1,55 +1,42 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks.scss';
+
 ::ng-deep {
-    // styling of whatishere popup
-    .whatishere-wrapper {
-        width: 18.75rem;
-        overflow: hidden;
-        margin-top: 0.3125rem;
-    }
+  .whatishere-wrapper {
+    overflow: hidden;
+    width: 17rem;
+  }
 
-    .whatishere-title {
-        padding-top: 0.3215rem;
-    }
+  .whatishere-title {
+    margin: $spacer-xs / 2 0;
+  }
 
-    .whatishere-content {
-        margin-top: 0.625rem;
-        width: 14.0625rem;
-        float: left;
-        div {
-            float: left;
-        }
-    }
+  .whatishere-content {
+    display: grid;
+    float: left;
+    gap: 0 $spacer-xs;
+    grid-template-columns: 1fr 3fr;
+    margin-top: $spacer-xs / 2;
+    width: 14rem;
+  }
 
-    .whatishere-type {
-        width: 4.0625rem;
-    }
+  .whatishere-type {
+    width: 3rem;
+  }
 
-    .whatishere-image {
-        overflow: hidden;
-    }
-}
-
-.icon {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    stroke-width: 0;
-    stroke: currentColor;
-    fill: currentColor;
-    vertical-align: -.25ex;
+  .whatishere-image {
+    overflow: hidden;
+  }
 }
 
 //fix toggle buttons outline difference button had -margin-top -1x, .a-button-outline had margin-bottom: -1px
 .m-button-group {
-    .a-button, .a-button-outline, select {
-        margin-top:0px;
-        margin-bottom: -1px;
-    }
-}
+  .m-button-group {
+    margin-bottom: -1px;
+  }
 
-.a-input--small .a-input__addon {
-    line-height: 2rem;
-}
-
-.a-input__addon {
-    padding-left: 0;
+  .a-button,
+  .a-button-outline,
+  select {
+    margin-top: 0;
+  }
 }
