@@ -53,7 +53,6 @@ export class LocationViewerMap extends LeafletMap {
       this.removeLayer(this.operationalLayer);
       const featureLayerOptions = {
         url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
-        where: layer.visible ? '' : '1 = -1',
         // style is used to style lines and polygons
         style: (feature) => {
           if (layer.colors) {
@@ -85,6 +84,10 @@ export class LocationViewerMap extends LeafletMap {
       } else {
         this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions);
       }
+
+      //update layer visibility
+      if (operationalLayerOptions.isVisible != null)
+        layer.visible = operationalLayerOptions.isVisible;
 
       if (layer.visible) {
         this.map.addLayer(this.operationalLayer);
