@@ -9,7 +9,9 @@
      [supportingLayerOptions]=supportingLayerOptions
      [operationalLayerOptions]="operationalLayerOptions"
      [filterLayers]="filterLayers"
-     (filteredResult)="updateResult($event)">
+     [clickOperationalMarkerEvent]="onClickOperationalMarker"
+     (filteredResult)="updateResult($event)"
+     (markerClicked)="onClickOperationalMarker($event)">
     </aui-location-viewer>
   </div>
   <button class="a-button" aria-label="Change configuration" (click)="changeSettings()">Change configuration</button>

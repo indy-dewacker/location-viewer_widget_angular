@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Added new eventemitter markerClicked that emits the marker object after clicking on operational marker
+
 ### Fixed
 - Fixed that operationallayer wouldn't show if default visibility of arcgis layer was false
 - Fixed that operationallayeroptions isVisible property overrules the default visibility setting of arcgis layer

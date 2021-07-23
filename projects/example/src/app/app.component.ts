@@ -51,11 +51,8 @@ export class AppComponent implements OnInit {
     propertyToDisplay: 'Routenaam',
   },
   {
-    url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/Mobiliteit/Mapserver',
-    layerId: 98,
-    name: 'Tariefzones',
-    popupLabel: 'Tariefzone',
-    propertyToDisplay: 'TARIEFZONE',
+    url: 'https://geoint.antwerpen.be/arcgissql/rest/services/P_Stad/grenzen/MapServer',
+    layerId: 4
   }]
 
   // supportingLayerOptions: SupportingLayerOptions = {
@@ -81,5 +78,9 @@ export class AppComponent implements OnInit {
       layerId: 2,
       enableClustering: false,
     };
+  }
+
+  onClickOperationalMarker(event: any): void {
+    console.log(event);
   }
 }
