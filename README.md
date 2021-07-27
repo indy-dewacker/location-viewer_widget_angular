@@ -93,6 +93,7 @@ Create a contract with the "GEOAPI" on the api-store
     (editFeature)="onEditFeature($event)"
     (hasSidebarChange)="onHasSidebarChange($event)"
     (filteredResult)="onFilteredResult($event)"
+    (markerClicked)="onMarkerClicked($event)"
 >
 
 <p>This is shown inside the leaflet sidebar if hasSidebar is set to true.</p>
@@ -160,6 +161,8 @@ class ExampleComponent {
     @Output() editFeature = new EventEmitter<any>();
     /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer. */
     @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
+    /* Operational layer clicked: fired when clicking on marker of operational layer */
+    @Output() markerClicked = new EventEmitter<any>();
 
 }
 ```

@@ -70,7 +70,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
   @Output() editFeature = new EventEmitter<any>();
   /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer*/
   @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
-
+  /* Operational layer clicked: fired when clicking on marker of operational layer */
+  @Output() markerClicked = new EventEmitter<any>();
   /* supporting layer config */
   supportingLayers: Layer[];
   /* operational layer config */
@@ -361,6 +362,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     // listen for events on operational layer
     if (this.leafletMap.operationalLayer) {
       this.leafletMap.operationalLayer.on(InteractionEvents.click, (event) => {
+        //emit the event 
+        this.markerClicked.emit(event);
         // if custommarker return data under options object
         if (customMarker) {
           const latLng = event.layer.getLatLng();
