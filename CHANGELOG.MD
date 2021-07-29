@@ -12,12 +12,16 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [2.1.0] - 2021-07-29
+
 ### Added
 - Added new eventemitter markerClicked that emits the marker object after clicking on operational marker
 
 ### Fixed
 - Fixed that operationallayer wouldn't show if default visibility of arcgis layer was false
 - Fixed that operationallayeroptions isVisible property overrules the default visibility setting of arcgis layer
+
 
 ## [2.0.1] - 2021-06-17
 
@@ -84,7 +88,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v2.0.0
 [1.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.0...v1.3.1
