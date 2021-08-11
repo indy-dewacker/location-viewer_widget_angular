@@ -164,7 +164,7 @@ export class LayerService {
         const layer = this.buildLayerFromInfoAndLegend(childLayer, layerLegend, visible);
 
         if (layers.filter((x) => x.parentLayerId === childLayer.id).length > 0) {
-          layer.layers = this.buildChildLayer(childLayer.id, layers, layerLegend);
+          layer.layers = this.buildChildLayer(childLayer.id, layers, layerLegend, visible);
         }
 
         childLayers.push(layer);
