@@ -101,7 +101,7 @@ export class LocationViewerMap extends LeafletMap {
       if (enableClustering) {
         this.operationalLayer = this.mapService.L.markerClusterGroup();
       } else {
-        this.operationalLayer = this.mapService.L.layerGroup();
+        this.operationalLayer = this.mapService.L.featureGroup();
       }
       markers.forEach((marker) => {
         if (marker.coordinate && marker.coordinate.lat && marker.coordinate.lon) {
