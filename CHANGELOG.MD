@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Added visible property to supportinglayeroptions to overrule default visibility setting of arcgis layer
+### Fixed
+- Fixed issue that operational layer with custom markers and without clustering did not emit click event
 
 ## [2.1.0] - 2021-07-29
 
