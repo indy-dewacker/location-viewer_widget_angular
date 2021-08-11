@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Added visible property to supportinglayeroptions to overrule default visibility setting of arcgis layer
 
 ## [2.1.0] - 2021-07-29
 
