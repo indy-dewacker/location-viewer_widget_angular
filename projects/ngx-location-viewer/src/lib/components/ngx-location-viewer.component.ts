@@ -313,6 +313,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             info,
             legend,
             this.supportingLayerOptions.layerIds,
+            this.supportingLayerOptions.visible
           );
           const ids = this.layerService.getVisibleLayerIds(this.supportingLayers);
           const layer = this.leafletMap.addSupportingLayers(this.supportingLayerOptions.url, ids);
