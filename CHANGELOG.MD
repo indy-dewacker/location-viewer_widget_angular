@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+### Fixed
+- Fixed issue that operational layer with custom markers and without clustering did not emit click event
+
 ## [1.3.1] - 2021-06-15
 
 ### Fixed
