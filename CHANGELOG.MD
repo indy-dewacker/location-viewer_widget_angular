@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+## [1.4.0] - 2021-08-13
+
 ### Added
 - Added visible property to supportinglayeroptions to overrule default visibility setting of arcgis layer
 ### Fixed
@@ -64,7 +66,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.1.0...v1.2.0
