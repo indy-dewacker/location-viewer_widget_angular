@@ -70,7 +70,7 @@ export class LocationViewerHelper {
    * @return boolean
    */
   isValidOperationalFeatureLayerConfiguration(operationalLayerOptions: OperationalLayerOptions): boolean {
-    return operationalLayerOptions.url && operationalLayerOptions.layerId && this.isValidMapServer(operationalLayerOptions.url);
+    return operationalLayerOptions.url && (operationalLayerOptions.layerId || operationalLayerOptions.layerId === 0) && this.isValidMapServer(operationalLayerOptions.url);
   }
 
   /**

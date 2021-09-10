@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Fixed issue that operational layer with layerid 0 threw validation error
+
 ## [2.2.0] - 2021-08-13
 
 ### Added
