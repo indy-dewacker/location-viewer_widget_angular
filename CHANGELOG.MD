@@ -12,8 +12,12 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [2.2.1] - 2021-09-13
+
 ### Fixed
 - Fixed issue that operational layer with layerid 0 threw validation error
+
 
 ## [2.2.0] - 2021-08-13
 
@@ -21,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Added visible property to supportinglayeroptions to overrule default visibility setting of arcgis layer
 ### Fixed
 - Fixed issue that operational layer with custom markers and without clustering did not emit click event
+
 
 ## [2.1.0] - 2021-07-29
 
@@ -97,8 +102,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.2.0...HEAD
-[2.2.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.1.0...v2.2.0
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.0...v2.2.1
 [2.1.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v2.0.0
