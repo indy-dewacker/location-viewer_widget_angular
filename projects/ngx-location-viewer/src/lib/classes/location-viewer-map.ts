@@ -55,10 +55,10 @@ export class LocationViewerMap extends LeafletMap {
         url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
         // style is used to style lines and polygons
         style: (feature) => {
-          if (layer.colors) {
+          if (layer.colors && layer.colors.length > 0) {
             const colorValue = feature.properties[layer.styleField];
             const colorItem = layer.colors.find((x) => x.value === colorValue);
-            return colorItem;
+            return colorItem ? colorItem : layer.colors[0];
           }
         },
         // point to layer method is used to style points

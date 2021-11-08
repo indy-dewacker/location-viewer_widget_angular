@@ -9,11 +9,14 @@ export interface LayerSpecificInfo {
 
 export interface LayerDrawingInfo {
   renderer: LayerRendererInfo;
+  transparancy: number;
 }
 
 export interface LayerRendererInfo {
   field1: string;
-  uniqueValueInfos: LayerUniqueValueInfo[];
+  type: DrawingInfoType;
+  uniqueValueInfos?: LayerUniqueValueInfo[];
+  symbol?: LayerSymbolInfo;
 }
 
 export interface LayerUniqueValueInfo {
@@ -35,4 +38,9 @@ export interface LayerSymbolInfo {
 export interface LayerSymbolOutline {
   color?: number[];
   width?: number;
+}
+
+export enum DrawingInfoType {
+  SIMPLE = 'simple',
+  UNIQUEVALUE = 'uniqueValue'
 }
