@@ -38,28 +38,32 @@
             aria-label="Selecteer met een veelhoek">
             <aui-icon name="ai-vectors-anchor-triangle"></aui-icon>
           </button>
-          <button *ngIf="filterLayers && filterLayers.length > 0" type="button"
-            class="a-button a-button--small has-icon a-button--block" [ngClass]="{
-            'a-button': currentButton !== buttonActions.selectZone,
-            'a-button-outline': currentButton === buttonActions.selectZone
-        }" (click)="activeButtonChange(buttonActions.selectZone)" title="Selecteer met filterlaag"
-            aria-label="Selecteer met filterlaag">
-            <aui-icon name="ai-layers"></aui-icon>
-          </button>
+          <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
+            <button *ngIf="availableFilterLayers?.length > 0" type="button"
+              class="a-button a-button--small has-icon a-button--block" [ngClass]="{
+              'a-button': currentButton !== buttonActions.selectZone,
+              'a-button-outline': currentButton === buttonActions.selectZone
+          }" (click)="activeButtonChange(buttonActions.selectZone)" title="Selecteer met filterlaag"
+              aria-label="Selecteer met filterlaag">
+              <aui-icon name="ai-layers"></aui-icon>
+            </button>
+          </ng-container>
         </div>
         <div class="a-input a-input--small has-icon-right u-margin-left-xs">
-          <div class="a-input__wrapper"
-            *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1">
+          <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
+            <div class="a-input__wrapper"
+            *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers?.length > 1">
             <select name="select-filterLayer" id="select-filterLayer" [(ngModel)]="currentFilterLayer"
               (change)="onChangeFilterLayer()">
               <option disabled [ngValue]="undefined">Kies filterlaag</option>
-              <ng-container *ngFor="let filterLayer of filterLayers">
+              <ng-container *ngFor="let filterLayer of availableFilterLayers">
                 <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
               </ng-container>
             </select>
-            <aui-icon *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1"
+            <aui-icon *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers.length > 1"
               name="ai-arrow-down-1"></aui-icon>
           </div>
+          </ng-container>
         </div>
       </div>
       <div class="m-button-group m-button-group--horizontal" *ngIf="showMeasureTools">
