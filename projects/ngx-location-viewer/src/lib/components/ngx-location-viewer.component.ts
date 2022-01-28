@@ -1,7 +1,7 @@
 import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-leaflet';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { forkJoin, from, of, Subject } from 'rxjs';
-import { combineAll, map, take, takeUntil } from 'rxjs/operators';
+import { forkJoin, from, Observable, of, Subject } from 'rxjs';
+import { combineAll, map, take, takeUntil, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash-es';
 import { LocationViewerMap } from '../classes/location-viewer-map';
 import { LayerService } from '../services/layer.service';
@@ -76,6 +76,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
   supportingLayers: Layer[];
   /* operational layer config */
   operationalLayer: Layer;
+  /* filterLayers */
+  filterLayers$: Observable<FilterLayerOptions[]>;
 
   buttonActions = ButtonActions;
   /* Current tile layer type default or custom */
@@ -132,7 +134,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             this.initiateOperationalLayer();
             break;
           case 'filterLayers':
-            this.initiateFilterLayer();
+            this.initiateFilterLayers();
             break;
           default:
             break;
@@ -296,7 +298,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
       this.initiateSupportingLayer();
       this.initiateOperationalLayer();
-      this.initiateFilterLayer();
+      this.initiateFilterLayers();
       this.initiateEvents();
     });
   }
@@ -389,15 +391,15 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     }
   }
 
-  private initiateFilterLayer() {
+  private initiateFilterLayers() {
     // if no default data is provided fetch layer data from mapserver
-    if (this.filterLayers && this.filterLayers.length > 0) {
-      from(this.filterLayers)
+    if (this.filterLayers) {
+      this.leafletMap.setVisibilityFilterLayer(false);
+      this.filterLayers$ = from(this.filterLayers)
         .pipe(
           map((layer: FilterLayerOptions) => {
             if (layer.name == null || layer.popupLabel == null || layer.propertyToDisplay == null) {
               return this.mapserverService.getMapserverLayerInfo(layer.url, layer.layerId).pipe(
-                take(1),
                 map((layerInfo) => {
                   let filterLayer = layer;
                   filterLayer.name = filterLayer.name ? filterLayer.name : layerInfo.name;
@@ -413,19 +415,16 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             }
           }),
           combineAll(),
-          take(1),
+          tap((filterLayers: FilterLayerOptions[]) => {
+            if (
+                filterLayers &&
+                filterLayers.length == 1 &&
+                this.locationViewerHelper.isValidMapServer(filterLayers[0].url)
+              ) {
+                this.leafletMap.addFilterLayer(filterLayers[0]);
+              }
+          })
         )
-        .subscribe((filterLayers: FilterLayerOptions[]) => {
-          this.filterLayers = filterLayers;
-          //if only 1 filterlayer is provided ==> add filterlayer to map
-          if (
-            this.filterLayers &&
-            this.filterLayers.length == 1 &&
-            this.locationViewerHelper.isValidMapServer(this.filterLayers[0].url)
-          ) {
-            this.leafletMap.addFilterLayer(this.filterLayers[0]);
-          }
-        });
     }
 
     //register on filterlayer click
