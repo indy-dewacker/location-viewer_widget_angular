@@ -61,8 +61,9 @@
                                 >
                                     <svg class="icon icon-draw-polygon"><use xlink:href="#icon-draw-polygon"></use></svg>
                                 </button>
-                                <button
-                                    *ngIf="filterLayers && filterLayers.length > 0"
+                                <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
+                                    <button
+                                    *ngIf="availableFilterLayers.length > 0"
                                     type="button"
                                     class="a-button a-button--small has-icon a-button--block"
                                     [ngClass]="{
@@ -75,14 +76,17 @@
                                 >
                                     <svg class="icon icon-layer-group"><use xlink:href="#icon-layer-group"></use></svg>
                                 </button>
-                            </div>
-                            <select *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1" name="select-filterLayer" id="select-filterLayer" [(ngModel)]="currentFilterLayer" (change)="onChangeFilterLayer()">
-                                <option disabled [ngValue]="undefined">Kies filterlaag</option>
-                                <ng-container *ngFor="let filterLayer of filterLayers">
-                                    <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
                                 </ng-container>
-                              </select>
-                              <span *ngIf="currentButton === buttonActions.selectZone && filterLayers && filterLayers.length > 1" class="fa fa-angle-down"></span>
+                            </div>
+                            <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
+                                <select *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers.length > 1" name="select-filterLayer" id="select-filterLayer" [(ngModel)]="currentFilterLayer" (change)="onChangeFilterLayer()">
+                                    <option disabled [ngValue]="undefined">Kies filterlaag</option>
+                                    <ng-container *ngFor="let filterLayer of availableFilterLayers">
+                                        <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
+                                    </ng-container>
+                                  </select>
+                                  <span *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers.length > 1" class="fa fa-angle-down"></span>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
