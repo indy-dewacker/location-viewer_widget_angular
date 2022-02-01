@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Fixed issue that filterLayers did not update correcty on change
+- Fixed issue that legend icon operational layer failed to load on config change
+
 ## [1.4.0] - 2021-08-13
 
 ### Added
