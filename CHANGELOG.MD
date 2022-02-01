@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [1.4.1] - 2022-02-01
+
 ### Fixed
 - Fixed issue that filterLayers did not update correcty on change
 - Fixed issue that legend icon operational layer failed to load on config change
@@ -70,7 +73,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.2.0...v1.3.0
