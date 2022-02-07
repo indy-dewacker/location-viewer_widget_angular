@@ -124,10 +124,8 @@ export class LocationViewerMap extends LeafletMap {
                     this.operationalLayer.addLayer(leafletMarker);
                 }
             });
-
-            if (this.map) {
-                this.addLayer(this.operationalLayer);
-            }            
+            
+            this.addLayer(this.operationalLayer);
         }
     }
 
