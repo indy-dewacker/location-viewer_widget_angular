@@ -1,5 +1,6 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-leaflet';
 import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { Layer } from '../types/layer.model';
@@ -28,7 +29,9 @@ export class LocationViewerMap extends LeafletMap {
                 continuousWorld: true,
                 useCors: false,
                 f: 'image',
-            }).addTo(this.map);
+            });
+
+            this.addLayer(this.supportingLayer);
         }
 
         return this.supportingLayer;
@@ -38,6 +41,19 @@ export class LocationViewerMap extends LeafletMap {
     removeLayer(layer: any) {
         if (this.mapService.isAvailable() && layer) {
             this.map.removeLayer(layer);
+        }
+    }
+
+    // Adds layer
+    addLayer(layer: any) {
+        if (this.mapService.isAvailable() && layer) {
+            if (this.map) {
+                this.map.addLayer(layer)
+            } else {
+                this.onInit.pipe(take(1)).subscribe(() => {
+                    this.map.addLayer(layer);
+                })
+            }
         }
     }
 
@@ -53,7 +69,6 @@ export class LocationViewerMap extends LeafletMap {
             this.removeLayer(this.operationalLayer);
             const featureLayerOptions = {
                 url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
-                where: layer.visible ? '' : '1 = -1',
                 // style is used to style lines and polygons
                 style: (feature) => {
                     if (layer.colors) {
@@ -87,7 +102,7 @@ export class LocationViewerMap extends LeafletMap {
             }
 
             if (layer.visible) {
-                this.map.addLayer(this.operationalLayer);
+                this.addLayer(this.operationalLayer);
             }
         }
     }
@@ -110,7 +125,9 @@ export class LocationViewerMap extends LeafletMap {
                 }
             });
 
-            this.map.addLayer(this.operationalLayer);
+            if (this.map) {
+                this.addLayer(this.operationalLayer);
+            }            
         }
     }
 

@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed 
+- Fixed that operationallayer wouldn't show if default visibility of arcgis layer was false
+- Fixed error when adding layer when map wasn't initialized
+
+## [1.4.1] - 2022-02-1
+
 ### Fixed
 - Fixed issue that filterLayers did not update correcty on change
 - Fixed issue that legend icon operational layer failed to load on config change
