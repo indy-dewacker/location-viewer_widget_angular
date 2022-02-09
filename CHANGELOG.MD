@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Fixed error that would be added twice.
 
 ## [1.4.2] - 2022-02-09
 

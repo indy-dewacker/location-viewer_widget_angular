@@ -124,7 +124,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             const change = changes[propName];
 
             // only handle changes after first cycle, first cycle need to wait for leafletmap init, check if value changes (not the reference)
-            if (!change.firstChange && !isEqual(change.previousValue, change.currentValue)) {
+            // only if map is initliazed, first config will be loaded on OnInit event of map
+            if (this.leafletMap && this.leafletMap.map && !change.firstChange && !isEqual(change.previousValue, change.currentValue)) {
                 switch (propName) {
                     case 'supportingLayerOptions':
                         this.initiateSupportingLayer();
