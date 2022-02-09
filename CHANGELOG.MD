@@ -12,8 +12,11 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+## [1.4.3] - 2022-02-09
+
 ### Fixed
 - Fixed error that would be added twice.
+
 
 ## [1.4.2] - 2022-02-09
 
@@ -84,7 +87,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.2...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.3...HEAD
+[1.4.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.3.1...v1.4.0
