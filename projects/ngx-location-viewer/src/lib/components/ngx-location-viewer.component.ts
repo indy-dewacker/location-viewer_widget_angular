@@ -8,6 +8,7 @@ import { LayerService } from '../services/layer.service';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { MapServerService } from '../services/mapserver.service';
 import { Layer } from '../types/layer.model';
+import { Layers } from '../types/layers.model';
 import { SupportingLayerOptions } from '../types/supporting-layer-options.model';
 import area from '@turf/area';
 import { DrawEvents, InteractionEvents, RasterEvents } from '../types/leaflet.types';
@@ -71,7 +72,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer */
     @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
     /* Fire when visibility of layers was changed by the user */
-    @Output() layerVisibilityChange = new EventEmitter<any>();
+    @Output() layerVisibilityChange = new EventEmitter<Layers>();
 
     /* supporting layer config */
     supportingLayers: Layer[];
@@ -256,7 +257,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                 this.leafletMap.setVisibilityOperationalLayer(this.operationalLayer.visible);
                 break;
         }
-        const layers = {
+        const layers: Layers = {
           operationalLayer: this.operationalLayer,
           supportingLayers: this.supportingLayers,
         }

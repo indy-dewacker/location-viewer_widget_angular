@@ -10,4 +10,5 @@ export * from './lib/types/operational-layer-options.model';
 export * from './lib/types/filter-layer-options.model';
 export * from './lib/types/geoapi/geofeature-detail.model';
 export * from './lib/types/leaflet-tile-layer.model';
+export * from './lib/types/layers.model';
 export * from './lib/classes/location-viewer-map';
