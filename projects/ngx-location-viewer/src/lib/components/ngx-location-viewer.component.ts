@@ -68,8 +68,10 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Output() addLine = new EventEmitter<any>();
     /* EditFeature event */
     @Output() editFeature = new EventEmitter<any>();
-    /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer*/
+    /* Operational layer filtered: fired when using selection tools rectangle/polygon, using filter layer or clicking on marker of operational layer */
     @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
+    /* Fire when visibility of layers was changed by the user */
+    @Output() layerVisibilityChange = new EventEmitter<any>();
 
     /* supporting layer config */
     supportingLayers: Layer[];
@@ -254,6 +256,11 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                 this.leafletMap.setVisibilityOperationalLayer(this.operationalLayer.visible);
                 break;
         }
+        const layers = {
+          operationalLayer: this.operationalLayer,
+          supportingLayers: this.supportingLayers,
+        }
+        this.layerVisibilityChange.emit(layers);
     }
 
     /**
@@ -424,7 +431,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
               })
             )
         }
-    
+
         //register on filterlayer click
         this.leafletMap.filterLayerClicked.pipe(takeUntil(this.destroyed$)).subscribe((x) => {
           this.filterOperationalLayer(x.target.feature);

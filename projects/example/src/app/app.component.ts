@@ -82,4 +82,8 @@ export class AppComponent implements OnInit {
             enableClustering: false,
         };
     }
+
+    layerVisibilityChange(event) {
+      console.log(event);
+    }
 }
