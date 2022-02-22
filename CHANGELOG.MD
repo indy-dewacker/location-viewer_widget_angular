@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Option to set visibility supportinglayers through visible property by passing layerids
 
 ## [2.2.3] - 2022-01-28
 
