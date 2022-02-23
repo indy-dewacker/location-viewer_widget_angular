@@ -177,13 +177,10 @@ export class LayerService {
     if (visible != null) {
       if (typeof(visible) === 'boolean') {
         return visible;
-      } else {
-        return visible.includes(layerId);
       }
-    } else 
-    {
-      return defaultVisibility;
-    }
+      return visible.includes(layerId);
+    } 
+    return defaultVisibility;
   }
 
   private buildChildLayer(parentLayerId: number, layers: LayerInfo[], layerLegend: LayerLegend[], visible?: boolean | number[]): Layer[] {
