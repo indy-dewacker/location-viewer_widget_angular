@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+### Fixed
+- Added output property for layer visibility changes
+
+
 ## [1.4.3] - 2022-02-09
 
 ### Fixed
