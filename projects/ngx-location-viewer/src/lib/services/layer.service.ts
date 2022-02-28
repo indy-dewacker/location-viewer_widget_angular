@@ -70,7 +70,7 @@ export class LayerService {
     }
 
     // filter multiple layers by id
-    buildSupportingLayersFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[], visible?: boolean): Layer[] {
+    buildSupportingLayersFromInfoAndLegend(info: MapserverInfo, legend: MapserverLegend, layerIds: number[], visible?: boolean | number[]): Layer[] {
         // get selected layers from info
         let selectedLayers = info.layers.filter((layer) => layerIds.includes(layer.id));
 
@@ -103,7 +103,7 @@ export class LayerService {
         return visibleLayerIds;
     }
 
-    private buildLayerTree(layers: Layer[], layersInfo: LayerInfo[], legend: MapserverLegend, visible?: boolean): Layer[] {
+    private buildLayerTree(layers: Layer[], layersInfo: LayerInfo[], legend: MapserverLegend, visible?: boolean | number[]): Layer[] {
         let layerTree: Layer[] = [];
         layers.forEach(layer => {
             const layerInfo = layersInfo.find(x => x.id === layer.id);
@@ -138,13 +138,13 @@ export class LayerService {
         return layerTree;
     }
 
-    private buildLayerFromInfoAndLegend(info: LayerInfo, legend: LayerLegend[], visible?: boolean): Layer {
+    private buildLayerFromInfoAndLegend(info: LayerInfo, legend: LayerLegend[], visible?: boolean | number[]): Layer {
         let layer: Layer;
         if (info) {
             layer = {
                 id: info.id,
                 name: info.name,
-                visible: visible != null ? visible : info.defaultVisibility,
+                visible: this.determineLayerVisibility(info.id, info.defaultVisibility, visible),
                 layers: []
             };
 
@@ -156,7 +156,18 @@ export class LayerService {
 
         return layer;
     }
-    private buildChildLayer(parentLayerId: number, layers: LayerInfo[], layerLegend: LayerLegend[], visible?: boolean): Layer[] {
+
+    private determineLayerVisibility(layerId: number, defaultVisibility: boolean, visible?: boolean | number[]): boolean {
+        if (visible != null) {
+          if (typeof(visible) === 'boolean') {
+            return visible;
+          }
+          return visible.includes(layerId);
+        } 
+        return defaultVisibility;
+    }
+
+    private buildChildLayer(parentLayerId: number, layers: LayerInfo[], layerLegend: LayerLegend[], visible?: boolean | number[]): Layer[] {
         const childLayers: Layer[] = [];
         layers
             .filter((x) => x.parentLayerId === parentLayerId)
