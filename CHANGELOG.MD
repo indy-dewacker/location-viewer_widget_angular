@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Option to set visibility supportinglayers through visible property by passing layerids
+- Option to add tooltips on operationalLayer
 
 ## [2.2.3] - 2022-01-28
 
