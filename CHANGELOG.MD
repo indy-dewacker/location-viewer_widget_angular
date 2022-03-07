@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.5.0] - 2022-03-07
+
 ### Added
 - Option to set visibility supportinglayers through visible property by passing layerids
 
@@ -95,7 +97,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.3...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.3...v1.5.0
 [1.4.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.0...v1.4.1
