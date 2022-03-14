@@ -48,7 +48,7 @@ export class LocationViewerMap extends LeafletMap {
     }
   }
 
-  addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer) {
+  addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer, defaultDisplayField?: string) {
     if (this.mapService.isAvailable()) {
       this.removeLayer(this.operationalLayer);
       const featureLayerOptions = {
@@ -77,6 +77,14 @@ export class LocationViewerMap extends LeafletMap {
             iconAnchor: [10, 10],
           });
           return this.mapService.L.marker(latlng, { icon });
+        },
+        onEachFeature: (feature, layer) => {
+          if (operationalLayerOptions.showTooltip) {
+            layer.bindTooltip(this.mapService.L.Util.template(
+              `{${defaultDisplayField}}`,
+              feature.properties,
+            ));
+          }
         },
       };
       if (operationalLayerOptions.enableClustering) {

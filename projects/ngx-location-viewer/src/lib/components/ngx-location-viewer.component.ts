@@ -340,7 +340,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
           .pipe(take(1))
           .subscribe(([layerInfo, legend]) => {
             this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
-            this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer);
+            this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer, this.operationalLayerOptions.tooltipField ? this.operationalLayerOptions.tooltipField : layerInfo.displayField);
             this.registerClickEvent(false);
           });
       } else if (

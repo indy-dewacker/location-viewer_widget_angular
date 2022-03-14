@@ -11,6 +11,10 @@ export interface OperationalLayerOptions {
   markers?: OperationalMarker[]
   /* set visibility of layer */
   isVisible?: boolean;
+  /* show tooltip with value*/
+  showTooltip?: boolean;
+  /* propertyvalue to show in the tooltip, if not provided will fallback to default displayfield of */
+  tooltipField?: string;
 }
 
 
