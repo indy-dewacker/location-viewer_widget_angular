@@ -12,12 +12,16 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [2.3.0] - 2022-03-17
+
 ### Fixed
 - Webpack 5 import errors on esri-leaflet & esri-leaflet-cluster packages
 
 ### Added
 - Option to set visibility supportinglayers through visible property by passing layerids
 - Option to add tooltips on operationalLayer
+
 
 ## [2.2.3] - 2022-01-28
 
@@ -120,7 +124,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.2.3...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.0...v2.2.1
