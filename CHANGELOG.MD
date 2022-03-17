@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Webpack 5 import errors on esri-leaflet & esri-leaflet-cluster packages
+
 ### Added
 - Option to set visibility supportinglayers through visible property by passing layerids
 - Option to add tooltips on operationalLayer
