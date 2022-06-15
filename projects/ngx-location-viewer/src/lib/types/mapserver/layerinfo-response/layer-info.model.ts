@@ -1,9 +1,11 @@
+import { GeometryTypes } from '../../geometry-types.enum';
+
 export interface LayerSpecificInfo {
   id: number;
   name: string;
   defaultVisibility: boolean;
   drawingInfo: LayerDrawingInfo;
-  geometryType: string;
+  geometryType: GeometryTypes;
   displayField: string;
 }
 

@@ -26,6 +26,7 @@ export class LayerService {
       layers: [],
       legend: layerLegend.legend,
       styleField: layerInfo.drawingInfo.renderer.field1,
+      geometryType: layerInfo.geometryType
     };
 
     if (layerInfo.geometryType !== GeometryTypes.esriGeometryPoint) {

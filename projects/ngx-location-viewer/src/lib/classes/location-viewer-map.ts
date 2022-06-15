@@ -2,6 +2,7 @@ import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-leaflet';
 import { Subject } from 'rxjs';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
+import { GeometryTypes } from '../types/geometry-types.enum';
 import { Layer } from '../types/layer.model';
 import { PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
@@ -51,18 +52,33 @@ export class LocationViewerMap extends LeafletMap {
   addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer, defaultDisplayField?: string) {
     if (this.mapService.isAvailable()) {
       this.removeLayer(this.operationalLayer);
-      const featureLayerOptions = {
+      let featureLayerOptions = {
         url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
+        style: null,
+        pointToLayer: null,
+        onEachFeature: (feature, layer) => {
+          if (operationalLayerOptions.showTooltip) {
+            layer.bindTooltip(this.mapService.L.Util.template(
+              `{${defaultDisplayField}}`,
+              feature.properties,
+            ));
+          }
+        },
+      };
+
+      if (layer.geometryType === GeometryTypes.esriGeometryPolygon || layer.geometryType === GeometryTypes.esriGeometryPolyline)
+      {
         // style is used to style lines and polygons
-        style: (feature) => {
+        featureLayerOptions.style = (feature) => {
           if (layer.colors && layer.colors.length > 0) {
             const colorValue = feature.properties[layer.styleField];
             const colorItem = layer.colors.find((x) => x.value === colorValue);
             return colorItem ? colorItem : layer.colors[0];
           }
-        },
+        }
+      } else {
         // point to layer method is used to style points
-        pointToLayer: (feature, latlng) => {
+        featureLayerOptions.pointToLayer = (feature, latlng) => {
           const legendValue = feature.properties[layer.styleField];
           const legendItem = layer.legend.find((x) => x.values && x.values.includes(legendValue));
           let iconUrl = '';
@@ -77,16 +93,9 @@ export class LocationViewerMap extends LeafletMap {
             iconAnchor: [10, 10],
           });
           return this.mapService.L.marker(latlng, { icon });
-        },
-        onEachFeature: (feature, layer) => {
-          if (operationalLayerOptions.showTooltip) {
-            layer.bindTooltip(this.mapService.L.Util.template(
-              `{${defaultDisplayField}}`,
-              feature.properties,
-            ));
-          }
-        },
-      };
+        }
+      }
+
       if (operationalLayerOptions.enableClustering) {
         this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions);
       } else {
