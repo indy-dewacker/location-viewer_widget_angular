@@ -92,6 +92,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
   private destroyed$ = new Subject<boolean>();
   /* Current active tile layers */
   private activeTileLayers = [];
+  /* Check if current operational layer is created with custom markers */
+  private customOperationalLayer: boolean;
 
   /**
    * Check if current tile layer is the default one.
@@ -257,6 +259,39 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   /**
+   * Register operational layer click event
+   */
+   public registerOperationalLayerClickEvent(): void {
+    // listen for events on operational layer
+    if (this.leafletMap.operationalLayer) {
+      this.leafletMap.operationalLayer.on(InteractionEvents.click, (event) => {
+        //emit the event 
+        this.markerClicked.emit(event);
+        // if custommarker return data under options object
+        if (this.customOperationalLayer) {
+          const latLng = event.layer.getLatLng();
+          let marker: OperationalMarker = {
+            coordinate: {
+              lat: latLng.lat,
+              lon: latLng.lng,
+            },
+            data: event.layer.options.data,
+            icon: '',
+          };
+          this.filteredResult.emit([marker]);
+        } else {
+          this.filteredResult.emit([event.layer.feature.properties]);
+        }
+
+        // Centers map on marker coordinates and sets view level to zoomOnMarkerSelect
+        if (this.zoomOnMarkerSelect) {
+          this.leafletMap.setView(event.latlng, this.zoomOnMarkerSelect);
+        }
+      });
+    }
+  }
+
+  /**
    * Resets the current tile layers
    */
   private resetCurrentTileLayers() {
@@ -341,7 +376,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
           .subscribe(([layerInfo, legend]) => {
             this.operationalLayer = this.layerService.getLayerFromLayerInfo(layerInfo, legend);
             this.leafletMap.addOperationalLayer(this.operationalLayerOptions, this.operationalLayer, this.operationalLayerOptions.tooltipField ? this.operationalLayerOptions.tooltipField : layerInfo.displayField);
-            this.registerClickEvent(false);
+            this.customOperationalLayer = false;
+            this.registerOperationalLayerClickEvent();
           });
       } else if (
         this.operationalLayerOptions.markers &&
@@ -354,40 +390,11 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
           name: this.operationalLayerOptions.name,
           visible: this.operationalLayerOptions.isVisible,
         };
-        this.registerClickEvent();
+        this.customOperationalLayer = true;
+        this.registerOperationalLayerClickEvent();
       } else {
         throw new Error('Invalid operationalLayerOptions! Check readme for examples.');
       }
-    }
-  }
-
-  private registerClickEvent(customMarker = true) {
-    // listen for events on operational layer
-    if (this.leafletMap.operationalLayer) {
-      this.leafletMap.operationalLayer.on(InteractionEvents.click, (event) => {
-        //emit the event 
-        this.markerClicked.emit(event);
-        // if custommarker return data under options object
-        if (customMarker) {
-          const latLng = event.layer.getLatLng();
-          let marker: OperationalMarker = {
-            coordinate: {
-              lat: latLng.lat,
-              lon: latLng.lng,
-            },
-            data: event.layer.options.data,
-            icon: '',
-          };
-          this.filteredResult.emit([marker]);
-        } else {
-          this.filteredResult.emit([event.layer.feature.properties]);
-        }
-
-        // Centers map on marker coordinates and sets view level to zoomOnMarkerSelect
-        if (this.zoomOnMarkerSelect) {
-          this.leafletMap.setView(event.latlng, this.zoomOnMarkerSelect);
-        }
-      });
     }
   }
 

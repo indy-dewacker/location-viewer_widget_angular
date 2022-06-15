@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Changed
+- Renamed registerOperationalLayerClickEvent and made public method for accessibility
 
 ## [2.3.0] - 2022-03-17
 
