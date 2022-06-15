@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fix error Invalid LatLng object that was thrown after rendering polygon/polyline operationallayer (since esri-leaflet 3.0.5)
 
+### Changed
+- Format parameter ARCGIS from pjson to json for small performance improvement
 
 ## [2.3.0] - 2022-03-17
 

@@ -9,7 +9,7 @@ import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-le
 export class MapServerService {
   constructor(private http: HttpClient) { }
 
-  private responseQueryParam = 'f=pjson';
+  private responseQueryParam = 'f=json';
 
   getMapserverLegend(url: string): Observable<MapserverLegend> {
     return this.http.get<MapserverLegend>(`${url}/legend?${this.responseQueryParam}`);
