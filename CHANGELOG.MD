@@ -11,12 +11,17 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 ## [Unreleased]
+
+
+## [2.3.1] - 2022-06-17
+
 ### Fixed
 - Fix error Invalid LatLng object that was thrown after rendering polygon/polyline operationallayer (since esri-leaflet 3.0.5)
 
 ### Changed
 - Format parameter ARCGIS from pjson to json for small performance improvement
 - Renamed registerOperationalLayerClickEvent and made public method for accessibility
+
 
 ## [2.3.0] - 2022-03-17
 
@@ -129,7 +134,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.1...HEAD
+[2.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.1...v2.2.2
