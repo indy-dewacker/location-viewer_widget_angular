@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Fixed that operationallayeroptions isVisible property overrules the default visibility setting of arcgis layer
 
 ## [1.5.0] - 2022-03-07
 
