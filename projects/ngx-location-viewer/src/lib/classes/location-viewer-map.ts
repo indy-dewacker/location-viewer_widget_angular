@@ -101,6 +101,10 @@ export class LocationViewerMap extends LeafletMap {
                 this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions);
             }
 
+            //update layer visibility
+            if (operationalLayerOptions.isVisible != null) 
+                layer.visible = operationalLayerOptions.isVisible;
+
             if (layer.visible) {
                 this.addLayer(this.operationalLayer);
             }
