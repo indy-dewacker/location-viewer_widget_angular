@@ -15,6 +15,8 @@ export interface OperationalLayerOptions {
   showTooltip?: boolean;
   /* propertyvalue to show in the tooltip, if not provided will fallback to default displayfield of */
   tooltipField?: string;
+  /* an optional expression to filter features server side (mapserver) */
+  where?: string;
 }
 
 
