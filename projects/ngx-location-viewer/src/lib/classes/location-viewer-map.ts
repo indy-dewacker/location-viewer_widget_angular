@@ -2,6 +2,7 @@ import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-leaflet';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { FeatureLayerOptions } from '../types/esri/featurelayer-options.model';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { Layer } from '../types/layer.model';
 import { PopupEvents } from '../types/leaflet.types';
@@ -67,7 +68,7 @@ export class LocationViewerMap extends LeafletMap {
     addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer) {
         if (this.mapService.isAvailable()) {
             this.removeLayer(this.operationalLayer);
-            const featureLayerOptions = {
+            let featureLayerOptions: FeatureLayerOptions = {
                 url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
                 // style is used to style lines and polygons
                 style: (feature) => {
@@ -95,6 +96,10 @@ export class LocationViewerMap extends LeafletMap {
                     return this.mapService.L.marker(latlng, { icon });
                 },
             };
+
+            if (operationalLayerOptions.where != null)
+                featureLayerOptions.where = operationalLayerOptions.where;
+
             if (operationalLayerOptions.enableClustering) {
                 this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions);
             } else {

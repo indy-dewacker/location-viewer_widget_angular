@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Added new 'where' property to allow server side (mapserver) filtering of operational layer
+
 ### Fixed
 - Fixed that operationallayeroptions isVisible property overrules the default visibility setting of arcgis layer
 
