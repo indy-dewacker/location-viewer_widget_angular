@@ -15,8 +15,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added new 'where' property to allow server side (mapserver) filtering of operational layer
 
+
+## [1.5.1] - 2022-06-29
+
 ### Fixed
 - Fixed that operationallayeroptions isVisible property overrules the default visibility setting of arcgis layer
+
 
 ## [1.5.0] - 2022-03-07
 
@@ -102,7 +106,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.3...v1.5.0
 [1.4.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.1...v1.4.2
