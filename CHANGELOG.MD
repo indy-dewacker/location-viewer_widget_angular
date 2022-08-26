@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [1.6.0] - 2022-08-26
+
 ### Added
 - Added new 'where' property to allow server side (mapserver) filtering of operational layer
 
@@ -106,7 +109,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.3...v1.5.0
 [1.4.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.4.2...v1.4.3
