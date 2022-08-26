@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Added new 'where' property to allow server side (mapserver) filtering of operational layer
+
 
 ## [1.5.1] - 2022-06-29
 

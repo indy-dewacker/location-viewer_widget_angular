@@ -11,6 +11,8 @@ export interface OperationalLayerOptions {
     markers?: OperationalMarker[]
     /* set visibility of layer */
     isVisible?: boolean;
+    /* an optional expression to filter features server side (mapserver) */
+    where?: string;
 }
 
 
