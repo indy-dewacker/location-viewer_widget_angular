@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Changed
+- Toggle sidebar functionality to work with hasSidebar property
+
+### Added
+- ShowSidebar property to set default visibility of sidebar
 
 ## [2.3.1] - 2022-06-17
 

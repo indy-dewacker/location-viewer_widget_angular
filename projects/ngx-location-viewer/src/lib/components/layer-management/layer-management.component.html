@@ -1,23 +1,21 @@
-<div class="sidebar">
-  <div class="sidebar__header">
-    <button class="a-button-transparent a-button--default has-icon sidebar__close-button" aria-label="Sluiten"
-      (click)="toggleLayermanagement()">
-      <aui-icon name="ai-close"></aui-icon>
-    </button>
-  </div>
-  <div class="sidebar__content">
-    <h1 class="has-base-font u-text-bold h5">Lagen</h1>
-    <div class="u-margin-left-xs">
-      <div *ngIf="operationalLayer" class="u-margin-top">
+<h1 class="has-base-font u-text-bold h5">Lagen</h1>
+<div class="u-margin-left-xs">
+    <div *ngIf="operationalLayer" class="u-margin-top">
         <h2 class="has-base-font u-text-bold h6">Operationele laag:</h2>
-        <aui-layer *ngIf="operationalLayer" [layer]="operationalLayer" [layerType]="layerTypes.operational"
-          (layerVisibiltyChange)="onLayerVisibilityChange($event)"></aui-layer>
-      </div>
-      <div *ngIf="supportingLayers" class="u-margin-top">
-        <h2 class="has-base-font u-text-bold h6">Ondersteunende lagen:</h2>
-        <aui-layer *ngFor="let layer of supportingLayers" [layer]="layer" [layerType]="layerTypes.supporting"
-          (layerVisibiltyChange)="onLayerVisibilityChange($event)"></aui-layer>
-      </div>
+        <aui-layer
+            *ngIf="operationalLayer"
+            [layer]="operationalLayer"
+            [layerType]="layerTypes.operational"
+            (layerVisibiltyChange)="onLayerVisibilityChange($event)"
+        ></aui-layer>
     </div>
-  </div>
+    <div *ngIf="supportingLayers" class="u-margin-top">
+        <h2 class="has-base-font u-text-bold h6">Ondersteunende lagen:</h2>
+        <aui-layer
+            *ngFor="let layer of supportingLayers"
+            [layer]="layer"
+            [layerType]="layerTypes.supporting"
+            (layerVisibiltyChange)="onLayerVisibilityChange($event)"
+        ></aui-layer>
+    </div>
 </div>

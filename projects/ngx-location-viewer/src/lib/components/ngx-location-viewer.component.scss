@@ -40,3 +40,13 @@
     margin-top: 0;
   }
 }
+
+.sidebar__header {
+  position: relative;
+
+  .sidebar__close-button {
+    position: absolute;
+    right: -$spacer-xs;
+    top: -$spacer-xs;
+  }
+}
