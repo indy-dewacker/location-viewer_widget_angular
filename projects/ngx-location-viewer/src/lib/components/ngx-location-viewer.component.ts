@@ -20,6 +20,7 @@ import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { LocationViewerHelper } from '../services/location-viewer.helper';
 import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
 import { LeafletTileLayerModel, LeafletTileLayerType } from '../types/leaflet-tile-layer.model';
+import { Translations } from '../types/translations.model';
 
 @Component({
   selector: 'aui-location-viewer',
@@ -62,6 +63,21 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
    * If null the zoomlevel won't change after marker selection.
    */
   @Input() zoomOnMarkerSelect?= 16;
+  /* */
+  @Input() translations: Translations = {
+    closeSidebar: 'Sluit zijbalk',
+    openSidebar: 'Open zijbalk',
+    select: 'Selecteren',
+    selectRectangle: 'Selecteer met een rechthoek',
+    selectPolygon: 'Selecteer met een veelhoek',
+    selectFilterLayer: 'Selecteer met filterlaag',
+    measure: 'Meten',
+    measureArea: 'Meten oppervlakte en omtrek',
+    measureDistance: 'Meten afstand',
+    whatIsHere: 'Wat is hier',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom uit'
+  }
   /* HasSideBar change */
   @Output() hasSidebarChange = new EventEmitter<boolean>();
   /* AddPolygon event */
