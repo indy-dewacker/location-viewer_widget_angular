@@ -1,6 +1,7 @@
 import { LeafletMap, LeafletMapOptions } from '@acpaas-ui/ngx-leaflet';
 import { Subject } from 'rxjs';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
+import { FeatureLayerOptions } from '../types/esri/featurelayer-options.model';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { GeometryTypes } from '../types/geometry-types.enum';
 import { Layer } from '../types/layer.model';
@@ -52,7 +53,7 @@ export class LocationViewerMap extends LeafletMap {
   addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer, defaultDisplayField?: string) {
     if (this.mapService.isAvailable()) {
       this.removeLayer(this.operationalLayer);
-      let featureLayerOptions = {
+      let featureLayerOptions: FeatureLayerOptions = {
         url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
         style: null,
         pointToLayer: null,
@@ -95,6 +96,9 @@ export class LocationViewerMap extends LeafletMap {
           return this.mapService.L.marker(latlng, { icon });
         }
       }
+
+      if (operationalLayerOptions.where != null)
+        featureLayerOptions.where = operationalLayerOptions.where;
 
       if (operationalLayerOptions.enableClustering) {
         this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions);
