@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - ShowSidebar property to set default visibility of sidebar
 - Translations property to override default translations
+- Added new 'where' property to allow server side (mapserver) filtering of operational layer
 
 ## [2.3.1] - 2022-06-17
 

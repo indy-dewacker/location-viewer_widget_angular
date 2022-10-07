@@ -107,7 +107,12 @@ Create a contract with the "GEOAPI" on the api-store
 * Operational layer
 Operational layer is the main layer of the location viewer widget. After you have provided the setting to build this layer it is possible to filter this layer with selection tools (rectangle, polygon and filterlayer). After each selection the location viewer widget will push the filtered results of the layer.
 This layer will be initialized in ngOnInit with settings passed through the operationalLayerOptions input param. There are 2 possible ways to build this layer:
-  * Mapserver (provide url (valid mapserver url) and layerid properties)
+  * Mapserver (provide url (valid mapserver url), layerid and where properties)
+    * url: url of the mapserver
+    * layerid: layerid of the layer on the provided mapserver url
+    * where: an optional expression to filter features server side (mapserver)
+    where clause will be used as param on the following request url/layerid/query, for additional info:
+    https://desktop.arcgis.com/en/arcmap/latest/map/working-with-layers/sql-reference-for-query-expressions-used-in-arcgis.htm
   * Markers (provide markers, isVisible and name properties)
 * Supporting layer
 Supporting layer is only there to visualize certain objects in leaflet. This layer will be initialized in ngOnInit with settings passed through the supportingLayerOptions input param.
