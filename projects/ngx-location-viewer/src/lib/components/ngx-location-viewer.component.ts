@@ -20,6 +20,7 @@ import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { LocationViewerHelper } from '../services/location-viewer.helper';
 import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
 import { LeafletTileLayerModel, LeafletTileLayerType } from '../types/leaflet-tile-layer.model';
+import { Translations } from '../types/translations.model';
 
 @Component({
   selector: 'aui-location-viewer',
@@ -33,8 +34,10 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
   @Input() defaultZoom = 14;
   /* The initial map center on load. */
   @Input() mapCenter: Array<number> = [51.215, 4.425];
-  /* Show a sidebar next to the map leaflet. A sidebar can contain any additional info you like. */
+  /* Shows button to open sidebar if true. A sidebar can contain any additional info you like. */
   @Input() hasSidebar = false;
+  /* If hasSidebar is true this will show whether the sidebar should be visible from the start */
+  @Input() showSidebar = false;
   /* Shows layermangement inside the sidebar. Layermanagement is used to add or remove featurelayers. */
   @Input() showLayerManagement = true;
   /* Show selection tools */
@@ -60,6 +63,21 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
    * If null the zoomlevel won't change after marker selection.
    */
   @Input() zoomOnMarkerSelect?= 16;
+  /* */
+  @Input() translations: Translations = {
+    closeSidebar: 'Sluit zijbalk',
+    openSidebar: 'Open zijbalk',
+    select: 'Selecteren',
+    selectRectangle: 'Selecteer met een rechthoek',
+    selectPolygon: 'Selecteer met een veelhoek',
+    selectFilterLayer: 'Selecteer met filterlaag',
+    measure: 'Meten',
+    measureArea: 'Meten oppervlakte en omtrek',
+    measureDistance: 'Meten afstand',
+    whatIsHere: 'Wat is hier',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom uit'
+  }
   /* HasSideBar change */
   @Output() hasSidebarChange = new EventEmitter<boolean>();
   /* AddPolygon event */
@@ -164,9 +182,13 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     this.leafletMap.zoomOut();
   }
 
-  toggleLayermanagement() {
-    this.hasSidebar = !this.hasSidebar;
-    this.hasSidebarChange.emit(this.hasSidebar);
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
+    this.hasSidebarChange.emit(this.showSidebar);
+    // recalculates leaflet map size
+    setTimeout(() => {
+      this.leafletMap.map.invalidateSize();
+    })
   }
 
   activeButtonChange(action: ButtonActions) {
@@ -335,6 +357,11 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
       this.initiateOperationalLayer();
       this.initiateFilterLayers();
       this.initiateEvents();
+
+      // set hasSidebar true if showlayermanagement is true because this is inside the sidebar
+      if (this.showLayerManagement && !this.hasSidebar) {
+        this.hasSidebar = true;
+      }
     });
   }
 
