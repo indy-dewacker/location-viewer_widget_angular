@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [2.4.0] - 2022-10-11
+
 ### Changed
 - Toggle sidebar functionality to work with hasSidebar property
 
@@ -19,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - ShowSidebar property to set default visibility of sidebar
 - Translations property to override default translations
 - Added new 'where' property to allow server side (mapserver) filtering of operational layer
+
 
 ## [2.3.1] - 2022-06-17
 
@@ -45,6 +49,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed issue that legend icon operational layer failed to load on config change
 - Fixed issue that filterLayers did not update correcty on change
+
 
 ## [2.2.2] - 2021-11-16
 
@@ -141,7 +146,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.1...v2.4.0
 [2.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.2...v2.2.3
