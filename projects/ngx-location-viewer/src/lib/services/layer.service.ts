@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { GeometryTypes } from '../types/geometry-types.enum';
-import { Layer } from '../types/layer.model';
+import { Layer, LayerColor } from '../types/layer.model';
 import { LayerInfo } from '../types/mapserver/info-response/layer-info.model';
 import { MapserverInfo } from '../types/mapserver/info-response/mapserver-info.model';
-import { LayerSpecificInfo } from '../types/mapserver/layerinfo-response/layer-info.model';
+import { DrawingInfoType, LayerSpecificInfo, LayerSymbolInfo } from '../types/mapserver/layerinfo-response/layer-info.model';
 import { LayerLegend } from '../types/mapserver/legend-response/layer-legend.model';
 import { MapserverLegend } from '../types/mapserver/legend-response/mapserver-legend.model';
 
@@ -15,58 +15,37 @@ export class LayerService {
     getLayerFromLayerInfo(layerInfo: LayerSpecificInfo, legend: MapserverLegend): Layer {
         const layerLegend = legend.layers.find((x) => x.layerId === layerInfo.id);
 
-        if (!layerLegend) {
-            throw new Error(`Could not retrieve legend info for layer with id: ${layerInfo.id}`);
-        }
+    if (!layerLegend) {
+      throw new Error(`Could not retrieve legend info for layer with id: ${layerInfo.id}`);
+    }
 
-        const layer: Layer = {
-            id: layerInfo.id,
-            name: layerInfo.name,
-            visible: layerInfo.defaultVisibility,
-            layers: [],
-            legend: layerLegend.legend,
-            styleField: layerInfo.drawingInfo.renderer.field1,
-        };
+    const layer: Layer = {
+      id: layerInfo.id,
+      name: layerInfo.name,
+      visible: layerInfo.defaultVisibility,
+      layers: [],
+      legend: layerLegend.legend,
+      styleField: layerInfo.drawingInfo.renderer.field1,
+      geometryType: layerInfo.geometryType
+    };
 
-        if (layerInfo.geometryType !== GeometryTypes.esriGeometryPoint) {
-            layer.colors = layerInfo.drawingInfo.renderer.uniqueValueInfos.map((uniqueValue) => {
-                let fillColor = '';
-                let color = '';
-                let fill = false;
-                let weight = 1;
-                switch (layerInfo.geometryType) {
-                    case GeometryTypes.esriGeometryPolyline:
-                        color = this.RGBToHex(uniqueValue.symbol.color[0], uniqueValue.symbol.color[1], uniqueValue.symbol.color[2]);
-                        weight = uniqueValue.symbol.width;
-                        break;
-                    case GeometryTypes.esriGeometryPolygon:
-                        if (uniqueValue.symbol.color) {
-                            fillColor = this.RGBToHex(
-                                uniqueValue.symbol.color[0],
-                                uniqueValue.symbol.color[1],
-                                uniqueValue.symbol.color[2],
-                            );
-                            fill = uniqueValue.symbol.color[3] > 0 ? true : false;
-                        }
-                        color = this.RGBToHex(
-                            uniqueValue.symbol.outline.color[0],
-                            uniqueValue.symbol.outline.color[1],
-                            uniqueValue.symbol.outline.color[2],
-                        );
-                        weight = uniqueValue.symbol.outline.width;
-                        break;
-                }
-                return {
-                    value: uniqueValue.value,
-                    weight,
-                    color,
-                    fillColor,
-                    fill,
-                };
-            });
-        }
+    if (layerInfo.geometryType !== GeometryTypes.esriGeometryPoint) {
+      switch(layerInfo.drawingInfo.renderer.type) {
+        case DrawingInfoType.UNIQUEVALUE:
+          layer.colors = layerInfo.drawingInfo.renderer.uniqueValueInfos.map((uniqueValue) => {
+            return this.layerSymbolInfoToLayerColor(uniqueValue.symbol, layerInfo.geometryType, uniqueValue.value);
+          });
+          break;
+        case DrawingInfoType.SIMPLE:
+          const color = this.layerSymbolInfoToLayerColor(layerInfo.drawingInfo.renderer.symbol, layerInfo.geometryType, null);
+          layer.colors = [color];
+          break;
+        default:
+          break;
+      }
+    }
 
-        return layer;
+    return layer;
     }
 
     // filter multiple layers by id
@@ -102,6 +81,43 @@ export class LayerService {
 
         return visibleLayerIds;
     }
+
+    /* Convert layerSymbonInfo (ARCGIS) to layercolor object */
+  private layerSymbolInfoToLayerColor(symbolInfo: LayerSymbolInfo, geometryType: string, uniqueValue: string): LayerColor {
+    let fillColor = '';
+        let color = '';
+        let fill = false;
+        let weight = 1;
+        switch (geometryType) {
+          case GeometryTypes.esriGeometryPolyline:
+            color = this.RGBToHex(symbolInfo.color[0], symbolInfo.color[1], symbolInfo.color[2]);
+            weight = symbolInfo.width;
+            break;
+          case GeometryTypes.esriGeometryPolygon:
+            if (symbolInfo.color) {
+              fillColor = this.RGBToHex(
+                symbolInfo.color[0],
+                symbolInfo.color[1],
+                symbolInfo.color[2],
+              );
+              fill = symbolInfo.color[3] > 0;
+            }
+            color = this.RGBToHex(
+              symbolInfo.outline.color[0],
+              symbolInfo.outline.color[1],
+              symbolInfo.outline.color[2],
+            );
+            weight = symbolInfo.outline.width;
+            break;
+        }
+        return {
+          value: uniqueValue,
+          weight,
+          color,
+          fillColor,
+          fill,
+        };
+  }
 
     private buildLayerTree(layers: Layer[], layersInfo: LayerInfo[], legend: MapserverLegend, visible?: boolean | number[]): Layer[] {
         let layerTree: Layer[] = [];
