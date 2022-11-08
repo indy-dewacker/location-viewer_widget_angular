@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Fixed
+- Fixed issue that arcgis layer (polygon) with renderer info type 'simple' failed to load
 
 ## [1.6.0] - 2022-08-26
 
