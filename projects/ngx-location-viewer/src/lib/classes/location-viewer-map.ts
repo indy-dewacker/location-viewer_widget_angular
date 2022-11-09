@@ -66,7 +66,7 @@ export class LocationViewerMap extends LeafletMap {
         }
     }
 
-    addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer, defaultDisplayField?: string) {
+    addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer) {
         if (this.mapService.isAvailable()) {
           this.removeLayer(this.operationalLayer);
           let featureLayerOptions: FeatureLayerOptions = {
