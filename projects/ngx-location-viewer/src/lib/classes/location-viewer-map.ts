@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { LocationViewerMapService } from '../services/location-viewer-map.service';
 import { FeatureLayerOptions } from '../types/esri/featurelayer-options.model';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
+import { GeometryTypes } from '../types/geometry-types.enum';
 import { Layer } from '../types/layer.model';
 import { PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
@@ -67,54 +68,62 @@ export class LocationViewerMap extends LeafletMap {
 
     addOperationalLayer(operationalLayerOptions: OperationalLayerOptions, layer: Layer) {
         if (this.mapService.isAvailable()) {
-            this.removeLayer(this.operationalLayer);
-            let featureLayerOptions: FeatureLayerOptions = {
-                url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
-                // style is used to style lines and polygons
-                style: (feature) => {
-                    if (layer.colors) {
-                        const colorValue = feature.properties[layer.styleField];
-                        const colorItem = layer.colors.find((x) => x.value === colorValue);
-                        return colorItem;
-                    }
-                },
-                // point to layer method is used to style points
-                pointToLayer: (feature, latlng) => {
-                    const legendValue = feature.properties[layer.styleField];
-                    const legendItem = layer.legend.find((x) => x.values && x.values.includes(legendValue));
-                    let iconUrl = '';
-                    if (legendItem) {
-                        iconUrl = `data:${legendItem.contentType};base64, ${legendItem.imageData}`;
-                    } else {
-                        iconUrl = `data:${layer.legend[0].contentType};base64, ${layer.legend[0].imageData}`;
-                    }
-
-                    const icon = this.mapService.L.icon({
-                        iconUrl,
-                        iconAnchor: [10, 10],
-                    });
-                    return this.mapService.L.marker(latlng, { icon });
-                },
-            };
-
-            if (operationalLayerOptions.where != null)
-                featureLayerOptions.where = operationalLayerOptions.where;
-
-            if (operationalLayerOptions.enableClustering) {
-                this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions);
-            } else {
-                this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions);
+          this.removeLayer(this.operationalLayer);
+          let featureLayerOptions: FeatureLayerOptions = {
+            url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
+            style: null,
+            pointToLayer: null
+          };
+    
+          if (layer.geometryType === GeometryTypes.esriGeometryPolygon || layer.geometryType === GeometryTypes.esriGeometryPolyline)
+          {
+            // style is used to style lines and polygons
+            featureLayerOptions.style = (feature) => {
+              if (layer.colors && layer.colors.length > 0) {
+                const colorValue = feature.properties[layer.styleField];
+                const colorItem = layer.colors.find((x) => x.value === colorValue);
+                return colorItem ? colorItem : layer.colors[0];
+              }
             }
-
-            //update layer visibility
-            if (operationalLayerOptions.isVisible != null) 
-                layer.visible = operationalLayerOptions.isVisible;
-
-            if (layer.visible) {
-                this.addLayer(this.operationalLayer);
+          } else {
+            // point to layer method is used to style points
+            featureLayerOptions.pointToLayer = (feature, latlng) => {
+              const legendValue = feature.properties[layer.styleField];
+              const legendItem = layer.legend.find((x) => x.values && x.values.includes(legendValue));
+              let iconUrl = '';
+              if (legendItem) {
+                iconUrl = `data:${legendItem.contentType};base64, ${legendItem.imageData}`;
+              } else {
+                iconUrl = `data:${layer.legend[0].contentType};base64, ${layer.legend[0].imageData}`;
+              }
+    
+              const icon = this.mapService.L.icon({
+                iconUrl,
+                iconAnchor: [10, 10],
+              });
+              return this.mapService.L.marker(latlng, { icon });
             }
+          }
+    
+          if (operationalLayerOptions.where != null)
+            featureLayerOptions.where = operationalLayerOptions.where;
+    
+          if (operationalLayerOptions.enableClustering) {
+            this.operationalLayer = new this.mapService.esri.Cluster.featureLayer(featureLayerOptions);
+          } else {
+            this.operationalLayer = this.mapService.esri.featureLayer(featureLayerOptions);
+          }
+    
+          //update layer visibility
+          if (operationalLayerOptions.isVisible != null)
+            layer.visible = operationalLayerOptions.isVisible;
+    
+          if (layer.visible) {
+            this.map.addLayer(this.operationalLayer);
+          }
         }
-    }
+      }
+    
 
     addOperationalMarkers(markers: OperationalMarker[], enableClustering: boolean) {
         if (this.mapService.isAvailable()) {

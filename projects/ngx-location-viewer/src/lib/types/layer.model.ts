@@ -1,3 +1,4 @@
+import { GeometryTypes } from './geometry-types.enum';
 import { LayerLegendInfo } from './mapserver/legend-response/layer-legend-info.model';
 
 export interface Layer {
@@ -9,6 +10,7 @@ export interface Layer {
     styleField?: string;
     colors?: LayerColor[];
     isLoading?: boolean;
+    geometryType?: GeometryTypes;
 }
 
 export interface LayerColor {
