@@ -13,6 +13,18 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.6.2] - 2022-11-14
+
+### Fixed
+- Fixed a broken release
+
+
+## [1.6.1] - 2022-11-14 - BORKED
+
+### Fixed
+- Fixed issue that arcgis layer (polygon) with renderer info type 'simple' failed to load
+
+
 ## [1.6.1] - 2022-11-14
 
 ### Fixed
@@ -115,7 +127,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v1.5.0...v1.5.1
