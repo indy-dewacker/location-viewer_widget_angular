@@ -1,7 +1,7 @@
 {
   "name": "@acpaas-ui-widgets/ngx-location-viewer",
   "description": "Location viewer in progress",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,7 +22,6 @@
     "esri-leaflet-cluster": "^2.1.0",
     "leaflet.markercluster": "^1.4.1"
   },
-  "private": true,
   "dependencies": {
     "@acpaas-ui/ngx-flyout": "^4.6.0",
     "@acpaas-ui/ngx-leaflet": "^4.6.0",
