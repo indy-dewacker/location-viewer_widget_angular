@@ -17,6 +17,8 @@ export interface OperationalLayerOptions {
   tooltipField?: string;
   /* an optional expression to filter features server side (mapserver) */
   where?: string;
+  minZoom?: number;
+  maxZoom?: number;
 }
 
 

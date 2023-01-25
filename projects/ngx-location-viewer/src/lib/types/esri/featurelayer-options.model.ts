@@ -3,5 +3,7 @@ export interface FeatureLayerOptions {
     style: (feature) => void,
     pointToLayer: (feature, latlng) => void,
     onEachFeature: (feature, layer) => void,
-    where?: string
+    where?: string,
+    minZoom?: number,
+    maxZoom?: number
 }

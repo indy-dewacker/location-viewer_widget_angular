@@ -55,6 +55,8 @@ export class LocationViewerMap extends LeafletMap {
       this.removeLayer(this.operationalLayer);
       let featureLayerOptions: FeatureLayerOptions = {
         url: `${operationalLayerOptions.url}/${operationalLayerOptions.layerId}/query`,
+        minZoom: operationalLayerOptions.minZoom,
+        maxZoom: operationalLayerOptions.maxZoom,
         style: null,
         pointToLayer: null,
         onEachFeature: (feature, layer) => {
