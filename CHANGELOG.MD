@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+### Added
+- Option to pass minZoom and maxZoom params when layer should be visible (performance)
 
 ## [2.4.0] - 2022-10-11
 
