@@ -4,7 +4,7 @@ import { LocationViewerMapService } from '../services/location-viewer-map.servic
 import { FeatureLayerOptions } from '../types/esri/featurelayer-options.model';
 import { FilterLayerOptions } from '../types/filter-layer-options.model';
 import { GeometryTypes } from '../types/geometry-types.enum';
-import { Layer } from '../types/layer.model';
+import { Layer, LayerColor } from '../types/layer.model';
 import { PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
 
@@ -74,9 +74,16 @@ export class LocationViewerMap extends LeafletMap {
         // style is used to style lines and polygons
         featureLayerOptions.style = (feature) => {
           if (layer.colors && layer.colors.length > 0) {
-            const colorValue = feature.properties[layer.styleField];
-            const colorItem = layer.colors.find((x) => x.value === colorValue);
-            return colorItem ? colorItem : layer.colors[0];
+            let colorItem = layer.colors[0];
+            
+            // check if more coloritems are avaiable to check for custom style by value
+            if (layer.colors.length > 1)
+            {
+              const colorValue = feature.properties[layer.styleField];
+              colorItem = layer.colors.find((x) => x.value === colorValue);
+            }
+
+            return  {...colorItem, ...operationalLayerOptions.layerColor};
           }
         }
       } else {

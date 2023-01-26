@@ -1,3 +1,5 @@
+import { LayerColor } from './layer.model';
+
 export interface OperationalLayerOptions {
   /* if true markers will be clustered */
   enableClustering: boolean;
@@ -17,8 +19,12 @@ export interface OperationalLayerOptions {
   tooltipField?: string;
   /* an optional expression to filter features server side (mapserver) */
   where?: string;
+  /* the minimum active zoomlevel to show the ESRI feature layer */
   minZoom?: number;
+  /* the maximum active zoomlevel to show the ESRI feature layer */
   maxZoom?: number;
+  /* style options that will be passed to ESRI feature layer, more info https://leafletjs.com/reference.html#path */
+  layerColor?: LayerColor;
 }
 
 
