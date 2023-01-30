@@ -14,9 +14,10 @@ export interface Layer {
 }
 
 export interface LayerColor {
-  fillColor: string;
-  color: string;
-  weight: number;
+  fillColor?: string;
+  color?: string;
+  weight?: number;
   fill?: boolean;
-  value: string;
+  value?: string;
+  fillOpacity?: number;
 }

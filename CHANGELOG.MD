@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Option to pass minZoom and maxZoom params when layer should be visible (performance)
+- Option to pass layerColor (style options) to override default from mapserver
 
 ## [2.4.0] - 2022-10-11
 
