@@ -12,9 +12,13 @@ All notable changes to this project will be documented in this file.
 -->
 ## [Unreleased]
 
+
+## [2.4.1] - 2023-01-30
+
 ### Added
 - Option to pass minZoom and maxZoom params when layer should be visible (performance)
 - Option to pass layerColor (style options) to override default from mapserver
+
 
 ## [2.4.0] - 2022-10-11
 
@@ -149,7 +153,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.1...v2.4.0
 [2.3.1]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/digipolisantwerp/location-viewer_widget_angular/compare/v2.2.3...v2.3.0
