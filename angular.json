@@ -35,8 +35,7 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css"
             ],
-            "scripts": [],
-            "es5BrowserSupport": true
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -149,5 +148,8 @@
       }
     }
   },
-  "defaultProject": "ngx-location-viewer"
+  "defaultProject": "ngx-location-viewer",
+  "cli": {
+    "analytics": false
+  }
 }
