@@ -1,6 +1,8 @@
 import { MapService } from '@acpaas-ui/ngx-leaflet';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
+// import * as Cluster from 'esri-leaflet-cluster'
+
 @Injectable()
 export class LocationViewerMapService extends MapService {
   // tslint:disable-next-line: ban-types

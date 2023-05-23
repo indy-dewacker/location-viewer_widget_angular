@@ -7,7 +7,7 @@ import { GeometryTypes } from '../types/geometry-types.enum';
 import { Layer, LayerColor } from '../types/layer.model';
 import { PopupEvents } from '../types/leaflet.types';
 import { OperationalLayerOptions, OperationalMarker } from '../types/operational-layer-options.model';
-
+import * as L from 'leaflet';
 export class LocationViewerMap extends LeafletMap {
   public supportingLayer: any;
   public operationalLayer: any;

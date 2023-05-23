@@ -43,6 +43,4 @@ testem.log
 .DS_Store
 Thumbs.db
 
-#local lib
-.yalc
-yalc.lock
+.angular

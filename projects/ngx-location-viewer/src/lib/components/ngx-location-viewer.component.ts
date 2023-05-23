@@ -21,6 +21,8 @@ import { LocationViewerHelper } from '../services/location-viewer.helper';
 import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
 import { LeafletTileLayerModel, LeafletTileLayerType } from '../types/leaflet-tile-layer.model';
 import { Translations } from '../types/translations.model';
+import { LatLngExpression } from 'leaflet';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'aui-location-viewer',
@@ -33,7 +35,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
   /* The default zoom level on map load. */
   @Input() defaultZoom = 14;
   /* The initial map center on load. */
-  @Input() mapCenter: Array<number> = [51.215, 4.425];
+  @Input() mapCenter: LatLngExpression = [51.215, 4.425];
   /* Shows button to open sidebar if true. A sidebar can contain any additional info you like. */
   @Input() hasSidebar = false;
   /* If hasSidebar is true this will show whether the sidebar should be visible from the start */

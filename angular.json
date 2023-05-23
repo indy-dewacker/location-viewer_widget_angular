@@ -1,155 +1,138 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "example": {
-      "root": "projects/example/",
-      "sourceRoot": "projects/example/src",
-      "projectType": "application",
-      "prefix": "app",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/example",
-            "index": "projects/example/src/index.html",
-            "main": "projects/example/src/main.ts",
-            "polyfills": "projects/example/src/polyfills.ts",
-            "tsConfig": "projects/example/tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "./node_modules/leaflet/dist/images",
-                "output": "/"
-              },
-              "projects/example/src/favicon.ico",
-              "projects/example/src/assets"
-            ],
-            "styles": [
-              "projects/example/src/styles.css",
-              "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/leaflet-draw/dist/leaflet.draw.css",
-              "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.css"
-            ],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "projects/example/src/environments/environment.ts",
-                  "with": "projects/example/src/environments/environment.prod.ts"
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "example": {
+            "root": "projects/example/",
+            "sourceRoot": "projects/example/src",
+            "projectType": "application",
+            "prefix": "app",
+            "schematics": {},
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/example",
+                        "index": "projects/example/src/index.html",
+                        "main": "projects/example/src/main.ts",
+                        "polyfills": "projects/example/src/polyfills.ts",
+                        "tsConfig": "projects/example/tsconfig.app.json",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "./node_modules/leaflet/dist/images",
+                                "output": "/"
+                            },
+                            "projects/example/src/favicon.ico",
+                            "projects/example/src/assets"
+                        ],
+                        "styles": [
+                            "projects/example/src/styles.css",
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "node_modules/leaflet-draw/dist/leaflet.draw.css",
+                            "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
+                            "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+                            "node_modules/leaflet.markercluster/dist/MarkerCluster.css"
+                        ],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "projects/example/src/environments/environment.ts",
+                                    "with": "projects/example/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "example:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "example:build:production"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "example:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/example/src/test.ts",
+                        "polyfills": "projects/example/src/polyfills.ts",
+                        "tsConfig": "projects/example/tsconfig.spec.json",
+                        "karmaConfig": "projects/example/karma.conf.js",
+                        "styles": ["projects/example/src/styles.css"],
+                        "scripts": [],
+                        "assets": ["projects/example/src/favicon.ico", "projects/example/src/assets"]
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": ["projects/example/tsconfig.app.json", "projects/example/tsconfig.spec.json"],
+                        "exclude": ["**/node_modules/**"]
+                    }
                 }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+            }
+        },
+        "ngx-location-viewer": {
+            "root": "projects/ngx-location-viewer",
+            "sourceRoot": "projects/ngx-location-viewer/src",
+            "projectType": "library",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "tsConfig": "projects/ngx-location-viewer/tsconfig.lib.json",
+                        "project": "projects/ngx-location-viewer/ng-package.json"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/ngx-location-viewer/src/test.ts",
+                        "tsConfig": "projects/ngx-location-viewer/tsconfig.spec.json",
+                        "karmaConfig": "projects/ngx-location-viewer/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": ["projects/ngx-location-viewer/tsconfig.lib.json", "projects/ngx-location-viewer/tsconfig.spec.json"],
+                        "exclude": ["**/node_modules/**"]
+                    }
                 }
-              ]
             }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "example:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "example:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "example:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/example/src/test.ts",
-            "polyfills": "projects/example/src/polyfills.ts",
-            "tsConfig": "projects/example/tsconfig.spec.json",
-            "karmaConfig": "projects/example/karma.conf.js",
-            "styles": [
-              "projects/example/src/styles.css"
-            ],
-            "scripts": [],
-            "assets": [
-              "projects/example/src/favicon.ico",
-              "projects/example/src/assets"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/example/tsconfig.app.json",
-              "projects/example/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
-      }
     },
-    "ngx-location-viewer": {
-      "root": "projects/ngx-location-viewer",
-      "sourceRoot": "projects/ngx-location-viewer/src",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/ngx-location-viewer/tsconfig.lib.json",
-            "project": "projects/ngx-location-viewer/ng-package.json"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ngx-location-viewer/src/test.ts",
-            "tsConfig": "projects/ngx-location-viewer/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-location-viewer/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ngx-location-viewer/tsconfig.lib.json",
-              "projects/ngx-location-viewer/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
+    "cli": {
+        "analytics": false
     }
-  },
-  "defaultProject": "ngx-location-viewer",
-  "cli": {
-    "analytics": false
-  }
 }
