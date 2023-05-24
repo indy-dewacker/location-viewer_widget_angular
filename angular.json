@@ -99,13 +99,6 @@
                         "scripts": [],
                         "assets": ["projects/example/src/favicon.ico", "projects/example/src/assets"]
                     }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": ["projects/example/tsconfig.app.json", "projects/example/tsconfig.spec.json"],
-                        "exclude": ["**/node_modules/**"]
-                    }
                 }
             }
         },
@@ -128,13 +121,6 @@
                         "main": "projects/ngx-location-viewer/src/test.ts",
                         "tsConfig": "projects/ngx-location-viewer/tsconfig.spec.json",
                         "karmaConfig": "projects/ngx-location-viewer/karma.conf.js"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": ["projects/ngx-location-viewer/tsconfig.lib.json", "projects/ngx-location-viewer/tsconfig.spec.json"],
-                        "exclude": ["**/node_modules/**"]
                     }
                 }
             }
