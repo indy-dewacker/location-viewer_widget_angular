@@ -5,9 +5,9 @@
     "peerDependencies": {
         "@acpaas-ui/ngx-icon": "^5.0.0",
         "@acpaas-ui/ngx-leaflet": "^5.0.2",
-        "@angular/common": "~13.4.0",
-        "@angular/core": "~13.4.0",
-        "@angular/forms": "~13.4.0"
+        "@angular/common": "~14.3.0",
+        "@angular/core": "~14.3.0",
+        "@angular/forms": "~14.3.0"
     },
     "dependencies": {
         "@geoman-io/leaflet-geoman-free": "^2.7.0",
