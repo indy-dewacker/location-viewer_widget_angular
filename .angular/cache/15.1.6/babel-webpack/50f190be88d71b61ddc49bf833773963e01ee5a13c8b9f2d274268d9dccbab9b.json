@@ -1,1 +1,0 @@
-{"ast":null,"code":"export var LayerTypes = /*#__PURE__*/(() => {\n  (function (LayerTypes) {\n    LayerTypes[\"operational\"] = \"operational\";\n    LayerTypes[\"supporting\"] = \"supporting\";\n  })(LayerTypes || (LayerTypes = {}));\n  return LayerTypes;\n})();","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
