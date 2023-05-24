@@ -5,15 +5,16 @@
     "peerDependencies": {
         "@acpaas-ui/ngx-icon": "^5.0.0",
         "@acpaas-ui/ngx-leaflet": "^5.0.2",
-        "@angular/common": "^9.0.0",
-        "@angular/core": "^9.0.0",
-        "@angular/forms": "^9.0.0"
+        "@angular/common": "~10.2.5",
+        "@angular/core": "~10.2.5",
+        "@angular/forms": "~10.2.5"
     },
     "dependencies": {
         "@geoman-io/leaflet-geoman-free": "^2.7.0",
         "@turf/area": "^6.0.1",
         "esri-leaflet-cluster": "^3.0.0",
         "leaflet.markercluster": "^1.4.1",
-        "lodash-es": "^4.17.21"
+        "lodash-es": "^4.17.21",
+        "tslib": "^2.0.0"
     }
 }
