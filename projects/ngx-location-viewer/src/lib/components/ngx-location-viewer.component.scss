@@ -1,4 +1,5 @@
-@import '@a-ui/core/dist/assets/styles/_quarks.scss';
+$spacer: 1.5rem !default; // 24px
+$spacer-xs: $spacer * 0.5 !default;
 
 ::ng-deep {
     .whatishere-wrapper {
@@ -7,7 +8,7 @@
     }
 
     .whatishere-title {
-        margin: $spacer-xs / 2 0;
+        margin: calc($spacer-xs / 2) 0;
     }
 
     .whatishere-content {
@@ -15,7 +16,7 @@
         float: left;
         gap: 0 $spacer-xs;
         grid-template-columns: 1fr 3fr;
-        margin-top: $spacer-xs / 2;
+        margin-top: calc($spacer-xs / 2);
         width: 14rem;
     }
 

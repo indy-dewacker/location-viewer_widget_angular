@@ -32,7 +32,6 @@
         "@acpaas-ui/ngx-icon": "6.0.0-beta.0",
         "@acpaas-ui/ngx-leaflet": "^5.1.2",
         "@angular-devkit/build-angular": "^15.2.8",
-        "@angular-devkit/build-ng-packagr": "^0.1002.4",
         "@angular/animations": "^15.2.9",
         "@angular/cli": "^15.2.8",
         "@angular/common": "^15.2.9",

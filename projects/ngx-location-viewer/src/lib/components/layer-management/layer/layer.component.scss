@@ -1,4 +1,5 @@
-@import '@a-ui/core/dist/assets/styles/_quarks.scss';
+$spacer: 1.5rem !default; // 24px
+$text-color: #141414 !default;
 
 .layer__toggle {
     cursor: pointer;
