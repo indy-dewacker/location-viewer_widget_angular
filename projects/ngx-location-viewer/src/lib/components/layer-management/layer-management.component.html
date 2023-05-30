@@ -1,19 +1,21 @@
 <h1 class="has-base-font u-text-bold h5">Lagen</h1>
 <div class="u-margin-left-xs">
     <div *ngIf="operationalLayer" class="u-margin-top">
-        <h2 class="has-base-font u-text-bold h6">Operationele laag:</h2>
+        <h2 class="has-base-font u-text-bold h6">{{ translations.operationalLayer }}</h2>
         <aui-layer
             *ngIf="operationalLayer"
+            [translations]="translations"
             [layer]="operationalLayer"
             [layerType]="layerTypes.operational"
             (layerVisibiltyChange)="onLayerVisibilityChange($event)"
         ></aui-layer>
     </div>
     <div *ngIf="supportingLayers" class="u-margin-top">
-        <h2 class="has-base-font u-text-bold h6">Ondersteunende lagen:</h2>
+        <h2 class="has-base-font u-text-bold h6">{{ translations.supportingLayers }}</h2>
         <aui-layer
             *ngFor="let layer of supportingLayers"
             [layer]="layer"
+            [translations]="translations"
             [layerType]="layerTypes.supporting"
             (layerVisibiltyChange)="onLayerVisibilityChange($event)"
         ></aui-layer>

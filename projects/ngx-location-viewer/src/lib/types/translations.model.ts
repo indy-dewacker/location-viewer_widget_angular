@@ -11,4 +11,14 @@ export interface Translations {
     whatIsHere: string;
     zoomIn: string;
     zoomOut: string;
+    close: string;
+    selectDefault: string;
+    selectSpecific: string;
+    operationalLayer: string;
+    supportingLayers: string;
+    showLayer: string;
+    hideLayer: string;
+    showLegend: string;
+    hideLegend: string;
+    choseFilterLayer: string;
 }

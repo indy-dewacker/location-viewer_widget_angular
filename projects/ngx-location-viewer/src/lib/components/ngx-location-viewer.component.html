@@ -1,139 +1,231 @@
 <aui-leaflet [leafletMap]="leafletMap" [hasSidebar]="showSidebar">
-  <div class="sidebar" *ngIf="hasSidebar && showSidebar">
-    <div class="sidebar__header">
-      <button class="a-button-transparent a-button--default has-icon sidebar__close-button" aria-label="Sluiten"
-        (click)="toggleSidebar()">
-        <aui-icon name="ai-close"></aui-icon>
-      </button>
-    </div>
-    <div class="sidebar__content">
-      <ng-content></ng-content>
-      <aui-layer-management *ngIf="showLayerManagement" [supportingLayers]="supportingLayers" [operationalLayer]="operationalLayer"
-        (layerVisibilityChange)="handleLayerVisibilityChange($event)">
-      </aui-layer-management>
-    </div>
-  </div>
-  <div class="controls-top-left" controls top left>
-    <button *ngIf="hasSidebar" type="button"
-      class="a-button a-button--small has-icon a-button--block u-margin-bottom-xs" name="toggle-layermanagement"
-      [title]="showSidebar ? translations.closeSidebar : translations.openSidebar"
-      [attr.aria-label]="showSidebar ? translations.closeSidebar : translations.openSidebar" (click)="toggleSidebar()">
-      <aui-icon *ngIf="showSidebar" name="ai-arrow-button-left-1"></aui-icon>
-      <aui-icon *ngIf="!showSidebar" name="ai-arrow-button-right-1"></aui-icon>
-    </button>
-    <div class="m-button-group m-button-group--vertical">
-      <div *ngIf="leafletMap.operationalLayer && showSelectionTools" class="m-button-group m-button-group--horizontal">
-        <button type="button" class="a-button--small has-icon" [ngClass]="{
-                    'a-button': !currentButton.startsWith(buttonActions.select),
-                    'a-button-outline': currentButton.startsWith(buttonActions.select)
-                }" [attr.aria-label]="translations.select" [title]="translations.select" (click)="activeButtonChange(buttonActions.select)">
-          <aui-icon name="ai-cursor"></aui-icon>
-        </button>
-        <div *ngIf="currentButton.startsWith(buttonActions.select)">
-          <button type="button" class="a-button--small has-icon" [ngClass]="{
-            'a-button': currentButton !== buttonActions.selectRectangle,
-            'a-button-outline': currentButton === buttonActions.selectRectangle
-        }" (click)="activeButtonChange(buttonActions.selectRectangle)" [title]="translations.selectRectangle"
-            [attr.aria-label]="translations.selectRectangle">
-            <aui-icon name="ai-vectors-anchor-square"></aui-icon>
-          </button>
-          <button type="button" class="a-button--small has-icon" [ngClass]="{
-            'a-button': currentButton !== buttonActions.selectPolygon,
-            'a-button-outline': currentButton === buttonActions.selectPolygon
-        }" (click)="activeButtonChange(buttonActions.selectPolygon)" [title]="translations.selectPolygon"
-            [attr.aria-label]="translations.selectPolygon">
-            <aui-icon name="ai-vectors-anchor-triangle"></aui-icon>
-          </button>
-          <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
-            <button *ngIf="availableFilterLayers?.length > 0" type="button"
-              class="a-button a-button--small has-icon a-button--block" [ngClass]="{
-              'a-button': currentButton !== buttonActions.selectZone,
-              'a-button-outline': currentButton === buttonActions.selectZone
-          }" (click)="activeButtonChange(buttonActions.selectZone)" [title]="translations.selectFilterLayer"
-              [attr.aria-label]="translations.selectFilterLayer">
-              <aui-icon name="ai-layers"></aui-icon>
+    <div class="sidebar" *ngIf="hasSidebar && showSidebar">
+        <div class="sidebar__header">
+            <button
+                class="a-button-transparent a-button--default has-icon sidebar__close-button"
+                [attr.aria-label]="translations.close"
+                (click)="toggleSidebar()"
+            >
+                <aui-icon name="ai-close"></aui-icon>
             </button>
-          </ng-container>
         </div>
-        <div class="a-input a-input--small has-icon-right u-margin-left-xs">
-          <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
-            <div class="a-input__wrapper"
-            *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers?.length > 1">
-            <select name="select-filterLayer" id="select-filterLayer" [(ngModel)]="currentFilterLayer"
-              (change)="onChangeFilterLayer()">
-              <option disabled [ngValue]="undefined">Kies filterlaag</option>
-              <ng-container *ngFor="let filterLayer of availableFilterLayers">
-                <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
-              </ng-container>
-            </select>
-            <aui-icon *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers.length > 1"
-              name="ai-arrow-down-1"></aui-icon>
-          </div>
-          </ng-container>
+        <div class="sidebar__content">
+            <ng-content></ng-content>
+            <aui-layer-management
+                *ngIf="showLayerManagement"
+                [supportingLayers]="supportingLayers"
+                [operationalLayer]="operationalLayer"
+                [translations]="translations"
+                (layerVisibilityChange)="handleLayerVisibilityChange($event)"
+            >
+            </aui-layer-management>
         </div>
-      </div>
-      <div class="m-button-group m-button-group--horizontal" *ngIf="showMeasureTools">
-        <button type="button" class="a-button--small has-icon" [ngClass]="{
-                    'a-button': !currentButton.startsWith(buttonActions.measurement),
-                    'a-button-outline': currentButton.startsWith(buttonActions.measurement)
-                }" (click)="activeButtonChange(buttonActions.measurement)" [title]="translations.measure" [attr.aria-label]="translations.measure">
-          <aui-icon name="ai-ruler"></aui-icon>
+    </div>
+    <div class="controls-top-left" controls top left>
+        <button
+            *ngIf="hasSidebar"
+            type="button"
+            class="a-button a-button--small has-icon a-button--block u-margin-bottom-xs"
+            name="toggle-layermanagement"
+            [title]="showSidebar ? translations.closeSidebar : translations.openSidebar"
+            [attr.aria-label]="showSidebar ? translations.closeSidebar : translations.openSidebar"
+            (click)="toggleSidebar()"
+        >
+            <aui-icon *ngIf="showSidebar" name="ai-arrow-button-left-1"></aui-icon>
+            <aui-icon *ngIf="!showSidebar" name="ai-arrow-button-right-1"></aui-icon>
         </button>
-        <div *ngIf="currentButton.startsWith(buttonActions.measurement)">
-          <button type="button" class="a-button--small has-icon" [ngClass]="{
-                        'a-button': currentButton !== buttonActions.distance,
-                        'a-button-outline': currentButton === buttonActions.distance
-                    }" (click)="activeButtonChange(buttonActions.distance)" [title]="translations.measureDistance"
-            [attr.aria-label]="translations.measureDistance">
-            <aui-icon name="ai-vectors-line-path"></aui-icon>
-          </button>
-          <button type="button" class="a-button--small has-icon" [ngClass]="{
-                        'a-button': currentButton !== buttonActions.area,
-                        'a-button-outline': currentButton === buttonActions.area
-                    }" (click)="activeButtonChange(buttonActions.area)" [title]="translations.measureArea"
-            [attr.aria-label]="translations.measureArea">
-            <aui-icon name="ai-vectors-anchor-rectangle"></aui-icon>
-          </button>
+        <div class="m-button-group m-button-group--vertical">
+            <div *ngIf="leafletMap.operationalLayer && showSelectionTools" class="m-button-group m-button-group--horizontal">
+                <button
+                    type="button"
+                    class="a-button--small has-icon"
+                    [ngClass]="{
+                        'a-button': !currentButton.startsWith(buttonActions.select),
+                        'a-button-outline': currentButton.startsWith(buttonActions.select)
+                    }"
+                    [attr.aria-label]="translations.select"
+                    [title]="translations.select"
+                    (click)="activeButtonChange(buttonActions.select)"
+                >
+                    <aui-icon name="ai-cursor"></aui-icon>
+                </button>
+                <div *ngIf="currentButton.startsWith(buttonActions.select)">
+                    <button
+                        type="button"
+                        class="a-button--small has-icon"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.selectRectangle,
+                            'a-button-outline': currentButton === buttonActions.selectRectangle
+                        }"
+                        (click)="activeButtonChange(buttonActions.selectRectangle)"
+                        [title]="translations.selectRectangle"
+                        [attr.aria-label]="translations.selectRectangle"
+                    >
+                        <aui-icon name="ai-vectors-anchor-square"></aui-icon>
+                    </button>
+                    <button
+                        type="button"
+                        class="a-button--small has-icon"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.selectPolygon,
+                            'a-button-outline': currentButton === buttonActions.selectPolygon
+                        }"
+                        (click)="activeButtonChange(buttonActions.selectPolygon)"
+                        [title]="translations.selectPolygon"
+                        [attr.aria-label]="translations.selectPolygon"
+                    >
+                        <aui-icon name="ai-vectors-anchor-triangle"></aui-icon>
+                    </button>
+                    <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
+                        <button
+                            *ngIf="availableFilterLayers?.length > 0"
+                            type="button"
+                            class="a-button a-button--small has-icon a-button--block"
+                            [ngClass]="{
+                                'a-button': currentButton !== buttonActions.selectZone,
+                                'a-button-outline': currentButton === buttonActions.selectZone
+                            }"
+                            (click)="activeButtonChange(buttonActions.selectZone)"
+                            [title]="translations.selectFilterLayer"
+                            [attr.aria-label]="translations.selectFilterLayer"
+                        >
+                            <aui-icon name="ai-layers"></aui-icon>
+                        </button>
+                    </ng-container>
+                </div>
+                <div class="a-input a-input--small has-icon-right u-margin-left-xs">
+                    <ng-container *ngIf="filterLayers$ | async as availableFilterLayers">
+                        <div
+                            class="a-input__wrapper"
+                            *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers?.length > 1"
+                        >
+                            <select
+                                name="select-filterLayer"
+                                id="select-filterLayer"
+                                [(ngModel)]="currentFilterLayer"
+                                (change)="onChangeFilterLayer()"
+                            >
+                                <option disabled [ngValue]="undefined">{{ translations.choseFilterLayer }}</option>
+                                <ng-container *ngFor="let filterLayer of availableFilterLayers">
+                                    <option [ngValue]="filterLayer">{{ filterLayer.name }}</option>
+                                </ng-container>
+                            </select>
+                            <aui-icon
+                                *ngIf="currentButton === buttonActions.selectZone && availableFilterLayers.length > 1"
+                                name="ai-arrow-down-1"
+                            ></aui-icon>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="m-button-group m-button-group--horizontal" *ngIf="showMeasureTools">
+                <button
+                    type="button"
+                    class="a-button--small has-icon"
+                    [ngClass]="{
+                        'a-button': !currentButton.startsWith(buttonActions.measurement),
+                        'a-button-outline': currentButton.startsWith(buttonActions.measurement)
+                    }"
+                    (click)="activeButtonChange(buttonActions.measurement)"
+                    [title]="translations.measure"
+                    [attr.aria-label]="translations.measure"
+                >
+                    <aui-icon name="ai-ruler"></aui-icon>
+                </button>
+                <div *ngIf="currentButton.startsWith(buttonActions.measurement)">
+                    <button
+                        type="button"
+                        class="a-button--small has-icon"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.distance,
+                            'a-button-outline': currentButton === buttonActions.distance
+                        }"
+                        (click)="activeButtonChange(buttonActions.distance)"
+                        [title]="translations.measureDistance"
+                        [attr.aria-label]="translations.measureDistance"
+                    >
+                        <aui-icon name="ai-vectors-line-path"></aui-icon>
+                    </button>
+                    <button
+                        type="button"
+                        class="a-button--small has-icon"
+                        [ngClass]="{
+                            'a-button': currentButton !== buttonActions.area,
+                            'a-button-outline': currentButton === buttonActions.area
+                        }"
+                        (click)="activeButtonChange(buttonActions.area)"
+                        [title]="translations.measureArea"
+                        [attr.aria-label]="translations.measureArea"
+                    >
+                        <aui-icon name="ai-vectors-anchor-rectangle"></aui-icon>
+                    </button>
+                </div>
+            </div>
+            <button
+                type="button"
+                class="a-button--small has-icon"
+                [ngClass]="{
+                    'a-button': currentButton !== buttonActions.whatishere,
+                    'a-button-outline': currentButton === buttonActions.whatishere
+                }"
+                (click)="activeButtonChange(buttonActions.whatishere)"
+                *ngIf="showWhatIsHereButton"
+                [title]="translations.whatIsHere"
+                [attr.aria-label]="translations.whatIsHere"
+            >
+                <aui-icon name="ai-pin"></aui-icon>
+            </button>
         </div>
-      </div>
-      <button type="button" class="a-button--small has-icon" [ngClass]="{
-                'a-button': currentButton !== buttonActions.whatishere,
-                'a-button-outline': currentButton === buttonActions.whatishere
-            }" (click)="activeButtonChange(buttonActions.whatishere)" *ngIf="showWhatIsHereButton" [title]="translations.whatIsHere"
-        [attr.aria-label]="translations.whatIsHere">
-        <aui-icon name="ai-pin"></aui-icon>
-      </button>
+        <ng-content select="[controls][top][left]"></ng-content>
     </div>
-    <ng-content select="[controls][top][left]"></ng-content>
-  </div>
-  <div controls bottom left>
-    <ng-content select="[controls][bottom][left]"></ng-content>
-    <div class="m-button-group m-button-group--vertical">
-      <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-in" (click)="zoomIn()"
-      [attr.aria-label]="translations.zoomIn" [title]="translations.zoomIn">
-        <aui-icon name="ai-add"></aui-icon>
-      </button>
-      <button type="button" class="a-button a-button--small has-icon a-button--block button-zoom-out"
-        (click)="zoomOut()" [attr.aria-label]="translations.zoomOut" [title]="translations.zoomOut">
-        <aui-icon name="ai-subtract"></aui-icon>
-      </button>
-    </div>
+    <div controls bottom left>
+        <ng-content select="[controls][bottom][left]"></ng-content>
+        <div class="m-button-group m-button-group--vertical">
+            <button
+                type="button"
+                class="a-button a-button--small has-icon a-button--block button-zoom-in"
+                (click)="zoomIn()"
+                [attr.aria-label]="translations.zoomIn"
+                [title]="translations.zoomIn"
+            >
+                <aui-icon name="ai-add"></aui-icon>
+            </button>
+            <button
+                type="button"
+                class="a-button a-button--small has-icon a-button--block button-zoom-out"
+                (click)="zoomOut()"
+                [attr.aria-label]="translations.zoomOut"
+                [title]="translations.zoomOut"
+            >
+                <aui-icon name="ai-subtract"></aui-icon>
+            </button>
+        </div>
 
-    <div *ngIf="tileLayer" class="m-button-group map-layer-toggle u-margin-top-xs">
-      <button type="button" class="a-button a-button--small" (click)="toggleTileLayer()" [disabled]="isDefaultTileLayer"
-        aria-label="Selecteer default basislaag">
-        {{ defaultTileLayerLabel }}
-      </button>
-      <button type="button" class="a-button a-button--small" (click)="toggleTileLayer(true)"
-        [disabled]="isCustomTileLayer" aria-label="Selecteer specifieke basislaag">
-        {{ tileLayer.buttonLabel }}
-      </button>
+        <div *ngIf="tileLayer" class="m-button-group map-layer-toggle u-margin-top-xs">
+            <button
+                type="button"
+                class="a-button a-button--small"
+                (click)="toggleTileLayer()"
+                [disabled]="isDefaultTileLayer"
+                [attr.aria-label]="translations.selectDefault"
+            >
+                {{ defaultTileLayerLabel }}
+            </button>
+            <button
+                type="button"
+                class="a-button a-button--small"
+                (click)="toggleTileLayer(true)"
+                [disabled]="isCustomTileLayer"
+                [attr.aria-label]="translations.selectSpecific"
+            >
+                {{ tileLayer.buttonLabel }}
+            </button>
+        </div>
     </div>
-  </div>
-  <div controls bottom right>
-    <ng-content select="[controls][bottom][right]"></ng-content>
-  </div>
-  <div controls top right>
-    <ng-content select="[controls][top][right]"></ng-content>
-  </div>
+    <div controls bottom right>
+        <ng-content select="[controls][bottom][right]"></ng-content>
+    </div>
+    <div controls top right>
+        <ng-content select="[controls][top][right]"></ng-content>
+    </div>
 </aui-leaflet>

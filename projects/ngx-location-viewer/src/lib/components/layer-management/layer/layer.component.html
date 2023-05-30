@@ -1,23 +1,48 @@
 <div class="u-margin-top-xs u-margin-left-xs">
-  <div class="a-input" *ngIf="layer">
-    <img *ngIf="layer?.legend?.length === 1" [src]="imageUrl" [alt]="layer?.name" class="layer__icon" />
-    <div class="a-input__checkbox">
-      <input type="checkbox" id="layer-{{ layer?.id }}" name="layer-{{ layer?.id }}" [checked]="layer?.visible"
-        [(ngModel)]="layer.visible" (change)="onChangeVisibility()" />
-      <label for="layer-{{ layer?.id }}">{{ layer?.name }}</label>
-      <button *ngIf="showLayers() || showLegend()" class="layer__toggle u-margin-left-xs layer__reveal" (click)="open = !open">
-        <aui-icon *ngIf="open" name="ai-arrow-up-1"></aui-icon>
-        <aui-icon *ngIf="!open" name="ai-arrow-down-1"></aui-icon>
-      </button>
-      <div *ngIf="layer?.isLoading === true" class="a-spinner a-spinner--sm" role="alert"></div>
+    <div class="a-input" *ngIf="layer">
+        <img *ngIf="layer?.legend?.length === 1" [src]="imageUrl" [alt]="layer?.name" class="layer__icon" />
+        <div class="a-input__checkbox">
+            <input
+                type="checkbox"
+                id="layer-{{ layer?.id }}"
+                name="layer-{{ layer?.id }}"
+                [checked]="layer?.visible"
+                [(ngModel)]="layer.visible"
+                (change)="onChangeVisibility()"
+            />
+            <label for="layer-{{ layer?.id }}">{{ layer?.name }}</label>
+            <button
+                *ngIf="showLayers() || showLegend()"
+                [attr.aria-label]="
+                    showLayers()
+                        ? open
+                            ? translations.showLayer
+                            : translations.hideLayer
+                        : open
+                        ? translations.showLegend
+                        : translations.hideLegend
+                "
+                class="layer__toggle u-margin-left-xs layer__reveal"
+                (click)="open = !open"
+            >
+                <aui-icon *ngIf="open" name="ai-arrow-up-1"></aui-icon>
+                <aui-icon *ngIf="!open" name="ai-arrow-down-1"></aui-icon>
+            </button>
+            <div *ngIf="layer?.isLoading === true" class="a-spinner a-spinner--sm" role="alert"></div>
+        </div>
     </div>
-  </div>
-  <div *ngIf="open && showLayers() && layer?.layers" class="u-margin-left-xs">
-    <aui-layer *ngFor="let childLayer of layer?.layers" [layer]="childLayer" [layerType]="layerType"
-      (layerVisibiltyChange)="onChangeVisibility()"> </aui-layer>
-  </div>
+    <div *ngIf="open && showLayers() && layer?.layers" class="u-margin-left-xs">
+        <aui-layer
+            *ngFor="let childLayer of layer?.layers"
+            [layer]="childLayer"
+            [layerType]="layerType"
+            [translations]="translations"
+            (layerVisibiltyChange)="onChangeVisibility()"
+        >
+        </aui-layer>
+    </div>
 
-  <div *ngIf="open && showLegend() && layer?.legend" class="u-margin-left">
-    <aui-layer-legend *ngFor="let layerLegend of layer?.legend" [layerLegend]="layerLegend"></aui-layer-legend>
-  </div>
+    <div *ngIf="open && showLegend() && layer?.legend" class="u-margin-left">
+        <aui-layer-legend *ngFor="let layerLegend of layer?.legend" [layerLegend]="layerLegend"></aui-layer-legend>
+    </div>
 </div>

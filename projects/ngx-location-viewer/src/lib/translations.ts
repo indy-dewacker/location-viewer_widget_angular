@@ -1,0 +1,26 @@
+import { Translations } from '../public-api';
+
+export const DUTCH_TRANSLATIONS: Translations = {
+    closeSidebar: 'Sluit zijbalk',
+    openSidebar: 'Open zijbalk',
+    select: 'Selecteren',
+    selectRectangle: 'Selecteer met een rechthoek',
+    selectPolygon: 'Selecteer met een veelhoek',
+    selectFilterLayer: 'Selecteer met filterlaag',
+    measure: 'Meten',
+    measureArea: 'Meten oppervlakte en omtrek',
+    measureDistance: 'Meten afstand',
+    whatIsHere: 'Wat is hier',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom uit',
+    close: 'Sluiten',
+    selectDefault: 'Selecteer default basislaag',
+    selectSpecific: 'Selecteer specifieke basislaag',
+    operationalLayer: 'Operationele laag:',
+    supportingLayers: 'Ondersteunende lagen',
+    showLayer: 'Toon laag',
+    hideLayer: 'Verberg laag',
+    showLegend: 'Toon legende',
+    hideLegend: 'Verberg legende',
+    choseFilterLayer: 'Kies filterlaag',
+};
