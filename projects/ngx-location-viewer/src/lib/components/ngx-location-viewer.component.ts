@@ -1,5 +1,5 @@
 import { baseMapAntwerp, baseMapWorldGray } from '@acpaas-ui/ngx-leaflet';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { forkJoin, from, Observable, of, Subject } from 'rxjs';
 import { combineAll, map, take, takeUntil, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash-es';
@@ -78,6 +78,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Output() filteredResult = new EventEmitter<GeofeatureDetail[] | OperationalMarker[] | any>();
     /* Operational layer clicked: fired when clicking on marker of operational layer */
     @Output() markerClicked = new EventEmitter<any>();
+
+    @ViewChild('leafletsidebar', { static: false }) sidebarDiv: ElementRef;
+
     /* supporting layer config */
     supportingLayers: Layer[];
     /* operational layer config */
@@ -177,7 +180,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
         setTimeout(() => {
             this.leafletMap.map.invalidateSize();
             if (this.showSidebar) {
-                document.getElementById('aui-leaflet-sidebar').focus();
+                this.sidebarDiv.nativeElement.focus();
             }
         });
     }

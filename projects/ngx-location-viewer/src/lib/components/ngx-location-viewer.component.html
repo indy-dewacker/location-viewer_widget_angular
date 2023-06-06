@@ -1,5 +1,5 @@
 <aui-leaflet [leafletMap]="leafletMap" [hasSidebar]="showSidebar">
-    <div id="aui-leaflet-sidebar" tabindex="0" class="sidebar" *ngIf="hasSidebar && showSidebar">
+    <div #leafletsidebar tabindex="0" class="sidebar" *ngIf="hasSidebar && showSidebar">
         <div class="sidebar__header">
             <button
                 class="a-button-transparent a-button--default has-icon sidebar__close-button"
