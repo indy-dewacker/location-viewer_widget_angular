@@ -176,6 +176,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
         // recalculates leaflet map size
         setTimeout(() => {
             this.leafletMap.map.invalidateSize();
+            if (this.showSidebar) {
+                document.getElementById('aui-leaflet-sidebar').focus();
+            }
         });
     }
 
