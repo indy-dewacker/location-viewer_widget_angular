@@ -10,8 +10,12 @@ All notable changes to this project will be documented in this file.
 "### Fixed" for any bug fixes.
 "### Security" in case of vulnerabilities.
 -->
-## [Unreleased]
+## [2.6.0] - 2023-06-14
 
+### Added
+- Option to pass currentPosition to initialise component with a position marker
+- Updating the value of currentPosition will redraw te position marker
+- Using the currentPosition will overrule the mapCenter position on load
 
 ## [2.5.0] - 2023-01-30
 
