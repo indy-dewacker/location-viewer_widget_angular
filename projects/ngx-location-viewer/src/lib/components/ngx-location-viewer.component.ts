@@ -78,6 +78,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom uit'
   }
+  @Input() currentPosition: Array<number> = null;
   /* HasSideBar change */
   @Output() hasSidebarChange = new EventEmitter<boolean>();
   /* AddPolygon event */
@@ -103,6 +104,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
   // Selected button
   currentButton = '';
+
+  // Marker showing the current position
+  currentPositionMarker: Layer = null;
 
   // Selected filter layer
   currentFilterLayer: FilterLayerOptions;
@@ -156,6 +160,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
           case 'filterLayers':
             this.initiateFilterLayers();
             break;
+          case 'currentPosition':
+          this.initiateCurrentPosition(change.currentValue);
           default:
             break;
         }
@@ -357,6 +363,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
       this.initiateOperationalLayer();
       this.initiateFilterLayers();
       this.initiateEvents();
+      this.initiateCurrentPosition();
 
       // set hasSidebar true if showlayermanagement is true because this is inside the sidebar
       if (this.showLayerManagement && !this.hasSidebar) {
@@ -521,6 +528,18 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
       // after finished intake reset current button
       this.activeButtonChange(ButtonActions.none);
     });
+  }
+
+  private initiateCurrentPosition(currentPosition: Array<number> = this.currentPosition): void {
+      if (currentPosition !== null) {
+          this.leafletMap.setView(currentPosition, this.defaultZoom);
+
+          if (this.currentPositionMarker !== null) {
+            this.leafletMap.removeLayer(this.currentPositionMarker);
+          } 
+          
+          this.currentPositionMarker = this.leafletMap.addMarker(currentPosition, { keyboard: false, interactive: false });
+      }
   }
 
   private filterOperationalLayer(feature) {
