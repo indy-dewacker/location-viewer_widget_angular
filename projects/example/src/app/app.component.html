@@ -4,13 +4,25 @@
   </div>
   <div class="u-bg-light u-margin-top u-margin-bottom">
     <aui-location-viewer
+     #locationViewer
      [geoApiBaseUrl]=geoApiBaseUrl
      [showLayerManagement]=showLayerManagement
      [supportingLayerOptions]=supportingLayerOptions
      [operationalLayerOptions]="operationalLayerOptions"
      [filterLayers]="filterLayers"
+     [currentPosition]="currentPosition"
      (filteredResult)="updateResult($event)"
      (markerClicked)="onClickOperationalMarker($event)">
+     <div controls bottom right>
+      <button
+        type="button"
+        class="a-button a-button--small has-icon"
+        [disabled]="locating"
+        (click)="handler()"
+      >
+        <aui-icon name="ai-location-target-1"></aui-icon>
+      </button>
+     </div>
     </aui-location-viewer>
   </div>
   <button class="a-button" aria-label="Change configuration" (click)="changeSettings()">Change configuration</button>

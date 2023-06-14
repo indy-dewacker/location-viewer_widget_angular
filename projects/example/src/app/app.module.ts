@@ -1,8 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { IconModule } from '@acpaas-ui/ngx-icon';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { LocationViewerModule } from 'projects/ngx-location-viewer/src/lib/ngx-location-viewer.module';
 
 import { AppComponent } from './app.component';
-import { LocationViewerModule } from 'projects/ngx-location-viewer/src/lib/ngx-location-viewer.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { LocationViewerModule } from 'projects/ngx-location-viewer/src/lib/ngx-l
   ],
   imports: [
     BrowserModule,
-    LocationViewerModule
+    LocationViewerModule,
+    IconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
