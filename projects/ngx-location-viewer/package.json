@@ -1,6 +1,6 @@
 {
     "name": "@acpaas-ui-widgets/ngx-location-viewer",
-    "version": "2.5.0",
+    "version": "3.0.0-beta.3",
     "license": "See license file",
     "peerDependencies": {
         "@acpaas-ui/ngx-icon": "6.0.0-beta.0",
