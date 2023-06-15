@@ -1,4 +1,4 @@
-import { Translations } from '../public-api';
+import { Translations } from './types/translations.model';
 
 export const DUTCH_TRANSLATIONS: Translations = {
     closeSidebar: 'Sluit zijbalk',
