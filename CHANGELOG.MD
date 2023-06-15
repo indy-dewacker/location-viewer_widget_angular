@@ -11,6 +11,12 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+## [3.0.0-beta.3] - 2023-06-15
+
+## Fixed
+
+-   Fix build
+
 ## [3.0.0-beta.2] - 2023-06-15
 
 ## Changed
