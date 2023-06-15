@@ -17,7 +17,7 @@
         "build-lib": "ng build ngx-location-viewer && npm run copy-files && npm run npm-pack"
     },
     "peerDependencies": {
-        "@acpaas-ui/ngx-icon": "^5.0.0",
+        "@acpaas-ui/ngx-icon": "6.0.0-beta.0",
         "@acpaas-ui/ngx-leaflet": "^5.0.2"
     },
     "overrides": {
