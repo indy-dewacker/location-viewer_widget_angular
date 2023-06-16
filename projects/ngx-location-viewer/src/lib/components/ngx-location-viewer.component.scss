@@ -42,6 +42,10 @@ $spacer-xs: $spacer * 0.5 !default;
     }
 }
 
+.sidebar {
+  outline: none;
+}
+
 .sidebar__header {
     position: relative;
 
