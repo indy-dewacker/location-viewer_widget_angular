@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { IconModule } from '@acpaas-ui/ngx-icon';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -10,7 +11,8 @@ import { LocationViewerModule } from 'projects/ngx-location-viewer/src/lib/ngx-l
   ],
   imports: [
     BrowserModule,
-    LocationViewerModule
+    LocationViewerModule,
+    IconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -22,6 +22,7 @@ import { GeofeatureDetail } from '../types/geoapi/geofeature-detail.model';
 import { LeafletTileLayerModel, LeafletTileLayerType } from '../types/leaflet-tile-layer.model';
 import { Translations } from '../types/translations.model';
 import { DUTCH_TRANSLATIONS } from '../translations';
+import { LatLngExpression } from 'leaflet';
 
 @Component({
     selector: 'aui-location-viewer',
@@ -34,7 +35,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     /* The default zoom level on map load. */
     @Input() defaultZoom = 14;
     /* The initial map center on load. */
-    @Input() mapCenter: Array<number> = [51.215, 4.425];
+    @Input() mapCenter: LatLngExpression = [51.215, 4.425];
     /* Shows button to open sidebar if true. A sidebar can contain any additional info you like. */
     @Input() hasSidebar = false;
     /* If hasSidebar is true this will show whether the sidebar should be visible from the start */
@@ -66,6 +67,8 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
     @Input() zoomOnMarkerSelect? = 16;
     /* */
     @Input() translations: Translations = DUTCH_TRANSLATIONS;
+    /* Point [lat,lng] describing the current position. Set the view of the map to this point every time it's changed.  */
+    @Input() currentPosition: LatLngExpression = null;
     /* HasSideBar change */
     @Output() hasSidebarChange = new EventEmitter<boolean>();
     /* AddPolygon event */
@@ -94,6 +97,9 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
 
     // Selected button
     currentButton = '';
+
+    // Marker showing the current position
+    currentPositionMarker: Layer = null;
 
     // Selected filter layer
     currentFilterLayer: FilterLayerOptions;
@@ -146,6 +152,16 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
                         break;
                     case 'filterLayers':
                         this.initiateFilterLayers();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (change.currentValue) {
+                switch (propName) {
+                    case 'currentPosition':
+                        this.initiateCurrentPosition(change.currentValue);
                         break;
                     default:
                         break;
@@ -351,6 +367,7 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             this.initiateOperationalLayer();
             this.initiateFilterLayers();
             this.initiateEvents();
+            this.initiateCurrentPosition();
 
             // set hasSidebar true if showlayermanagement is true because this is inside the sidebar
             if (this.showLayerManagement && !this.hasSidebar) {
@@ -514,6 +531,18 @@ export class NgxLocationViewerComponent implements OnInit, OnChanges, OnDestroy 
             // after finished intake reset current button
             this.activeButtonChange(ButtonActions.none);
         });
+    }
+
+    private initiateCurrentPosition(currentPosition: LatLngExpression = this.currentPosition): void {
+        if (currentPosition !== null) {
+            this.leafletMap.setView(currentPosition, this.defaultZoom);
+  
+            if (this.currentPositionMarker !== null) {
+              this.leafletMap.removeLayer(this.currentPositionMarker);
+            } 
+  
+            this.currentPositionMarker = this.leafletMap.addMarker(currentPosition, { keyboard: false, interactive: false });
+        }
     }
 
     private filterOperationalLayer(feature) {

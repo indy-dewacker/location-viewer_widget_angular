@@ -11,6 +11,15 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+## [Unreleased]
+## [3.1.0] - 2023-07-03
+
+### Added
+- Option to pass currentPosition to initialise component with a position marker
+- Updating the value of currentPosition will redraw te position marker
+- Using the currentPosition will overrule the mapCenter position on load
+- Updated the example app with a locate me button
+
 ## [3.0.0] - 2023-06-15
 
 ## Changed

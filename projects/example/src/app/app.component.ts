@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     FilterLayerOptions,
     GeofeatureDetail,
+    NgxLocationViewerComponent,
     OperationalLayerOptions,
     OperationalMarker,
     SupportingLayerOptions,
@@ -15,6 +16,10 @@ import taken from './../assets/sluiksort-taken.json';
     styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+    @ViewChild("locationViewer", { static: true }) locationViewer: NgxLocationViewerComponent;
+  
+    currentPosition: Array<number> = null;
+    locating = false;
     result: GeofeatureDetail[];
     geoApiBaseUrl = 'https://geoapi-app1-o.antwerpen.be/v2/';
     showLayerManagement = true;
@@ -84,5 +89,15 @@ export class AppComponent implements OnInit {
 
     onClickOperationalMarker(event: any): void {
         console.log(event);
+    }
+
+    handler(): void {
+      this.locating = true;
+      this.locationViewer.leafletMap.map.once('locationfound', (e: any) => {
+        const {lat, lng} = e.latlng;
+        this.currentPosition = [lat, lng]
+        this.locating = false;
+      });
+      this.locationViewer.leafletMap.map.locate();
     }
 }
